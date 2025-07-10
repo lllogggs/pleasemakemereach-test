@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <title>트립닷닷 | Trip.com 최저가 링크 찾기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta content="tripdotdot" name="author">
+  <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot" name="keywords">
+  <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 22개국에서 최저가 검색 가능">
+  
+  <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
+  <meta content="6d36eb0cb19fc826bcba409428fa0d6fddc9c33d" name="naver-site-verification">
+  
+  <meta property="og:title" content="트립닷닷 | Trip.com 최저가 링크 찾기">
+  <meta property="og:site_name" content="트립닷닷">
+  <meta property="og:description" content="10초만에 N만원 절약하고 여행가자">
+  <meta property="og:image" content="https://tripdotdot.com/thumbnail.jpg">
+  <meta property="og:url" content="https://tripdotdot.com/">
+  <meta property="og:type" content="website">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+    :root {
+      --primary-blue: #3264ff;
+      --light-blue: #eaf0ff;
+      --background-color: #f5f7fa;
+      --card-background: #ffffff;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+    }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      color: var(--text-primary);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 12px; 
+    }
+
+    .header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin: 0 0 0px 0; 
+    }
+
+    .header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .input-section {
+      background: var(--card-background);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+
+    #inputUrl {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    #inputUrl:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px var(--light-blue);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #254edc;
+    }
+
+    .info-card {
+      background: var(--card-background);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+
+    .info-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.7; 
+    }
+
+    .info-card ul li {
+        margin-bottom: 4px; 
+    }
+
+    .info-card ul li:last-child {
+        margin-bottom: 0;
+    }
+    
+    .info-card ul li strong,
+    .info-card p strong {
+        color: var(--primary-blue);
+    }
+
+    .info-card p {
+        font-size: 16px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .link-list {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      background: var(--card-background);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+
+    .link-list a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 500;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+      box-sizing: border-box;
+      word-break: keep-all; 
+    }
+
+    .link-list a:hover {
+      background-color: var(--light-blue);
+      border-color: var(--primary-blue);
+      transform: translateY(-2px);
+    }
+
+    .link-list a.clicked {
+      background-color: var(--light-blue);
+      border-color: var(--primary-blue);
+      font-weight: 700;
+    }
+
+    .flag {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 3px;
+      flex-shrink: 0; 
+    }
+    
+    .highlight {
+      background-color: rgba(255, 247, 0, 0.6);
+      font-weight: 700;
+      padding: 2px 0 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🌐 트립닷닷</h1>
+      <p>&nbsp;트립닷컴 최저가 링크 찾기</p>
+    </header>
+
+    <section class="input-section">
+      <input id="inputUrl" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
+      <button onclick="generateLinks()">최저가 링크 찾기</button>
+    </section>
+
+    <div class="link-list" id="results"></div>
+
+    <section class="info-card">
+        <h2>🌍 최저가 국가를 찾아보세요</h2>
+        <p>트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight">가장 저렴하게 예약</span>하세요!</p>
+    </section>
+    
+    <section class="info-card">
+      <h2>✅ 사용 방법</h2>
+      <ul>
+        <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
+        <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
+        <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
+      </ul>
+    </section>
+
+    <section class="info-card">
+      <h2>💡 알아두면 좋은 팁</h2>
+      <p>
+        👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>
+        ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수 있어요.<br>
+        💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
+      </p>
+    </section>
+
+  </div>
+
+  <script>
+    const domains = [
+      { label: '한국', code: 'kr', flag: 'kr' },
+      { label: '미국', code: 'us', flag: 'us' },
+      { label: '일본', code: 'jp', flag: 'jp' },
+      { label: '스페인', code: 'es', flag: 'es' },
+      { label: '프랑스', code: 'fr', flag: 'fr' },
+      { label: '베트남', code: 'vn', flag: 'vn' },
+      { label: '독일', code: 'de', flag: 'de' },
+      { label: '캐나다', code: 'ca', flag: 'ca' },
+      { label: '호주', code: 'au', flag: 'au' },
+      { label: '네덜란드', code: 'nl', flag: 'nl' },
+      { label: '싱가포르', code: 'sg', flag: 'sg' },
+      { label: '인도네시아', code: 'id', flag: 'id' },
+      { label: '말레이시아', code: 'my', flag: 'my' },
+      { label: '대만', code: 'tw', flag: 'tw' },
+      { label: '인도', code: 'in', flag: 'in' },
+      { label: '멕시코', code: 'mx', flag: 'mx' },
+      { label: '영국', code: 'uk', flag: 'gb' },
+      { label: '러시아', code: 'ru', flag: 'ru' },
+      { label: '아르헨티나', code: 'ar', flag: 'ar' },
+      { label: '포르투갈', code: 'pt', flag: 'pt' },
+      { label: '사우디아라비아', code: 'sa', flag: 'sa' }
+    ];
+
+    function generateLinks() {
+      const input = document.getElementById('inputUrl').value.trim();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      if (!input.includes('trip.com')) {
+        resultsDiv.style.display = 'grid'; 
+        resultsDiv.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">유효한 트립닷컴 링크를 입력해주세요.</p>';
+        return;
+      }
+      
+      try {
+        const url = new URL(input);
+        let pathname = url.pathname;
+        const params = new URLSearchParams(url.search);
+
+        // ▼▼▼ 모바일 경로(/m/)를 PC 경로(/)로 변경하는 로직 수정 ▼▼▼
+        if (pathname.startsWith('/m/')) {
+            pathname = pathname.replace('/m/', '/');
+        }
+
+        params.delete('curr');
+        params.set('curr', 'KRW');
+
+        const paramString = params.toString();
+        const cleanPath = pathname + (paramString ? '?' + paramString : '');
+        
+        const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
+        
+        resultsDiv.style.display = 'grid'; 
+        
+        domains.forEach(dom => {
+          const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
+          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
+          
+          const a = document.createElement('a');
+          a.href = fullUrl;
+          a.target = '_blank';
+          a.onclick = () => {
+            a.classList.toggle('clicked');
+          };
+          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom.label} 국기"> ${dom.label}`;
+          resultsDiv.appendChild(a);
+        });
+      } catch (error) {
+        resultsDiv.style.display = 'grid'; 
+        resultsDiv.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">입력한 링크의 형식이 올바르지 않습니다.</p>';
+        console.error("URL Parsing Error:", error);
+      }
+    }
+  </script>
+</body>
+</html>
