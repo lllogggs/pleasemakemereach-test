@@ -207,6 +207,42 @@
       padding: 2px 0 2px 4px;
       border-radius: 3px;
     }
+
+    .mobile-notice {
+      display: none; 
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      color: var(--text-primary);
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      z-index: 1000;
+      align-items: center;
+      gap: 15px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .mobile-notice-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .mobile-notice-text {
+      flex-grow: 1;
+      margin: 0;
+    }
+    .mobile-notice-close {
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      color: #aaa;
+      cursor: pointer;
+      padding: 0 5px;
+    }
   </style>
 </head>
 <body>
@@ -241,11 +277,19 @@
       <h2>💡 알아두면 좋은 팁</h2>
       <p>
         👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>
-        ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수 있어요.<br>
+        ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
         💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
       </p>
     </section>
+  </div>
 
+  <div id="mobile-notice" class="mobile-notice">
+    <div class="mobile-notice-icon">📱</div>
+    <p class="mobile-notice-text">
+      <strong>모바일에서는 안 보이는 가격이 있어요!</strong><br>
+      '숨겨진 최저가'를 놓치지 않으려면, 브라우저의 '데스크톱 사이트' 모드를 켜주세요! 💻
+    </p>
+    <button id="close-notice-btn" class="mobile-notice-close">&times;</button>
   </div>
 
   <script>
@@ -289,15 +333,17 @@
         let pathname = url.pathname;
         const params = new URLSearchParams(url.search);
 
-        // ▼▼▼ 모바일 경로(/m/)를 PC 경로(/)로 변경하는 로직 수정 ▼▼▼
+        // 1. 모바일 경로(/m/)가 있으면 PC 경로로 변환
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
         }
 
-        params.delete('curr');
-        params.set('curr', 'KRW');
+        // 2. 화폐단위를 KRW로 강제 설정
+        params.delete('curr'); // 기존 화폐단위 삭제
+        params.set('curr', 'KRW');   // KRW로 새로 설정
 
         const paramString = params.toString();
+        // 원본의 모든 파라미터를 유지한 채, 경로와 화폐단위만 수정한 cleanPath 생성
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
         
         const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
@@ -323,6 +369,23 @@
         console.error("URL Parsing Error:", error);
       }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const noticePopup = document.getElementById('mobile-notice');
+        const closeBtn = document.getElementById('close-notice-btn');
+
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            setTimeout(() => {
+                noticePopup.style.display = 'flex';
+            }, 2000);
+        }
+
+        closeBtn.addEventListener('click', function() {
+            noticePopup.style.display = 'none';
+        });
+    });
   </script>
 </body>
 </html>
