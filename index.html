@@ -208,41 +208,60 @@
       border-radius: 3px;
     }
 
-    .mobile-notice {
-      display: none; 
+    /* ▼▼▼ 모바일 안내 모달 팝업 스타일 ▼▼▼ */
+    .modal-overlay {
+      display: none; /* 기본은 숨김 */
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #fff;
-      color: var(--text-primary);
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
       align-items: center;
-      gap: 15px;
-      font-size: 15px;
-      line-height: 1.5;
+      z-index: 2000;
     }
-    .mobile-notice-icon {
-      font-size: 24px;
-      flex-shrink: 0;
+    .modal-content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
-    .mobile-notice-text {
-      flex-grow: 1;
-      margin: 0;
+    .modal-content h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 12px;
     }
-    .mobile-notice-close {
-      background: transparent;
-      border: none;
-      font-size: 22px;
-      color: #aaa;
-      cursor: pointer;
-      padding: 0 5px;
+    .modal-content .main-text {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 20px;
     }
+    .modal-content .sub-text {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+    .modal-content .sub-text strong {
+        color: var(--text-primary);
+    }
+    .modal-close-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    /* ▲▲▲ 모바일 안내 모달 팝업 스타일 ▲▲▲ */
   </style>
 </head>
 <body>
@@ -283,15 +302,15 @@
     </section>
   </div>
 
-  <div id="mobile-notice" class="mobile-notice">
-    <div class="mobile-notice-icon">📱</div>
-    <p class="mobile-notice-text">
-      <strong>모바일에서는 안 보이는 가격이 있어요!</strong><br>
-      '숨겨진 최저가'를 놓치지 않으려면, 브라우저의 '데스크톱 사이트' 모드를 켜주세요! 💻
-    </p>
-    <button id="close-notice-btn" class="mobile-notice-close">&times;</button>
+  <div id="mobile-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>🖥️ PC 환경 접속 안내</h2>
+        <p class="main-text">PC로 접속해야 가격이 더 저렴해요!</p>
+        <p class="sub-text" id="browser-guide-text">
+            </p>
+        <button id="modal-close-btn">확인했습니다</button>
+    </div>
   </div>
-
   <script>
     const domains = [
       { label: '한국', code: 'kr', flag: 'kr' },
@@ -333,17 +352,14 @@
         let pathname = url.pathname;
         const params = new URLSearchParams(url.search);
 
-        // 1. 모바일 경로(/m/)가 있으면 PC 경로로 변환
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
         }
 
-        // 2. 화폐단위를 KRW로 강제 설정
-        params.delete('curr'); // 기존 화폐단위 삭제
-        params.set('curr', 'KRW');   // KRW로 새로 설정
+        params.delete('curr');
+        params.set('curr', 'KRW');
 
         const paramString = params.toString();
-        // 원본의 모든 파라미터를 유지한 채, 경로와 화폐단위만 수정한 cleanPath 생성
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
         
         const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
@@ -370,22 +386,45 @@
       }
     }
 
+    // ▼▼▼ 모바일 안내 모달 팝업 기능 JavaScript ▼▼▼
     document.addEventListener('DOMContentLoaded', function() {
-        const noticePopup = document.getElementById('mobile-notice');
-        const closeBtn = document.getElementById('close-notice-btn');
+        const modalOverlay = document.getElementById('mobile-modal');
+        const closeBtn = document.getElementById('modal-close-btn');
+        const guideTextElement = document.getElementById('browser-guide-text');
 
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         if (isMobile) {
+            const userAgent = navigator.userAgent;
+            let guideText = "";
+
+            if (/SamsungBrowser/.test(userAgent)) {
+                guideText = "브라우저 메뉴(☰) → '<strong>PC 버전으로 보기</strong>'를 켜주세요!";
+            } else if (/iPhone|iPad|iPod/.test(userAgent) && !/CriOS/.test(userAgent)) {
+                guideText = "주소창의 '가' 아이콘 → '<strong>데스크톱 웹 사이트 요청</strong>'을 눌러주세요!";
+            } else {
+                guideText = "브라우저 메뉴(···)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
+            }
+            
+            guideTextElement.innerHTML = guideText;
+
             setTimeout(() => {
-                noticePopup.style.display = 'flex';
-            }, 2000);
+                modalOverlay.style.display = 'flex';
+            }, 1000);
         }
 
-        closeBtn.addEventListener('click', function() {
-            noticePopup.style.display = 'none';
+        function closeModal() {
+            modalOverlay.style.display = 'none';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', function(event) {
+            if (event.target === modalOverlay) {
+                closeModal();
+            }
         });
     });
+    // ▲▲▲ 모바일 안내 모달 팝업 기능 JavaScript ▲▲▲
   </script>
 </body>
 </html>
