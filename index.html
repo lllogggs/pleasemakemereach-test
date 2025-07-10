@@ -393,18 +393,18 @@
             let guideHTML = "";
 
             if (/SamsungBrowser/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나, 브라우저 메뉴(☰)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
+                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>브라우저 메뉴(☰)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
             } else if (/iPhone|iPad|iPod/.test(userAgent) && !/CriOS/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나, 주소창의 '가' 아이콘을 누른 뒤 '<strong>데스크톱 웹 사이트 요청</strong>'을 선택해주세요!";
+                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>주소창의 '가' 아이콘을 누른 뒤 '<strong>데스크톱 웹 사이트 요청</strong>'을 선택해주세요!";
             } else {
-                guideHTML = "<strong>PC로 접속</strong>하시거나, 브라우저 메뉴(···)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
+                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>브라우저 메뉴(···)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
             }
             
             guideTextElement.innerHTML = guideHTML;
 
             setTimeout(() => {
                 modalOverlay.style.display = 'flex';
-            }, 1000);
+            }, 500);
         }
 
         function closeModal() {
