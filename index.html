@@ -207,10 +207,9 @@
       padding: 2px 0 2px 4px;
       border-radius: 3px;
     }
-
-    /* ▼▼▼ 모바일 안내 모달 팝업 스타일 ▼▼▼ */
+    
     .modal-overlay {
-      display: none; /* 기본은 숨김 */
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
@@ -220,27 +219,24 @@
       justify-content: center;
       align-items: center;
       z-index: 2000;
+      padding: 20px;
+      box-sizing: border-box;
     }
     .modal-content {
       background-color: #fff;
-      padding: 30px;
+      padding: 24px;
       border-radius: 15px;
-      width: 90%;
+      width: 100%;
       max-width: 400px;
       text-align: center;
       box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    }
-    .modal-content h2 {
-        font-size: 20px;
-        font-weight: 700;
-        margin-top: 0;
-        margin-bottom: 12px;
     }
     .modal-content .main-text {
         font-size: 18px;
         font-weight: 700;
         color: var(--primary-blue);
-        margin-bottom: 20px;
+        margin-top: 0;
+        margin-bottom: 15px;
     }
     .modal-content .sub-text {
         font-size: 15px;
@@ -250,6 +246,7 @@
     }
     .modal-content .sub-text strong {
         color: var(--text-primary);
+        font-weight: 700;
     }
     .modal-close-btn {
         width: 100%;
@@ -261,7 +258,6 @@
         border-radius: 8px;
         cursor: pointer;
     }
-    /* ▲▲▲ 모바일 안내 모달 팝업 스타일 ▲▲▲ */
   </style>
 </head>
 <body>
@@ -304,13 +300,12 @@
 
   <div id="mobile-modal" class="modal-overlay">
     <div class="modal-content">
-        <h2>🖥️ PC 환경 접속 안내</h2>
         <p class="main-text">PC로 접속해야 가격이 더 저렴해요!</p>
-        <p class="sub-text" id="browser-guide-text">
-            </p>
+        <p class="sub-text" id="browser-guide-text"></p>
         <button id="modal-close-btn">확인했습니다</button>
     </div>
   </div>
+
   <script>
     const domains = [
       { label: '한국', code: 'kr', flag: 'kr' },
@@ -386,7 +381,6 @@
       }
     }
 
-    // ▼▼▼ 모바일 안내 모달 팝업 기능 JavaScript ▼▼▼
     document.addEventListener('DOMContentLoaded', function() {
         const modalOverlay = document.getElementById('mobile-modal');
         const closeBtn = document.getElementById('modal-close-btn');
@@ -396,17 +390,17 @@
 
         if (isMobile) {
             const userAgent = navigator.userAgent;
-            let guideText = "";
+            let guideHTML = "";
 
             if (/SamsungBrowser/.test(userAgent)) {
-                guideText = "브라우저 메뉴(☰) → '<strong>PC 버전으로 보기</strong>'를 켜주세요!";
+                guideHTML = "<strong>PC로 접속</strong>하시거나, 브라우저 메뉴(☰)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
             } else if (/iPhone|iPad|iPod/.test(userAgent) && !/CriOS/.test(userAgent)) {
-                guideText = "주소창의 '가' 아이콘 → '<strong>데스크톱 웹 사이트 요청</strong>'을 눌러주세요!";
+                guideHTML = "<strong>PC로 접속</strong>하시거나, 주소창의 '가' 아이콘을 누른 뒤 '<strong>데스크톱 웹 사이트 요청</strong>'을 선택해주세요!";
             } else {
-                guideText = "브라우저 메뉴(···)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
+                guideHTML = "<strong>PC로 접속</strong>하시거나, 브라우저 메뉴(···)에서 '<strong>데스크톱 사이트</strong>' 모드를 켜주세요!";
             }
             
-            guideTextElement.innerHTML = guideText;
+            guideTextElement.innerHTML = guideHTML;
 
             setTimeout(() => {
                 modalOverlay.style.display = 'flex';
@@ -424,7 +418,6 @@
             }
         });
     });
-    // ▲▲▲ 모바일 안내 모달 팝업 기능 JavaScript ▲▲▲
   </script>
 </body>
 </html>
