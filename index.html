@@ -231,13 +231,20 @@
       text-align: center;
       box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
-    .modal-content p {
-        font-size: 16px;
+    .modal-content .main-text {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    .modal-content .sub-text {
+        font-size: 15px;
         color: var(--text-secondary);
         line-height: 1.6;
         margin-bottom: 25px;
     }
-    .modal-content p strong {
+    .modal-content .sub-text strong {
         color: var(--text-primary);
         font-weight: 700;
     }
@@ -293,7 +300,8 @@
 
   <div id="mobile-modal" class="modal-overlay">
     <div class="modal-content">
-        <p id="browser-guide-text"></p>
+        <p class="main-text">PC로 접속해야 가격이 더 저렴해요!</p>
+        <p class="sub-text" id="browser-guide-text"></p>
         <button id="modal-close-btn">확인했습니다</button>
     </div>
   </div>
@@ -385,18 +393,18 @@
             let guideHTML = "";
 
             if (/SamsungBrowser/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>우측 하단 메뉴(☰)를 눌러 '<strong>데스크톱 사이트</strong>' 클릭하세요";
+                guideHTML = "<strong>PC로 접속</strong>하시거나, 우측 하단(☰)을 눌러 '<strong>데스크톱 사이트</strong>' 클릭하세요";
             } else if (/iPhone|iPad|iPod/.test(userAgent) && !/CriOS/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>메뉴에서 '<strong>데스크톱 웹 사이트 요청</strong>' 클릭하세요";
+                guideHTML = "<strong>PC로 접속</strong>하시거나, 메뉴에서 '<strong>데스크톱 웹 사이트 요청</strong>' 클릭하세요";
             } else {
-                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>'<strong>데스크톱 모드</strong>'로 전환해주세요";
+                guideHTML = "<strong>PC로 접속</strong>하시거나, '<strong>데스크톱 모드</strong>'로 전환해주세요";
             }
             
             guideTextElement.innerHTML = guideHTML;
 
             setTimeout(() => {
                 modalOverlay.style.display = 'flex';
-            }, 500); // 0.5초로 수정
+            }, 500);
         }
 
         function closeModal() {
