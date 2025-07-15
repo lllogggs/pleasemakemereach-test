@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NKHHET1CP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-  
+ 
     gtag('config', 'G-7NKHHET1CP');
   </script>
   <meta charset="UTF-8">
@@ -147,7 +146,7 @@
     }
 
     .info-card ul li:last-child {
-        margin-bottom: 0;
+        margin-bottom: 0; 
     }
     
     .info-card ul li strong,
@@ -268,7 +267,15 @@
         cursor: pointer;
     }
   </style>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "sd3i2hqjuv");
+  </script>
 </head>
+<body>
   <div class="container">
     <header class="header">
       <h1>🌐 트립닷닷</h1>
@@ -304,14 +311,19 @@
         💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
       </p>
     </section>
-  </div>
 
-  <div id="mobile-modal" class="modal-overlay">
-    <div class="modal-content">
-        <p class="main-text">PC로 접속해야 가격이 더 저렴해요!</p>
-        <p class="sub-text" id="browser-guide-text"></p>
-        <button id="modal-close-btn">확인했습니다</button>
+    <div id="mobile-modal" class="modal-overlay">
+      <div class="modal-content">
+          <p class="main-text">PC로 접속해야 가격이 더 저렴해요!</p>
+          <p class="sub-text" id="browser-guide-text"></p>
+          <button id="modal-close-btn">확인했습니다</button>
+      </div>
     </div>
+
+    <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
+      <p><a href="/privacy.html" target="_blank" style="color: #aaa;">개인정보처리방침</a></p>
+      <p>© 2025 tripdotdot. All rights reserved.</p>
+    </footer>
   </div>
 
   <script>
@@ -401,11 +413,11 @@
             let guideHTML = "";
 
             if (/SamsungBrowser/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나, 우측 하단(☰)을 눌러 '<strong>데스크톱 사이트</strong>' 클릭하세요";
+                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>우측 하단(☰)을 눌러 '<strong>데스크톱 사이트</strong>' 클릭하세요";
             } else if (/iPhone|iPad|iPod/.test(userAgent) && !/CriOS/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나, 메뉴에서 '<strong>데스크톱 웹 사이트 요청</strong>' 클릭하세요";
+                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>메뉴에서 '<strong>데스크톱 웹 사이트 요청</strong>' 클릭하세요";
             } else {
-                guideHTML = "<strong>PC로 접속</strong>하시거나, '<strong>데스크톱 모드</strong>'로 전환해주세요";
+                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>'<strong>데스크톱 모드</strong>'로 전환해주세요";
             }
             
             guideTextElement.innerHTML = guideHTML;
