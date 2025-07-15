@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NKHHET1CP"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
- 
-    gtag('config', 'G-7NKHHET1CP');
-  </script>
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -216,64 +208,74 @@
       border-radius: 3px;
     }
     
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      padding: 20px;
-      box-sizing: border-box;
+    /* ▼▼▼ 플로팅 문의 버튼 스타일 추가 ▼▼▼ */
+    .floating-chat-link {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        text-decoration: none;
     }
-    .modal-content {
-      background-color: #fff;
-      padding: 24px;
-      border-radius: 15px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+
+    /* PC용 배너 스타일 */
+    .pc-banner {
+        display: none; /* 모바일에서는 숨김 */
+        background-color: #FFEB3B; /* 노란색 배경 */
+        color: #333;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
     }
-    .modal-content .main-text {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--primary-blue);
-        margin-top: 0;
-        margin-bottom: 15px;
+    .pc-banner img {
+        width: 100px;
+        height: 100px;
+        display: block;
+        margin: 5px auto 0;
     }
-    .modal-content .sub-text {
-        font-size: 15px;
-        color: var(--text-secondary);
-        line-height: 1.6;
-        margin-bottom: 25px;
-    }
-    .modal-content .sub-text strong {
-        color: var(--text-primary);
-        font-weight: 700;
-    }
-    .modal-close-btn {
-        width: 100%;
-        padding: 12px;
+
+    /* 모바일용 말풍선 스타일 */
+    .mobile-bubble {
+        display: none; /* PC에서는 숨김 */
+        background-color: #FFEB3B; /* 노란색 배경 */
+        color: #3C1E1E;
+        padding: 12px 20px;
+        border-radius: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         font-size: 16px;
-        background-color: var(--primary-blue);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
+        font-weight: bold;
+        position: relative;
     }
+    .mobile-bubble::after { /* 말풍선 꼬리 만들기 */
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 20px;
+        width: 0;
+        height: 0;
+        border: 10px solid transparent;
+        border-top-color: #FFEB3B;
+        border-bottom: 0;
+        border-right: 0;
+        margin-left: -5px;
+        margin-bottom: -10px;
+    }
+
+    /* 미디어 쿼리를 사용한 반응형 처리 */
+    @media (min-width: 769px) { /* PC 화면 */
+        .pc-banner {
+            display: block;
+        }
+    }
+    @media (max-width: 768px) { /* 모바일 화면 */
+        .mobile-bubble {
+            display: block;
+        }
+    }
+    /* ▲▲▲ 플로팅 문의 버튼 스타일 추가 ▲▲▲ */
   </style>
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "sd3i2hqjuv");
-  </script>
 </head>
 <body>
   <div class="container">
@@ -312,20 +314,21 @@
       </p>
     </section>
 
-    <div id="mobile-modal" class="modal-overlay">
-      <div class="modal-content">
-          <p class="main-text">PC로 접속해야 가격이 더 저렴해요!</p>
-          <p class="sub-text" id="browser-guide-text"></p>
-          <button id="modal-close-btn">확인했습니다</button>
-      </div>
-    </div>
-
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
       <p><a href="/privacy.html" target="_blank" style="color: #aaa;">개인정보처리방침</a></p>
       <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
   </div>
 
+  <a href="https://open.kakao.com/o/sKGmxMDh" target="_blank" class="floating-chat-link">
+    <div class="pc-banner">
+      여행문의/불편사항
+      <img src="/qrcode.png" alt="오픈채팅 QR코드">
+    </div>
+    <div class="mobile-bubble">
+      문의
+    </div>
+  </a>
   <script>
     const domains = [
       { label: '한국', code: 'kr', flag: 'kr' },
@@ -400,44 +403,6 @@
         console.error("URL Parsing Error:", error);
       }
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const modalOverlay = document.getElementById('mobile-modal');
-        const closeBtn = document.getElementById('modal-close-btn');
-        const guideTextElement = document.getElementById('browser-guide-text');
-
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        if (isMobile) {
-            const userAgent = navigator.userAgent;
-            let guideHTML = "";
-
-            if (/SamsungBrowser/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>우측 하단(☰)을 눌러 '<strong>데스크톱 사이트</strong>' 클릭하세요";
-            } else if (/iPhone|iPad|iPod/.test(userAgent) && !/CriOS/.test(userAgent)) {
-                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>메뉴에서 '<strong>데스크톱 웹 사이트 요청</strong>' 클릭하세요";
-            } else {
-                guideHTML = "<strong>PC로 접속</strong>하시거나,<br>'<strong>데스크톱 모드</strong>'로 전환해주세요";
-            }
-            
-            guideTextElement.innerHTML = guideHTML;
-
-            setTimeout(() => {
-                modalOverlay.style.display = 'flex';
-            }, 500);
-        }
-
-        function closeModal() {
-            modalOverlay.style.display = 'none';
-        }
-
-        closeBtn.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', function(event) {
-            if (event.target === modalOverlay) {
-                closeModal();
-            }
-        });
-    });
   </script>
 </body>
 </html>
