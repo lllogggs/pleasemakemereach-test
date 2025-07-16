@@ -154,16 +154,20 @@
 
     .link-list {
       display: none;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
       background: var(--card-background);
       padding: 24px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       margin-bottom: 24px;
     }
+    
+    .link-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
 
-    .link-list a {
+    .link-list-grid a {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -181,13 +185,13 @@
       word-break: keep-all; 
     }
 
-    .link-list a:hover {
+    .link-list-grid a:hover {
       background-color: var(--light-blue);
       border-color: var(--primary-blue);
       transform: translateY(-2px);
     }
 
-    .link-list a.clicked {
+    .link-list-grid a.clicked {
       background-color: var(--light-blue);
       border-color: var(--primary-blue);
       font-weight: 700;
@@ -208,73 +212,20 @@
       border-radius: 3px;
     }
     
-    /* ▼▼▼ 플로팅 문의 버튼 스타일 추가 ▼▼▼ */
-    .floating-chat-link {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        z-index: 1000;
-        text-decoration: none;
-    }
-
-    /* PC용 배너 스타일 */
-    .pc-banner {
-        display: none; /* 모바일에서는 숨김 */
-        background-color: #FFEB3B; /* 노란색 배경 */
-        color: #333;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        text-align: center;
-        font-size: 14px;
-        font-weight: 500;
-    }
-    .pc-banner img {
-        width: 100px;
-        height: 100px;
+    .kakao-chat-btn {
         display: block;
-        margin: 5px auto 0;
-    }
-
-    /* 모바일용 말풍선 스타일 */
-    .mobile-bubble {
-        display: none; /* PC에서는 숨김 */
-        background-color: #FFEB3B; /* 노란색 배경 */
+        width: 100%;
+        background-color: #FAE100;
         color: #3C1E1E;
-        padding: 12px 20px;
-        border-radius: 30px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        font-size: 16px;
+        text-align: center;
+        padding: 14px;
+        border-radius: 8px;
+        text-decoration: none;
         font-weight: bold;
-        position: relative;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
     }
-    .mobile-bubble::after { /* 말풍선 꼬리 만들기 */
-        content: '';
-        position: absolute;
-        bottom: 0;
-        right: 20px;
-        width: 0;
-        height: 0;
-        border: 10px solid transparent;
-        border-top-color: #FFEB3B;
-        border-bottom: 0;
-        border-right: 0;
-        margin-left: -5px;
-        margin-bottom: -10px;
-    }
-
-    /* 미디어 쿼리를 사용한 반응형 처리 */
-    @media (min-width: 769px) { /* PC 화면 */
-        .pc-banner {
-            display: block;
-        }
-    }
-    @media (max-width: 768px) { /* 모바일 화면 */
-        .mobile-bubble {
-            display: block;
-        }
-    }
-    /* ▲▲▲ 플로팅 문의 버튼 스타일 추가 ▲▲▲ */
   </style>
 </head>
 <body>
@@ -313,22 +264,13 @@
         💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
       </p>
     </section>
-
+    
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
       <p><a href="/privacy.html" target="_blank" style="color: #aaa;">개인정보처리방침</a></p>
       <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
   </div>
 
-  <a href="https://open.kakao.com/o/sKGmxMDh" target="_blank" class="floating-chat-link">
-    <div class="pc-banner">
-      여행문의/불편사항
-      <img src="/qrcode.png" alt="오픈채팅 QR코드">
-    </div>
-    <div class="mobile-bubble">
-      문의
-    </div>
-  </a>
   <script>
     const domains = [
       { label: '한국', code: 'kr', flag: 'kr' },
@@ -358,10 +300,20 @@
       const input = document.getElementById('inputUrl').value.trim();
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = '';
+      resultsDiv.style.display = 'block';
+
+      function createKakaoButton() {
+          const kakaoBtn = document.createElement('a');
+          kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
+          kakaoBtn.target = '_blank';
+          kakaoBtn.className = 'kakao-chat-btn';
+          kakaoBtn.textContent = '카카오톡 오픈채팅 여행문의 / 불편사항접수';
+          return kakaoBtn;
+      }
 
       if (!input.includes('trip.com')) {
-        resultsDiv.style.display = 'grid'; 
-        resultsDiv.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">유효한 트립닷컴 링크를 입력해주세요.</p>';
+        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">유효한 트립닷컴 링크를 입력해주세요.</p>';
+        resultsDiv.appendChild(createKakaoButton());
         return;
       }
       
@@ -382,7 +334,8 @@
         
         const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
         
-        resultsDiv.style.display = 'grid'; 
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'link-list-grid';
         
         domains.forEach(dom => {
           const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
@@ -391,15 +344,17 @@
           const a = document.createElement('a');
           a.href = fullUrl;
           a.target = '_blank';
-          a.onclick = () => {
-            a.classList.toggle('clicked');
-          };
+          a.onclick = () => { a.classList.toggle('clicked'); };
           a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom.label} 국기"> ${dom.label}`;
-          resultsDiv.appendChild(a);
+          gridContainer.appendChild(a);
         });
+
+        resultsDiv.appendChild(gridContainer);
+        resultsDiv.appendChild(createKakaoButton());
+
       } catch (error) {
-        resultsDiv.style.display = 'grid'; 
-        resultsDiv.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">입력한 링크의 형식이 올바르지 않습니다.</p>';
+        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">입력한 링크의 형식이 올바르지 않습니다.</p>';
+        resultsDiv.appendChild(createKakaoButton());
         console.error("URL Parsing Error:", error);
       }
     }
