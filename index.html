@@ -29,7 +29,7 @@
       --light-blue: #eaf0ff;
       --background-color: #f5f7fa;
       --card-background: #ffffff;
-      --text-primary: #1f2937;
+      --text-primary: #1f2937; /* 남색 */
       --text-secondary: #6b7280;
       --border-color: #e5e7eb;
     }
@@ -50,18 +50,15 @@
       position: relative;
     }
     
-    /* 수정된 부분: 최종 언어 선택 버튼 */
     .language-button {
         position: absolute;
         top: 25px;
         right: 0;
         z-index: 10;
-        
         display: flex;
         align-items: center;
         gap: 8px;
-        
-        background-color: var(--text-primary); /* 사이트와 어울리는 배경색 */
+        background-color: var(--text-primary); /* 수정된 부분: 남색으로 변경 */
         border: none;
         border-radius: 8px;
         padding: 6px 12px;
@@ -132,7 +129,7 @@
         box-shadow: 0 0 0 3px var(--light-blue);
     }
 
-    button:not(.language-button) { /* 언어 버튼 제외 */
+    button:not(.language-button) {
       width: 100%;
       padding: 14px;
       font-size: 16px;
@@ -318,7 +315,7 @@
     </section>
     
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
-      <p><a href="/privacy.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
+      <p><a id="privacy-link" href="privacy_ko.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
       <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
   </div>
@@ -387,20 +384,20 @@
             }
         });
         
-        // 언어 버튼 UI 업데이트
         const langFlag = document.getElementById('lang-flag');
         const langText = document.getElementById('lang-text');
+        const privacyLink = document.getElementById('privacy-link');
         
         if (lang === 'ko') {
-            // 한국어 페이지일 때: EN 버튼 표시 (미국 국기)
             langFlag.src = 'https://flagcdn.com/w40/us.png';
             langFlag.alt = 'USA Flag';
             langText.textContent = 'EN';
+            privacyLink.href = 'privacy_ko.html';
         } else {
-            // 영어 페이지일 때: KR 버튼 표시 (대한민국 국기)
             langFlag.src = 'https://flagcdn.com/w40/kr.png';
             langFlag.alt = 'South Korea Flag';
             langText.textContent = 'KR';
+            privacyLink.href = 'privacy_en.html';
         }
 
         const kakaoBtn = document.querySelector('.kakao-chat-btn');
