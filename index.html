@@ -50,13 +50,14 @@
       position: relative;
     }
     
-    /* 수정된 부분: 언어 선택 버튼 (직사각형) */
+    /* 수정된 부분: 언어 선택 버튼 (정사각형) */
     .lang-switcher {
         position: absolute;
         top: 25px;
         right: 0;
-        /* width, height 제거 후 padding으로 크기 조절 */
-        padding: 8px 14px;
+        width: 50px; /* 정사각형 크기 */
+        height: 44px; /* 정사각형 크기 */
+        padding: 0;
         background-color: var(--card-background);
         border: 1px solid var(--border-color);
         border-radius: 10px;
@@ -65,7 +66,10 @@
         font-size: 15px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         z-index: 10;
-        white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
     }
 
     .header {
@@ -320,7 +324,7 @@
                 ⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>
                 💰 Always compare the <strong>'final price'</strong> including taxes.`,
             privacy: "Privacy Policy",
-            langSwitch: "한국어", // 수정된 부분: 영어 페이지일 때 보일 버튼 텍스트
+            langSwitch: "한국어", // 수정된 부분
             invalidLink: "Please enter a valid Trip.com link.",
             parseError: "The format of the entered link is incorrect.",
             kakaoTalk: "🙋‍♀️🙋‍♂️ Contact via KakaoTalk"
@@ -343,7 +347,7 @@
                 ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
                 💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
             privacy: "개인정보처리방침",
-            langSwitch: "English", // 수정된 부분: 한국어 페이지일 때 보일 버튼 텍스트
+            langSwitch: "EN", // 수정된 부분
             invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
             parseError: "입력한 링크의 형식이 올바르지 않습니다.",
             kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기"
