@@ -160,7 +160,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       margin-bottom: 24px;
     }
-    
+
     .link-list-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -227,80 +227,126 @@
         box-sizing: border-box;
     }
   </style>
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "sd3i2hqjuv");
-  </script>
 </head>
 <body>
   <div class="container">
     <header class="header">
-      <h1>🌐 트립닷닷</h1>
-      <p>&nbsp;트립닷컴 최저가 링크 찾기</p>
+      <h1><span data-lang-key="main_title">🌐 트립닷닷</span></h1>
+      <p data-lang-key="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
     </header>
 
     <section class="input-section">
-      <input id="inputUrl" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
-      <button onclick="generateLinks()">최저가 링크 찾기</button>
+      <input id="inputUrl" data-lang-key="placeholder_text" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
+      <button onclick="generateLinks()" data-lang-key="search_button">최저가 링크 찾기</button>
     </section>
 
     <div class="link-list" id="results"></div>
 
     <section class="info-card">
-        <h2>🌍 최저가 국가를 찾아보세요</h2>
-        <p>트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight">가장 저렴하게 예약</span>하세요!</p>
+        <h2 data-lang-key="section_title_1">🌍 최저가 국가를 찾아보세요</h2>
+        <p data-lang-key="section_desc_1">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight">가장 저렴하게 예약</span>하세요!</p>
     </section>
     
     <section class="info-card">
-      <h2>✅ 사용 방법</h2>
+      <h2 data-lang-key="section_title_2">✅ 사용 방법</h2>
       <ul>
-        <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
-        <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
-        <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
+        <li data-lang-key="step_1">1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
+        <li data-lang-key="step_2">2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
+        <li data-lang-key="step_3">3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
       </ul>
     </section>
 
     <section class="info-card">
-      <h2>💡 알아두면 좋은 팁</h2>
+      <h2 data-lang-key="section_title_3">💡 알아두면 좋은 팁</h2>
       <p>
-        👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>
-        ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
-        💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
+        <span data-lang-key="tip_1">👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.</span><br>
+        <span data-lang-key="tip_2">⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.</span><br>
+        <span data-lang-key="tip_3">💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.</span>
       </p>
     </section>
     
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
-      <p><a href="/privacy.html" target="_blank" style="color: #aaa;">개인정보처리방침</a></p>
+      <p><a href="/privacy.html" target="_blank" style="color: #aaa;" data-lang-key="privacy_policy">개인정보처리방침</a></p>
       <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
   </div>
 
   <script>
+    const translations = {
+        'en': {
+            'main_title': '🌐 Tripdotdot',
+            'subtitle': 'Find the Cheapest Trip.com Links',
+            'placeholder_text': 'Paste Hotel/Flight link from https://trip.com/~',
+            'search_button': 'Find Cheapest Links',
+            'section_title_1': '🌍 Find the Cheapest Country',
+            'section_desc_1': "On Trip.com, the same product can have <strong>different prices depending on the country.</strong><br>Book at the <span class=\"highlight\">absolute cheapest price</span> with <strong>Tripdotdot</strong>!",
+            'section_title_2': '✅ How to Use',
+            'step_1': '1️⃣ Search for your desired hotel/flight on Trip.com and <strong>copy the link!</strong>',
+            'step_2': "2️⃣ Paste the link in the box above and click <strong>'Find Links'</strong>!",
+            'step_3': "3️⃣ Click through the generated country links to <strong>check the lowest price!</strong>",
+            'section_title_3': '💡 Good to Know',
+            'tip_1': "👉 Use Chrome's <strong>'Translate'</strong> feature for foreign language pages.",
+            'tip_2': '⚠️ Some products may have the same price in all countries.',
+            'tip_3': "💰 Compare the <strong>'final price'</strong> including taxes and fees.",
+            'privacy_policy': 'Privacy Policy',
+            'country_kr': 'Korea', 'country_us': 'United States', 'country_jp': 'Japan',
+            'country_es': 'Spain', 'country_fr': 'France', 'country_vn': 'Vietnam',
+            'country_de': 'Germany', 'country_ca': 'Canada', 'country_au': 'Australia',
+            'country_nl': 'Netherlands', 'country_sg': 'Singapore', 'country_id': 'Indonesia',
+            'country_my': 'Malaysia', 'country_tw': 'Taiwan', 'country_in': 'India',
+            'country_mx': 'Mexico', 'country_uk': 'United Kingdom', 'country_ru': 'Russia',
+            'country_ar': 'Argentina', 'country_pt': 'Portugal', 'country_sa': 'Saudi Arabia'
+        }
+    };
+    
+    let currentLang = 'ko';
+
+    function setLanguage(lang) {
+        if (translations[lang]) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    if (key === 'placeholder_text') {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const userLang = navigator.language || navigator.userLanguage; 
+        if (userLang.startsWith('en')) {
+            setLanguage('en');
+        }
+    });
+
     const domains = [
-      { label: '한국', code: 'kr', flag: 'kr' },
-      { label: '미국', code: 'us', flag: 'us' },
-      { label: '일본', code: 'jp', flag: 'jp' },
-      { label: '스페인', code: 'es', flag: 'es' },
-      { label: '프랑스', code: 'fr', flag: 'fr' },
-      { label: '베트남', code: 'vn', flag: 'vn' },
-      { label: '독일', code: 'de', flag: 'de' },
-      { label: '캐나다', code: 'ca', flag: 'ca' },
-      { label: '호주', code: 'au', flag: 'au' },
-      { label: '네덜란드', code: 'nl', flag: 'nl' },
-      { label: '싱가포르', code: 'sg', flag: 'sg' },
-      { label: '인도네시아', code: 'id', flag: 'id' },
-      { label: '말레이시아', code: 'my', flag: 'my' },
-      { label: '대만', code: 'tw', flag: 'tw' },
-      { label: '인도', code: 'in', flag: 'in' },
-      { label: '멕시코', code: 'mx', flag: 'mx' },
-      { label: '영국', code: 'uk', flag: 'gb' },
-      { label: '러시아', code: 'ru', flag: 'ru' },
-      { label: '아르헨티나', code: 'ar', flag: 'ar' },
-      { label: '포르투갈', code: 'pt', flag: 'pt' },
-      { label: '사우디아라비아', code: 'sa', flag: 'sa' }
+      { label: '한국', code: 'kr', flag: 'kr', langKey: 'country_kr' },
+      { label: '미국', code: 'us', flag: 'us', langKey: 'country_us' },
+      { label: '일본', code: 'jp', flag: 'jp', langKey: 'country_jp' },
+      { label: '스페인', code: 'es', flag: 'es', langKey: 'country_es' },
+      { label: '프랑스', code: 'fr', flag: 'fr', langKey: 'country_fr' },
+      { label: '베트남', code: 'vn', flag: 'vn', langKey: 'country_vn' },
+      { label: '독일', code: 'de', flag: 'de', langKey: 'country_de' },
+      { label: '캐나다', code: 'ca', flag: 'ca', langKey: 'country_ca' },
+      { label: '호주', code: 'au', flag: 'au', langKey: 'country_au' },
+      { label: '네덜란드', code: 'nl', flag: 'nl', langKey: 'country_nl' },
+      { label: '싱가포르', code: 'sg', flag: 'sg', langKey: 'country_sg' },
+      { label: '인도네시아', code: 'id', flag: 'id', langKey: 'country_id' },
+      { label: '말레이시아', code: 'my', flag: 'my', langKey: 'country_my' },
+      { label: '대만', code: 'tw', flag: 'tw', langKey: 'country_tw' },
+      { label: '인도', code: 'in', flag: 'in', langKey: 'country_in' },
+      { label: '멕시코', code: 'mx', flag: 'mx', langKey: 'country_mx' },
+      { label: '영국', code: 'uk', flag: 'gb', langKey: 'country_uk' },
+      { label: '러시아', code: 'ru', flag: 'ru', langKey: 'country_ru' },
+      { label: '아르헨티나', code: 'ar', flag: 'ar', langKey: 'country_ar' },
+      { label: '포르투갈', code: 'pt', flag: 'pt', langKey: 'country_pt' },
+      { label: '사우디아라비아', code: 'sa', flag: 'sa', langKey: 'country_sa' }
     ];
 
     function generateLinks() {
@@ -348,11 +394,16 @@
           const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
           const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
           
+          let labelText = dom.label;
+          if (currentLang === 'en' && translations['en'][dom.langKey]) {
+            labelText = translations['en'][dom.langKey];
+          }
+
           const a = document.createElement('a');
           a.href = fullUrl;
           a.target = '_blank';
           a.onclick = () => { a.classList.toggle('clicked'); };
-          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom.label} 국기"> ${dom.label}`;
+          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${labelText} Flag"> ${labelText}`;
           gridContainer.appendChild(a);
         });
 
