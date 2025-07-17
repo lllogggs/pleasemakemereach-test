@@ -49,24 +49,27 @@
       max-width: 600px;
       position: relative;
     }
-
+    
+    /* 수정된 부분: 언어 선택 버튼 스타일 */
     .lang-switcher {
         position: absolute;
-        top: -20px;
-        right: 0;
+        top: 10px; /* 상단에서의 위치 조정 */
+        right: 0;  /* 우측 끝에 위치 */
         background-color: var(--card-background);
         border: 1px solid var(--border-color);
-        padding: 8px 12px;
+        padding: 6px 10px; /* 버튼 크기 축소 */
         border-radius: 8px;
         cursor: pointer;
         font-weight: 500;
         font-size: 14px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        z-index: 10; /* 다른 요소 위에 오도록 설정 */
     }
 
     .header {
       text-align: center;
-      margin-bottom: 12px;  
+      margin-bottom: 24px;  /* 버튼과 겹치지 않도록 마진 조정 */
+      padding-top: 10px; /* 버튼이 들어갈 공간 확보 */
     }
 
     .header h1 {
@@ -255,7 +258,7 @@
     <button id="lang-switcher" class="lang-switcher"></button>
     
     <header class="header">
-      <h1>🌐 트립닷닷</h1>
+      <h1 data-lang="mainTitle">🌐 트립닷닷</h1>
       <p data-lang="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
     </header>
 
@@ -298,6 +301,7 @@
   <script>
     const translations = {
         en: {
+            mainTitle: "🌐 Tripdotdot", // 추가된 번역
             subtitle: "Trip.com Lowest Price Link Finder",
             placeholder: "Paste Hotel/Flight link from trip.com!",
             findButton: "Find Lowest Price Links",
@@ -320,6 +324,7 @@
             kakaoTalk: "🙋‍♀️🙋‍♂️ Contact via KakaoTalk"
         },
         ko: {
+            mainTitle: "🌐 트립닷닷", // 추가된 번역
             subtitle: "트립닷컴 최저가 링크 찾기",
             placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
             findButton: "최저가 링크 찾기",
