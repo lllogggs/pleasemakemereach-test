@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta content="tripdotdot" name="author">
-  <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot" name="keywords">
+  <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot, trip.com price comparison" name="keywords">
   <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 22개국에서 최저가 검색 가능">
   
   <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
@@ -47,18 +47,33 @@
     .container {
       width: 100%;
       max-width: 600px;
+      position: relative;
+    }
+
+    .lang-switcher {
+        position: absolute;
+        top: -20px;
+        right: 0;
+        background-color: var(--card-background);
+        border: 1px solid var(--border-color);
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     .header {
       text-align: center;
-      margin-bottom: 12px; 
+      margin-bottom: 12px;  
     }
 
     .header h1 {
       font-size: 36px;
       font-weight: 700;
       color: var(--primary-blue);
-      margin: 0 0 0px 0; 
+      margin: 0 0 0px 0;  
     }
 
     .header p {
@@ -134,7 +149,7 @@
     }
 
     .info-card ul li {
-        margin-bottom: 4px; 
+        margin-bottom: 4px;  
     }
 
     .info-card ul li:last-child {
@@ -182,7 +197,7 @@
       font-weight: 500;
       transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
       box-sizing: border-box;
-      word-break: keep-all; 
+      word-break: keep-all;  
     }
 
     .link-list-grid a:hover {
@@ -202,7 +217,7 @@
       height: 16px;
       object-fit: cover;
       border-radius: 3px;
-      flex-shrink: 0; 
+      flex-shrink: 0;  
     }
     
     .highlight {
@@ -213,7 +228,7 @@
     }
     
     .kakao-chat-btn {
-        display: block;
+        display: none; /* Initially hidden */
         width: 100%;
         background-color: #FAE100;
         color: #3C1E1E;
@@ -237,26 +252,28 @@
 </head>
 <body>
   <div class="container">
+    <button id="lang-switcher" class="lang-switcher"></button>
+    
     <header class="header">
       <h1>🌐 트립닷닷</h1>
-      <p>&nbsp;트립닷컴 최저가 링크 찾기</p>
+      <p data-lang="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
     </header>
 
     <section class="input-section">
-      <input id="inputUrl" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
-      <button onclick="generateLinks()">최저가 링크 찾기</button>
+      <input id="inputUrl" data-lang="placeholder" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
+      <button onclick="generateLinks()" data-lang="findButton">최저가 링크 찾기</button>
     </section>
 
     <div class="link-list" id="results"></div>
 
     <section class="info-card">
-        <h2>🌍 최저가 국가를 찾아보세요</h2>
-        <p>트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight">가장 저렴하게 예약</span>하세요!</p>
+        <h2 data-lang="card1Title">🌍 최저가 국가를 찾아보세요</h2>
+        <p data-lang="card1Desc">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight" data-lang="card1Highlight">가장 저렴하게 예약</span>하세요!</p>
     </section>
     
     <section class="info-card">
-      <h2>✅ 사용 방법</h2>
-      <ul>
+      <h2 data-lang="card2Title">✅ 사용 방법</h2>
+      <ul data-lang="card2List">
         <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
         <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
         <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
@@ -264,8 +281,8 @@
     </section>
 
     <section class="info-card">
-      <h2>💡 알아두면 좋은 팁</h2>
-      <p>
+      <h2 data-lang="card3Title">💡 알아두면 좋은 팁</h2>
+      <p data-lang="card3List">
         👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>
         ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
         💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
@@ -273,34 +290,119 @@
     </section>
     
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
-      <p><a href="/privacy.html" target="_blank" style="color: #aaa;">개인정보처리방침</a></p>
+      <p><a href="/privacy.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
       <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
   </div>
 
   <script>
+    const translations = {
+        en: {
+            subtitle: "Trip.com Lowest Price Link Finder",
+            placeholder: "Paste Hotel/Flight link from trip.com!",
+            findButton: "Find Lowest Price Links",
+            card1Title: "🌍 Find the Cheapest Country",
+            card1Desc: "Trip.com prices can <strong>differ by country.</strong><br>Use <strong>Tripdotdot</strong> to book at the <span class=\"highlight\">absolute lowest price!</span>",
+            card2Title: "✅ How to Use",
+            card2List: `
+                <li>1️⃣ Find a deal on Trip.com and <strong>copy the link.</strong></li>
+                <li>2️⃣ Paste the link above and click <strong>'Find'</strong>!</li>
+                <li>3️⃣ Click the generated links to <strong>find the best price!</strong></li>`,
+            card3Title: "💡 Good to Know",
+            card3List: `
+                👉 Use Chrome's <strong>'Translate'</strong> for foreign pages.<br>
+                ⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>
+                💰 Always compare the <strong>'final price'</strong> including taxes.`,
+            privacy: "Privacy Policy",
+            langSwitch: "한국어",
+            invalidLink: "Please enter a valid Trip.com link.",
+            parseError: "The format of the entered link is incorrect.",
+            kakaoTalk: "🙋‍♀️🙋‍♂️ Contact via KakaoTalk"
+        },
+        ko: {
+            subtitle: "트립닷컴 최저가 링크 찾기",
+            placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
+            findButton: "최저가 링크 찾기",
+            card1Title: "🌍 최저가 국가를 찾아보세요",
+            card1Desc: "트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class=\"highlight\">가장 저렴하게 예약</span>하세요!",
+            card2Title: "✅ 사용 방법",
+            card2List: `
+                <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
+                <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
+                <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>`,
+            card3Title: "💡 알아두면 좋은 팁",
+            card3List: `
+                👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>
+                ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
+                💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
+            privacy: "개인정보처리방침",
+            langSwitch: "English",
+            invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
+            parseError: "입력한 링크의 형식이 올바르지 않습니다.",
+            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기"
+        }
+    };
+
+    let currentLang = 'ko';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.getAttribute('data-lang');
+            if (translations[lang][key]) {
+                if (el.tagName === 'INPUT') {
+                    el.placeholder = translations[lang][key];
+                } else {
+                    el.innerHTML = translations[lang][key];
+                }
+            }
+        });
+        
+        document.getElementById('lang-switcher').textContent = translations[lang].langSwitch;
+
+        const kakaoBtn = document.querySelector('.kakao-chat-btn');
+        if (kakaoBtn) {
+            kakaoBtn.style.display = lang === 'ko' ? 'block' : 'none';
+        }
+    }
+
+    function toggleLanguage() {
+        const newLang = currentLang === 'ko' ? 'en' : 'ko';
+        setLanguage(newLang);
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
+        const initialLang = userLang === 'ko' ? 'ko' : 'en';
+        setLanguage(initialLang);
+        
+        document.getElementById('lang-switcher').addEventListener('click', toggleLanguage);
+    });
+
     const domains = [
-      { label: '한국', code: 'kr', flag: 'kr' },
-      { label: '미국', code: 'us', flag: 'us' },
-      { label: '일본', code: 'jp', flag: 'jp' },
-      { label: '스페인', code: 'es', flag: 'es' },
-      { label: '프랑스', code: 'fr', flag: 'fr' },
-      { label: '베트남', code: 'vn', flag: 'vn' },
-      { label: '독일', code: 'de', flag: 'de' },
-      { label: '캐나다', code: 'ca', flag: 'ca' },
-      { label: '호주', code: 'au', flag: 'au' },
-      { label: '네덜란드', code: 'nl', flag: 'nl' },
-      { label: '싱가포르', code: 'sg', flag: 'sg' },
-      { label: '인도네시아', code: 'id', flag: 'id' },
-      { label: '말레이시아', code: 'my', flag: 'my' },
-      { label: '대만', code: 'tw', flag: 'tw' },
-      { label: '인도', code: 'in', flag: 'in' },
-      { label: '멕시코', code: 'mx', flag: 'mx' },
-      { label: '영국', code: 'uk', flag: 'gb' },
-      { label: '러시아', code: 'ru', flag: 'ru' },
-      { label: '아르헨티나', code: 'ar', flag: 'ar' },
-      { label: '포르투갈', code: 'pt', flag: 'pt' },
-      { label: '사우디아라비아', code: 'sa', flag: 'sa' }
+      { ko: '한국', en: 'Korea', code: 'kr', flag: 'kr' },
+      { ko: '미국', en: 'USA', code: 'us', flag: 'us' },
+      { ko: '일본', en: 'Japan', code: 'jp', flag: 'jp' },
+      { ko: '스페인', en: 'Spain', code: 'es', flag: 'es' },
+      { ko: '프랑스', en: 'France', code: 'fr', flag: 'fr' },
+      { ko: '베트남', en: 'Vietnam', code: 'vn', flag: 'vn' },
+      { ko: '독일', en: 'Germany', code: 'de', flag: 'de' },
+      { ko: '캐나다', en: 'Canada', code: 'ca', flag: 'ca' },
+      { ko: '호주', en: 'Australia', code: 'au', flag: 'au' },
+      { ko: '네덜란드', en: 'Netherlands', code: 'nl', flag: 'nl' },
+      { ko: '싱가포르', en: 'Singapore', code: 'sg', flag: 'sg' },
+      { ko: '인도네시아', en: 'Indonesia', code: 'id', flag: 'id' },
+      { ko: '말레이시아', en: 'Malaysia', code: 'my', flag: 'my' },
+      { ko: '대만', en: 'Taiwan', code: 'tw', flag: 'tw' },
+      { ko: '인도', en: 'India', code: 'in', flag: 'in' },
+      { ko: '멕시코', en: 'Mexico', code: 'mx', flag: 'mx' },
+      { ko: '영국', en: 'U.K.', code: 'uk', flag: 'gb' },
+      { ko: '러시아', en: 'Russia', code: 'ru', flag: 'ru' },
+      { ko: '아르헨티나', en: 'Argentina', code: 'ar', flag: 'ar' },
+      { ko: '포르투갈', en: 'Portugal', code: 'pt', flag: 'pt' },
+      { ko: '사우디', en: 'Saudi Arabia', code: 'sa', flag: 'sa' }
     ];
 
     function generateLinks() {
@@ -314,12 +416,13 @@
           kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
           kakaoBtn.target = '_blank';
           kakaoBtn.className = 'kakao-chat-btn';
-          kakaoBtn.textContent = '🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기';
+          kakaoBtn.textContent = translations[currentLang].kakaoTalk;
+          kakaoBtn.style.display = currentLang === 'ko' ? 'block' : 'none';
           return kakaoBtn;
       }
 
       if (!input.includes('trip.com')) {
-        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">유효한 트립닷컴 링크를 입력해주세요.</p>';
+        resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
         resultsDiv.appendChild(createKakaoButton());
         return;
       }
@@ -329,12 +432,13 @@
         let pathname = url.pathname;
         const params = new URLSearchParams(url.search);
 
+        const currency = params.get('curr') || 'USD';
+        params.delete('curr');
+        params.set('curr', currency.toUpperCase());
+
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
         }
-
-        params.delete('curr');
-        params.set('curr', 'KRW');
 
         const paramString = params.toString();
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
@@ -352,7 +456,7 @@
           a.href = fullUrl;
           a.target = '_blank';
           a.onclick = () => { a.classList.toggle('clicked'); };
-          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom.label} 국기"> ${dom.label}`;
+          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom[currentLang]} flag"> ${dom[currentLang]}`;
           gridContainer.appendChild(a);
         });
 
@@ -360,7 +464,7 @@
         resultsDiv.appendChild(createKakaoButton());
 
       } catch (error) {
-        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">입력한 링크의 형식이 올바르지 않습니다.</p>';
+        resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
         resultsDiv.appendChild(createKakaoButton());
         console.error("URL Parsing Error:", error);
       }
