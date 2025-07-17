@@ -1,421 +1,423 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" href="/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="/favicon.png">
-  <title>트립닷닷 | Trip.com 최저가 링크 찾기</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <meta content="tripdotdot" name="author">
-  <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot" name="keywords">
-  <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 22개국에서 최저가 검색 가능">
-  
-  <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
-  <meta content="6d36eb0cb19fc826bcba409428fa0d6fddc9c33d" name="naver-site-verification">
-  
-  <meta property="og:title" content="트립닷닷 | Trip.com 최저가 링크 찾기">
-  <meta property="og:site_name" content="트립닷닷">
-  <meta property="og:description" content="10초만에 N만원 절약하고 여행가자">
-  <meta property="og:image" content="https://tripdotdot.com/thumbnail.jpg">
-  <meta property="og:url" content="https://tripdotdot.com/">
-  <meta property="og:type" content="website">
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <title>트립닷닷 | Trip.com 최저가 링크 찾기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta content="tripdotdot" name="author">
+  <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot" name="keywords">
+  <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 22개국에서 최저가 검색 가능">
+  
+  <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
+  <meta content="6d36eb0cb19fc826bcba409428fa0d6fddc9c33d" name="naver-site-verification">
+  
+  <meta property="og:title" content="트립닷닷 | Trip.com 최저가 링크 찾기">
+  <meta property="og:site_name" content="트립닷닷">
+  <meta property="og:description" content="10초만에 N만원 절약하고 여행가자">
+  <meta property="og:image" content="https://tripdotdot.com/thumbnail.jpg">
+  <meta property="og:url" content="https://tripdotdot.com/">
+  <meta property="og:type" content="website">
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-    :root {
-      --primary-blue: #3264ff;
-      --light-blue: #eaf0ff;
-      --background-color: #f5f7fa;
-      --card-background: #ffffff;
-      --text-primary: #1f2937;
-      --text-secondary: #6b7280;
-      --border-color: #e5e7eb;
-    }
+    :root {
+      --primary-blue: #3264ff;
+      --light-blue: #eaf0ff;
+      --background-color: #f5f7fa;
+      --card-background: #ffffff;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+    }
 
-    body {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      background-color: var(--background-color);
-      margin: 0;
-      padding: 40px 20px;
-      display: flex;
-      justify-content: center;
-      color: var(--text-primary);
-    }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      color: var(--text-primary);
+    }
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+    }
 
-    .header {
-      text-align: center;
-      margin-bottom: 12px; 
-    }
+    .header {
+      text-align: center;
+      margin-bottom: 12px; 
+    }
 
-    .header h1 {
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--primary-blue);
-      margin: 0 0 0px 0; 
-    }
+    .header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin: 0 0 0px 0; 
+    }
 
-    .header p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin: 0;
-    }
+    .header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
 
-    .input-section {
-      background: var(--card-background);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
-    }
+    .input-section {
+      background: var(--card-background);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
 
-    #inputUrl {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    
-    #inputUrl:focus {
-        outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px var(--light-blue);
-    }
+    #inputUrl {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    #inputUrl:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px var(--light-blue);
+    }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 500;
-      background-color: var(--primary-blue);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
 
-    button:hover {
-      background-color: #254edc;
-    }
+    button:hover {
+      background-color: #254edc;
+    }
 
-    .info-card {
-      background: var(--card-background);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
-    }
+    .info-card {
+      background: var(--card-background);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
 
-    .info-card h2 {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0 0 16px 0;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
-    }
-    
-    .info-card ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.7; 
-    }
+    .info-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.7; 
+    }
 
-    .info-card ul li {
-        margin-bottom: 4px; 
-    }
+    .info-card ul li {
+        margin-bottom: 4px; 
+    }
 
-    .info-card ul li:last-child {
-        margin-bottom: 0; 
-    }
-    
-    .info-card ul li strong,
-    .info-card p strong {
-        color: var(--primary-blue);
-    }
+    .info-card ul li:last-child {
+        margin-bottom: 0; 
+    }
+    
+    .info-card ul li strong,
+    .info-card p strong {
+        color: var(--primary-blue);
+    }
 
-    .info-card p {
-        font-size: 16px;
-        line-height: 1.7;
-        margin: 0;
-    }
+    .info-card p {
+        font-size: 16px;
+        line-height: 1.7;
+        margin: 0;
+    }
 
-    .link-list {
-      display: none;
-      background: var(--card-background);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
-    }
+    .link-list {
+      display: none;
+      background: var(--card-background);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
 
-    .link-list-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-    }
+    .link-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
 
-    .link-list-grid a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 14px;
-      background: #fff;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text-primary);
-      font-size: 15px;
-      font-weight: 500;
-      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
-      box-sizing: border-box;
-      word-break: keep-all; 
-    }
+    .link-list-grid a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 500;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+      box-sizing: border-box;
+      word-break: keep-all; 
+    }
 
-    .link-list-grid a:hover {
-      background-color: var(--light-blue);
-      border-color: var(--primary-blue);
-      transform: translateY(-2px);
-    }
+    .link-list-grid a:hover {
+      background-color: var(--light-blue);
+      border-color: var(--primary-blue);
+      transform: translateY(-2px);
+    }
 
-    .link-list-grid a.clicked {
-      background-color: var(--light-blue);
-      border-color: var(--primary-blue);
-      font-weight: 700;
-    }
+    .link-list-grid a.clicked {
+      background-color: var(--light-blue);
+      border-color: var(--primary-blue);
+      font-weight: 700;
+    }
 
-    .flag {
-      width: 24px;
-      height: 16px;
-      object-fit: cover;
-      border-radius: 3px;
-      flex-shrink: 0; 
-    }
-    
-    .highlight {
-      background-color: rgba(255, 247, 0, 0.6);
-      font-weight: 700;
-      padding: 2px 0 2px 4px;
-      border-radius: 3px;
-    }
-    
-    .kakao-chat-btn {
-        display: block;
-        width: 100%;
-        background-color: #FAE100;
-        color: #3C1E1E;
-        text-align: center;
-        padding: 14px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 16px;
-        margin-top: 20px;
-        box-sizing: border-box;
-    }
-  </style>
+    .flag {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 3px;
+      flex-shrink: 0; 
+    }
+    
+    .highlight {
+      background-color: rgba(255, 247, 0, 0.6);
+      font-weight: 700;
+      padding: 2px 0 2px 4px;
+      border-radius: 3px;
+    }
+    
+    .kakao-chat-btn {
+        display: block;
+        width: 100%;
+        background-color: #FAE100;
+        color: #3C1E1E;
+        text-align: center;
+        padding: 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <h1><span data-lang-key="main_title">🌐 트립닷닷</span></h1>
-      <p data-lang-key="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
-    </header>
+  <div class="container">
+    <header class="header">
+      <h1><span data-lang-key="main_title">🌐 트립닷닷</span></h1>
+      <p data-lang-key="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
+    </header>
 
-    <section class="input-section">
-      <input id="inputUrl" data-lang-key="placeholder_text" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
-      <button onclick="generateLinks()" data-lang-key="search_button">최저가 링크 찾기</button>
-    </section>
+    <section class="input-section">
+      <input id="inputUrl" data-lang-key="placeholder_text" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
+      <button onclick="generateLinks()" data-lang-key="search_button">최저가 링크 찾기</button>
+    </section>
 
-    <div class="link-list" id="results"></div>
+    <div class="link-list" id="results"></div>
 
-    <section class="info-card">
-        <h2 data-lang-key="section_title_1">🌍 최저가 국가를 찾아보세요</h2>
-        <p data-lang-key="section_desc_1">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight">가장 저렴하게 예약</span>하세요!</p>
-    </section>
-    
-    <section class="info-card">
-      <h2 data-lang-key="section_title_2">✅ 사용 방법</h2>
-      <ul>
-        <li data-lang-key="step_1">1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
-        <li data-lang-key="step_2">2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
-        <li data-lang-key="step_3">3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
-      </ul>
-    </section>
+    <section class="info-card">
+        <h2 data-lang-key="section_title_1">🌍 최저가 국가를 찾아보세요</h2>
+        <p data-lang-key="section_desc_1">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight">가장 저렴하게 예약</span>하세요!</p>
+    </section>
+    
+    <section class="info-card">
+      <h2 data-lang-key="section_title_2">✅ 사용 방법</h2>
+      <ul>
+        <li data-lang-key="step_1">1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
+        <li data-lang-key="step_2">2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
+        <li data-lang-key="step_3">3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
+      </ul>
+    </section>
 
-    <section class="info-card">
-      <h2 data-lang-key="section_title_3">💡 알아두면 좋은 팁</h2>
-      <p>
-        <span data-lang-key="tip_1">👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.</span><br>
-        <span data-lang-key="tip_2">⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.</span><br>
-        <span data-lang-key="tip_3">💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.</span>
-      </p>
-    </section>
-    
-    <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
-      <p><a href="/privacy.html" target="_blank" style="color: #aaa;" data-lang-key="privacy_policy">개인정보처리방침</a></p>
-      <p>© 2025 tripdotdot. All rights reserved.</p>
-    </footer>
-  </div>
+    <section class="info-card">
+      <h2 data-lang-key="section_title_3">💡 알아두면 좋은 팁</h2>
+      <p>
+        <span data-lang-key="tip_1">👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.</span><br>
+        <span data-lang-key="tip_2">⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.</span><br>
+        <span data-lang-key="tip_3">💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.</span>
+      </p>
+    </section>
+    
+    <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
+      <p><a href="/privacy.html" target="_blank" style="color: #aaa;" data-lang-key="privacy_policy">개인정보처리방침</a></p>
+      <p>© 2025 tripdotdot. All rights reserved.</p>
+    </footer>
+  </div>
 
-  <script>
-    const translations = {
-        'en': {
-            'main_title': '🌐 Tripdotdot',
-            'subtitle': 'Find the Cheapest Trip.com Links',
-            'placeholder_text': 'Paste Hotel/Flight link from https://trip.com/~',
-            'search_button': 'Find Cheapest Links',
-            'section_title_1': '🌍 Find the Cheapest Country',
-            'section_desc_1': "On Trip.com, the same product can have <strong>different prices depending on the country.</strong><br>Book at the <span class=\"highlight\">absolute cheapest price</span> with <strong>Tripdotdot</strong>!",
-            'section_title_2': '✅ How to Use',
-            'step_1': '1️⃣ Search for your desired hotel/flight on Trip.com and <strong>copy the link!</strong>',
-            'step_2': "2️⃣ Paste the link in the box above and click <strong>'Find Links'</strong>!",
-            'step_3': "3️⃣ Click through the generated country links to <strong>check the lowest price!</strong>",
-            'section_title_3': '💡 Good to Know',
-            'tip_1': "👉 Use Chrome's <strong>'Translate'</strong> feature for foreign language pages.",
-            'tip_2': '⚠️ Some products may have the same price in all countries.',
-            'tip_3': "💰 Compare the <strong>'final price'</strong> including taxes and fees.",
-            'privacy_policy': 'Privacy Policy',
-            'country_kr': 'Korea', 'country_us': 'United States', 'country_jp': 'Japan',
-            'country_es': 'Spain', 'country_fr': 'France', 'country_vn': 'Vietnam',
-            'country_de': 'Germany', 'country_ca': 'Canada', 'country_au': 'Australia',
-            'country_nl': 'Netherlands', 'country_sg': 'Singapore', 'country_id': 'Indonesia',
-            'country_my': 'Malaysia', 'country_tw': 'Taiwan', 'country_in': 'India',
-            'country_mx': 'Mexico', 'country_uk': 'United Kingdom', 'country_ru': 'Russia',
-            'country_ar': 'Argentina', 'country_pt': 'Portugal', 'country_sa': 'Saudi Arabia'
-        }
-    };
-    
-    let currentLang = 'ko';
+  <script>
+    const translations = {
+        'en': {
+            'main_title': '🌐 Tripdotdot',
+            'subtitle': 'Find the Cheapest Trip.com Links',
+            'placeholder_text': 'Paste Hotel/Flight link from https://trip.com/~',
+            'search_button': 'Find Cheapest Links',
+            'section_title_1': '🌍 Find the Cheapest Country',
+            'section_desc_1': "On Trip.com, the same product can have <strong>different prices depending on the country.</strong><br>Book at the <span class=\"highlight\">absolute cheapest price</span> with <strong>Tripdotdot</strong>!",
+            'section_title_2': '✅ How to Use',
+            'step_1': '1️⃣ Search for your desired hotel/flight on Trip.com and <strong>copy the link!</strong>',
+            'step_2': "2️⃣ Paste the link in the box above and click <strong>'Find Links'</strong>!",
+            'step_3': "3️⃣ Click through the generated country links to <strong>check the lowest price!</strong>",
+            'section_title_3': '💡 Good to Know',
+            'tip_1': "👉 Use Chrome's <strong>'Translate'</strong> feature for foreign language pages.",
+            'tip_2': '⚠️ Some products may have the same price in all countries.',
+            'tip_3': "💰 Compare the <strong>'final price'</strong> including taxes and fees.",
+            'privacy_policy': 'Privacy Policy',
+            'country_kr': 'Korea', 'country_us': 'United States', 'country_jp': 'Japan',
+            'country_es': 'Spain', 'country_fr': 'France', 'country_vn': 'Vietnam',
+            'country_de': 'Germany', 'country_ca': 'Canada', 'country_au': 'Australia',
+            'country_nl': 'Netherlands', 'country_sg': 'Singapore', 'country_id': 'Indonesia',
+            'country_my': 'Malaysia', 'country_tw': 'Taiwan', 'country_in': 'India',
+            'country_mx': 'Mexico', 'country_uk': 'United Kingdom', 'country_ru': 'Russia',
+            'country_ar': 'Argentina', 'country_pt': 'Portugal', 'country_sa': 'Saudi Arabia'
+        }
+    };
+    
+    let currentLang = 'ko';
 
-    function setLanguage(lang) {
-        if (translations[lang]) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            document.querySelectorAll('[data-lang-key]').forEach(el => {
-                const key = el.getAttribute('data-lang-key');
-                if (translations[lang][key]) {
-                    if (key === 'placeholder_text') {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.innerHTML = translations[lang][key];
-                    }
-                }
-            });
-        }
-    }
+    function setLanguage(lang) {
+        if (translations[lang]) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    if (key === 'placeholder_text') {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+        }
+    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const userLang = navigator.language || navigator.userLanguage; 
-        if (userLang.startsWith('en')) {
-            setLanguage('en');
-        }
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const userLang = navigator.language || navigator.userLanguage; 
+        // 한국어가 아니면 영어로 설정
+        if (!userLang.startsWith('ko')) {
+            setLanguage('en');
+        }
+    });
 
-    const domains = [
-      { label: '한국', code: 'kr', flag: 'kr', langKey: 'country_kr' },
-      { label: '미국', code: 'us', flag: 'us', langKey: 'country_us' },
-      { label: '일본', code: 'jp', flag: 'jp', langKey: 'country_jp' },
-      { label: '스페인', code: 'es', flag: 'es', langKey: 'country_es' },
-      { label: '프랑스', code: 'fr', flag: 'fr', langKey: 'country_fr' },
-      { label: '베트남', code: 'vn', flag: 'vn', langKey: 'country_vn' },
-      { label: '독일', code: 'de', flag: 'de', langKey: 'country_de' },
-      { label: '캐나다', code: 'ca', flag: 'ca', langKey: 'country_ca' },
-      { label: '호주', code: 'au', flag: 'au', langKey: 'country_au' },
-      { label: '네덜란드', code: 'nl', flag: 'nl', langKey: 'country_nl' },
-      { label: '싱가포르', code: 'sg', flag: 'sg', langKey: 'country_sg' },
-      { label: '인도네시아', code: 'id', flag: 'id', langKey: 'country_id' },
-      { label: '말레이시아', code: 'my', flag: 'my', langKey: 'country_my' },
-      { label: '대만', code: 'tw', flag: 'tw', langKey: 'country_tw' },
-      { label: '인도', code: 'in', flag: 'in', langKey: 'country_in' },
-      { label: '멕시코', code: 'mx', flag: 'mx', langKey: 'country_mx' },
-      { label: '영국', code: 'uk', flag: 'gb', langKey: 'country_uk' },
-      { label: '러시아', code: 'ru', flag: 'ru', langKey: 'country_ru' },
-      { label: '아르헨티나', code: 'ar', flag: 'ar', langKey: 'country_ar' },
-      { label: '포르투갈', code: 'pt', flag: 'pt', langKey: 'country_pt' },
-      { label: '사우디아라비아', code: 'sa', flag: 'sa', langKey: 'country_sa' }
-    ];
+    const domains = [
+      { label: '한국', code: 'kr', flag: 'kr', langKey: 'country_kr' },
+      { label: '미국', code: 'us', flag: 'us', langKey: 'country_us' },
+      { label: '일본', code: 'jp', flag: 'jp', langKey: 'country_jp' },
+      { label: '스페인', code: 'es', flag: 'es', langKey: 'country_es' },
+      { label: '프랑스', code: 'fr', flag: 'fr', langKey: 'country_fr' },
+      { label: '베트남', code: 'vn', flag: 'vn', langKey: 'country_vn' },
+      { label: '독일', code: 'de', flag: 'de', langKey: 'country_de' },
+      { label: '캐나다', code: 'ca', flag: 'ca', langKey: 'country_ca' },
+      { label: '호주', code: 'au', flag: 'au', langKey: 'country_au' },
+      { label: '네덜란드', code: 'nl', flag: 'nl', langKey: 'country_nl' },
+      { label: '싱가포르', code: 'sg', flag: 'sg', langKey: 'country_sg' },
+      { label: '인도네시아', code: 'id', flag: 'id', langKey: 'country_id' },
+      { label: '말레이시아', code: 'my', flag: 'my', langKey: 'country_my' },
+      { label: '대만', code: 'tw', flag: 'tw', langKey: 'country_tw' },
+      { label: '인도', code: 'in', flag: 'in', langKey: 'country_in' },
+      { label: '멕시코', code: 'mx', flag: 'mx', langKey: 'country_mx' },
+      { label: '영국', code: 'uk', flag: 'gb', langKey: 'country_uk' },
+      { label: '러시아', code: 'ru', flag: 'ru', langKey: 'country_ru' },
+      { label: '아르헨티나', code: 'ar', flag: 'ar', langKey: 'country_ar' },
+      { label: '포르투갈', code: 'pt', flag: 'pt', langKey: 'country_pt' },
+      { label: '사우디아라비아', code: 'sa', flag: 'sa', langKey: 'country_sa' }
+    ];
 
-    function generateLinks() {
-      const input = document.getElementById('inputUrl').value.trim();
-      const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = '';
-      resultsDiv.style.display = 'block';
+    function generateLinks() {
+      const input = document.getElementById('inputUrl').value.trim();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      resultsDiv.style.display = 'block';
 
-      function createKakaoButton() {
-          const kakaoBtn = document.createElement('a');
-          kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
-          kakaoBtn.target = '_blank';
-          kakaoBtn.className = 'kakao-chat-btn';
-          kakaoBtn.textContent = '🙋‍♀️🙋‍♂️ 여행 전문가에게 카톡 문의하기';
-          return kakaoBtn;
-      }
+      function createKakaoButton() {
+          const kakaoBtn = document.createElement('a');
+          kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
+          kakaoBtn.target = '_blank';
+          kakaoBtn.className = 'kakao-chat-btn';
+          kakaoBtn.textContent = '🙋‍♀️🙋‍♂️ 여행 전문가에게 카톡 문의하기';
+          return kakaoBtn;
+      }
 
-      if (!input.includes('trip.com')) {
-        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">유효한 트립닷컴 링크를 입력해주세요.</p>';
-        resultsDiv.appendChild(createKakaoButton());
-        return;
-      }
-      
-      try {
-        const url = new URL(input);
-        let pathname = url.pathname;
-        const params = new URLSearchParams(url.search);
+      if (!input.includes('trip.com')) {
+        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">유효한 트립닷컴 링크를 입력해주세요.</p>';
+        resultsDiv.appendChild(createKakaoButton());
+        return;
+      }
+      
+      try {
+        const url = new URL(input);
+        let pathname = url.pathname;
+        const params = new URLSearchParams(url.search);
 
-        if (pathname.startsWith('/m/')) {
-            pathname = pathname.replace('/m/', '/');
-        }
-
-        params.delete('curr');
-        params.set('curr', 'KRW');
-
-        const paramString = params.toString();
-        const cleanPath = pathname + (paramString ? '?' + paramString : '');
+        if (pathname.startsWith('/m/')) {
+            pathname = pathname.replace('/m/', '/');
+        }
         
-        const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
-        
-        const gridContainer = document.createElement('div');
-        gridContainer.className = 'link-list-grid';
-        
-        domains.forEach(dom => {
-          const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
-          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
-          
-          let labelText = dom.label;
-          if (currentLang === 'en' && translations['en'][dom.langKey]) {
-            labelText = translations['en'][dom.langKey];
-          }
+        if (!params.has('curr')) {
+            params.set('curr', 'USD');
+        }
 
-          const a = document.createElement('a');
-          a.href = fullUrl;
-          a.target = '_blank';
-          a.onclick = () => { a.classList.toggle('clicked'); };
-          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${labelText} Flag"> ${labelText}`;
-          gridContainer.appendChild(a);
-        });
+        const paramString = params.toString();
+        const cleanPath = pathname + (paramString ? '?' + paramString : '');
+        
+        const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
+        
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'link-list-grid';
+        
+        domains.forEach(dom => {
+          const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
+          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
+          
+          let labelText = dom.label;
+          if (currentLang === 'en' && translations['en'][dom.langKey]) {
+            labelText = translations['en'][dom.langKey];
+          }
 
-        resultsDiv.appendChild(gridContainer);
-        resultsDiv.appendChild(createKakaoButton());
+          const a = document.createElement('a');
+          a.href = fullUrl;
+          a.target = '_blank';
+          a.onclick = () => { a.classList.toggle('clicked'); };
+          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${labelText} Flag"> ${labelText}`;
+          gridContainer.appendChild(a);
+        });
 
-      } catch (error) {
-        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">입력한 링크의 형식이 올바르지 않습니다.</p>';
-        resultsDiv.appendChild(createKakaoButton());
-        console.error("URL Parsing Error:", error);
-      }
-    }
-  </script>
+        resultsDiv.appendChild(gridContainer);
+        resultsDiv.appendChild(createKakaoButton());
+
+      } catch (error) {
+        resultsDiv.innerHTML = '<p style="color: red; text-align: center;">입력한 링크의 형식이 올바르지 않습니다.</p>';
+        resultsDiv.appendChild(createKakaoButton());
+        console.error("URL Parsing Error:", error);
+      }
+    }
+  </script>
 </body>
 </html>
