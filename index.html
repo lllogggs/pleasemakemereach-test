@@ -50,26 +50,41 @@
       position: relative;
     }
     
-    .lang-switcher {
+    /* 수정된 부분: 최종 언어 선택 버튼 */
+    .language-button {
         position: absolute;
         top: 25px;
         right: 0;
-        width: 50px;
-        height: 44px;
-        padding: 0;
-        background-color: var(--card-background);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 15px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         z-index: 10;
+        
         display: flex;
         align-items: center;
-        justify-content: center;
-        white-space: nowrap;
-        color: var(--text-primary); /* 수정된 부분: 텍스트 색상 명시 */
+        gap: 8px;
+        
+        background-color: var(--text-primary); /* 사이트와 어울리는 배경색 */
+        border: none;
+        border-radius: 8px;
+        padding: 6px 12px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    .language-button:hover {
+        transform: translateY(-1px);
+    }
+
+    #lang-flag {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    #lang-text {
+        color: white;
+        font-size: 15px;
+        font-weight: 700;
     }
 
     .header {
@@ -117,7 +132,7 @@
         box-shadow: 0 0 0 3px var(--light-blue);
     }
 
-    button {
+    button:not(.language-button) { /* 언어 버튼 제외 */
       width: 100%;
       padding: 14px;
       font-size: 16px;
@@ -130,7 +145,7 @@
       transition: background-color 0.2s;
     }
 
-    button:hover {
+    button:not(.language-button):hover {
       background-color: #254edc;
     }
 
@@ -238,7 +253,7 @@
     }
     
     .kakao-chat-btn {
-        display: none; /* Initially hidden */
+        display: none;
         width: 100%;
         background-color: #FAE100;
         color: #3C1E1E;
@@ -263,7 +278,11 @@
 <body>
   <div class="container">
     <header class="header">
-      <button id="lang-switcher" class="lang-switcher"></button>
+      <button id="language-button" class="language-button">
+        <img id="lang-flag" src="" alt="Language flag">
+        <span id="lang-text"></span>
+      </button>
+
       <h1 data-lang="mainTitle">🌐 트립닷닷</h1>
       <p data-lang="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
     </header>
@@ -324,10 +343,8 @@
                 ⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>
                 💰 Always compare the <strong>'final price'</strong> including taxes.`,
             privacy: "Privacy Policy",
-            langSwitch: "한국어",
             invalidLink: "Please enter a valid Trip.com link.",
             parseError: "The format of the entered link is incorrect.",
-            kakaoTalk: "🙋‍♀️🙋‍♂️ Contact via KakaoTalk"
         },
         ko: {
             mainTitle: "🌐 트립닷닷",
@@ -347,7 +364,6 @@
                 ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
                 💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
             privacy: "개인정보처리방침",
-            langSwitch: "EN",
             invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
             parseError: "입력한 링크의 형식이 올바르지 않습니다.",
             kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기"
@@ -371,7 +387,21 @@
             }
         });
         
-        document.getElementById('lang-switcher').textContent = translations[lang].langSwitch;
+        // 언어 버튼 UI 업데이트
+        const langFlag = document.getElementById('lang-flag');
+        const langText = document.getElementById('lang-text');
+        
+        if (lang === 'ko') {
+            // 한국어 페이지일 때: EN 버튼 표시 (미국 국기)
+            langFlag.src = 'https://flagcdn.com/w40/us.png';
+            langFlag.alt = 'USA Flag';
+            langText.textContent = 'EN';
+        } else {
+            // 영어 페이지일 때: KR 버튼 표시 (대한민국 국기)
+            langFlag.src = 'https://flagcdn.com/w40/kr.png';
+            langFlag.alt = 'South Korea Flag';
+            langText.textContent = 'KR';
+        }
 
         const kakaoBtn = document.querySelector('.kakao-chat-btn');
         if (kakaoBtn) {
@@ -389,7 +419,7 @@
         const initialLang = userLang === 'ko' ? 'ko' : 'en';
         setLanguage(initialLang);
         
-        document.getElementById('lang-switcher').addEventListener('click', toggleLanguage);
+        document.getElementById('language-button').addEventListener('click', toggleLanguage);
     });
 
     const domains = [
@@ -427,7 +457,7 @@
           kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
           kakaoBtn.target = '_blank';
           kakaoBtn.className = 'kakao-chat-btn';
-          kakaoBtn.textContent = translations[currentLang].kakaoTalk;
+          kakaoBtn.textContent = translations.ko.kakaoTalk; 
           kakaoBtn.style.display = currentLang === 'ko' ? 'block' : 'none';
           return kakaoBtn;
       }
