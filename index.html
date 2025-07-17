@@ -50,33 +50,40 @@
       position: relative;
     }
     
-    /* 수정된 부분: 언어 선택 버튼 스타일 */
+    /* 수정된 부분: 언어 선택 버튼 (정사각형) */
     .lang-switcher {
         position: absolute;
-        top: 10px; /* 상단에서의 위치 조정 */
-        right: 0;  /* 우측 끝에 위치 */
+        top: 25px;
+        right: 0;
+        width: 44px; /* 정사각형 크기 */
+        height: 44px; /* 정사각형 크기 */
+        padding: 0; /* 패딩 제거 */
         background-color: var(--card-background);
         border: 1px solid var(--border-color);
-        padding: 6px 10px; /* 버튼 크기 축소 */
-        border-radius: 8px;
+        border-radius: 10px; /* 좀 더 둥글게 */
         cursor: pointer;
-        font-weight: 500;
-        font-size: 14px;
+        font-weight: 700;
+        font-size: 15px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        z-index: 10; /* 다른 요소 위에 오도록 설정 */
+        z-index: 10;
+        /* 텍스트를 중앙에 위치시키기 위한 Flexbox */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 24px;  /* 버튼과 겹치지 않도록 마진 조정 */
-      padding-top: 10px; /* 버튼이 들어갈 공간 확보 */
+      margin-bottom: 24px;
+      position: relative;
     }
 
     .header h1 {
       font-size: 36px;
       font-weight: 700;
       color: var(--primary-blue);
-      margin: 0 0 0px 0;  
+      margin: 0;
+      padding-top: 10px; /* 제목과 버튼 사이의 공간 확보 */
     }
 
     .header p {
@@ -255,9 +262,8 @@
 </head>
 <body>
   <div class="container">
-    <button id="lang-switcher" class="lang-switcher"></button>
-    
     <header class="header">
+      <button id="lang-switcher" class="lang-switcher"></button>
       <h1 data-lang="mainTitle">🌐 트립닷닷</h1>
       <p data-lang="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
     </header>
@@ -301,7 +307,7 @@
   <script>
     const translations = {
         en: {
-            mainTitle: "🌐 Tripdotdot", // 추가된 번역
+            mainTitle: "🌐 Tripdotdot",
             subtitle: "Trip.com Lowest Price Link Finder",
             placeholder: "Paste Hotel/Flight link from trip.com!",
             findButton: "Find Lowest Price Links",
@@ -318,13 +324,13 @@
                 ⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>
                 💰 Always compare the <strong>'final price'</strong> including taxes.`,
             privacy: "Privacy Policy",
-            langSwitch: "한국어",
+            langSwitch: "KO", // 수정된 부분: 버튼 텍스트
             invalidLink: "Please enter a valid Trip.com link.",
             parseError: "The format of the entered link is incorrect.",
             kakaoTalk: "🙋‍♀️🙋‍♂️ Contact via KakaoTalk"
         },
         ko: {
-            mainTitle: "🌐 트립닷닷", // 추가된 번역
+            mainTitle: "🌐 트립닷닷",
             subtitle: "트립닷컴 최저가 링크 찾기",
             placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
             findButton: "최저가 링크 찾기",
@@ -341,7 +347,7 @@
                 ⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>
                 💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
             privacy: "개인정보처리방침",
-            langSwitch: "English",
+            langSwitch: "EN", // 수정된 부분: 버튼 텍스트
             invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
             parseError: "입력한 링크의 형식이 올바르지 않습니다.",
             kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기"
