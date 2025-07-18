@@ -174,10 +174,9 @@
     }
 
     .widget-frame {
-        position: relative;
         border: 1px solid var(--border-color);
         border-radius: 14px;
-        padding: 25px 15px 15px 15px;
+        padding: 15px;
         background-color: var(--card-background);
         width: 285px;
         box-sizing: border-box;
@@ -185,13 +184,8 @@
     }
 
     .widget-title {
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: var(--background-color);
-        padding: 0 10px;
-        /* 수정된 부분 */
+        text-align: center;
+        margin-bottom: 15px;
         font-weight: 600;
         font-size: 16px;
         color: var(--primary-blue);
@@ -211,7 +205,6 @@
         }
         .widget-frame {
             width: 100%;
-            padding: 25px 10px 10px 10px;
         }
     }
 
@@ -361,11 +354,11 @@
 
     <section class="widget-container" id="widget-container">
         <div class="widget-frame">
-            <span class="widget-title" data-lang="hotelWidgetTitle"></span>
+            <div class="widget-title" data-lang="hotelWidgetTitle"></div>
             <iframe border="0" src="" frameborder="0" scrolling="no" id="hotel-widget"></iframe>
         </div>
         <div class="widget-frame">
-            <span class="widget-title" data-lang="flightWidgetTitle"></span>
+            <div class="widget-title" data-lang="flightWidgetTitle"></div>
             <iframe border="0" src="" frameborder="0" scrolling="no" id="flight-widget"></iframe>
         </div>
     </section>
