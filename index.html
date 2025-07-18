@@ -58,7 +58,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        background-color: var(--text-primary); /* 수정된 부분: 남색으로 변경 */
+        background-color: var(--text-primary);
         border: none;
         border-radius: 8px;
         padding: 6px 12px;
@@ -145,6 +145,42 @@
     button:not(.language-button):hover {
       background-color: #254edc;
     }
+
+    /* === 추가된 부분 START === */
+    .search-prompt {
+        text-align: center;
+        margin: 16px 0 0 0;
+        font-size: 15px;
+    }
+
+    .search-prompt a {
+        color: var(--text-secondary);
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    
+    .widget-container {
+        display: none;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .widget-container iframe {
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 반응형 스타일 */
+    @media (max-width: 680px) {
+        .widget-container {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+    /* === 추가된 부분 END === */
 
     .info-card {
       background: var(--card-background);
@@ -287,6 +323,12 @@
     <section class="input-section">
       <input id="inputUrl" data-lang="placeholder" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
       <button onclick="generateLinks()" data-lang="findButton">최저가 링크 찾기</button>
+      <p class="search-prompt"><a id="show-widget-link" data-lang="searchPrompt">링크가 없다면? 트립닷컴에서 검색하기</a></p>
+    </section>
+
+    <section class="widget-container" id="widget-container">
+        <iframe border="0" src="https://kr.trip.com/partners/ad/S4477048?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b" style="width:320px;height:320px" frameborder="0" scrolling="no" id="S4477048"></iframe>
+        <iframe border="0" src="https://kr.trip.com/partners/ad/S4477048?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b" style="width:320px;height:320px" frameborder="0" scrolling="no" id="S4477048"></iframe>
     </section>
 
     <div class="link-list" id="results"></div>
@@ -327,6 +369,7 @@
             subtitle: "Trip.com Lowest Price Link Finder",
             placeholder: "Paste Hotel/Flight link from trip.com!",
             findButton: "Find Lowest Price Links",
+            searchPrompt: "No link yet? Search on Trip.com", // 추가된 번역
             card1Title: "🌍 Find the Cheapest Country",
             card1Desc: "Trip.com prices can <strong>differ by country.</strong><br>Use <strong>Tripdotdot</strong> to book at the <span class=\"highlight\">absolute lowest price!</span>",
             card2Title: "✅ How to Use",
@@ -348,6 +391,7 @@
             subtitle: "트립닷컴 최저가 링크 찾기",
             placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
             findButton: "최저가 링크 찾기",
+            searchPrompt: "링크가 없다면? 트립닷컴에서 검색하기", // 추가된 번역
             card1Title: "🌍 최저가 국가를 찾아보세요",
             card1Desc: "트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class=\"highlight\">가장 저렴하게 예약</span>하세요!",
             card2Title: "✅ 사용 방법",
@@ -417,6 +461,18 @@
         setLanguage(initialLang);
         
         document.getElementById('language-button').addEventListener('click', toggleLanguage);
+
+        // === 추가된 부분 START ===
+        const widgetLink = document.getElementById('show-widget-link');
+        const widgetContainer = document.getElementById('widget-container');
+
+        widgetLink.addEventListener('click', (event) => {
+            event.preventDefault(); // 링크의 기본 동작(페이지 이동) 방지
+            
+            const isVisible = widgetContainer.style.display === 'flex';
+            widgetContainer.style.display = isVisible ? 'none' : 'flex';
+        });
+        // === 추가된 부분 END ===
     });
 
     const domains = [
