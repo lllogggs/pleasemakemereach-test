@@ -146,7 +146,6 @@
       background-color: #254edc;
     }
 
-    /* === 수정된 부분 START === */
     .secondary-button {
         width: 100%;
         padding: 10px;
@@ -170,7 +169,7 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        gap: 10px;
+        gap: 20px; /* 위젯 사이 간격 */
         margin-bottom: 24px;
     }
     
@@ -178,25 +177,23 @@
         border: 1px solid var(--border-color) !important;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        transform: scale(0.9);
-        transform-origin: center center;
-        width: 320px;
+        /* 수정된 부분: PC 위젯 사이즈 */
+        width: 290px;
         height: 320px;
     }
 
     /* 반응형 스타일 */
-    @media (max-width: 680px) {
+    @media (max-width: 620px) { /* 290*2 + 20 + padding = 620 */
         .widget-container {
             flex-direction: column;
             gap: 20px;
         }
         .widget-container iframe {
-            transform: none; /* 스케일 초기화 */
-            width: 100%;     /* 가로 폭 꽉 채우기 */
-            max-width: 320px;/* 최대 너비 제한 */
+            /* 수정된 부분: 모바일 위젯 사이즈 */
+            width: 100%;
+            height: 320px;
         }
     }
-    /* === 수정된 부분 END === */
 
     .info-card {
       background: var(--card-background);
@@ -433,18 +430,33 @@
         currentLang = lang;
         document.documentElement.lang = lang;
         
-        document.querySelectorAll('[data-lang]').forEach(el => {
+        const elementsToTranslate = document.querySelectorAll('[data-lang]');
+        elementsToTranslate.forEach(el => {
             const key = el.getAttribute('data-lang');
             if (translations[lang][key]) {
-                if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
+                if (el.tagName === 'INPUT') {
                     el.placeholder = translations[lang][key];
-                    el.textContent = translations[lang][key];
-                } else {
+                } else if (el.tagName === 'BUTTON') {
+                    // 버튼의 HTML 내용을 바꾸지 않고 텍스트만 바꾸도록 수정
+                    // Find the first text node and change its value
+                    for (const node of el.childNodes) {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            node.textContent = translations[lang][key];
+                            break;
+                        }
+                    }
+                }
+                 else {
                     el.innerHTML = translations[lang][key];
                 }
             }
         });
         
+        // 버튼 텍스트는 textContent로 직접 제어
+        document.querySelector('[data-lang="findButton"]').textContent = translations[lang].findButton;
+        document.querySelector('[data-lang="searchPrompt"]').textContent = translations[lang].searchPrompt;
+
+
         const langFlag = document.getElementById('lang-flag');
         const langText = document.getElementById('lang-text');
         const privacyLink = document.getElementById('privacy-link');
@@ -485,7 +497,7 @@
         widgetButton.addEventListener('click', (event) => {
             event.preventDefault();
             
-            const isVisible = widgetContainer.style.display === 'flex';
+            const isVisible = widgetContainer.style.display === 'flex' || widgetContainer.style.display === 'block';
             widgetContainer.style.display = isVisible ? 'none' : 'flex';
         });
     });
