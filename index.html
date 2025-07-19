@@ -267,7 +267,6 @@
       border-radius: 3px;
     }
 
-    /* === 추가된 부분 START: 모달 스타일 === */
     .modal-overlay {
         display: none;
         position: fixed;
@@ -363,7 +362,21 @@
             height: 450px;
         }
     }
-    /* === 추가된 부분 END === */
+
+    .kakao-chat-btn {
+        display: block;
+        width: 100%;
+        background-color: #FAE100;
+        color: #3C1E1E;
+        text-align: center;
+        padding: 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+    }
 
   </style>
   <script type="text/javascript">
@@ -466,6 +479,7 @@
             privacy: "Privacy Policy",
             invalidLink: "Please enter a valid Trip.com link.",
             parseError: "The format of the entered link is incorrect.",
+            kakaoTalk: "🙋‍♀️🙋‍♂️ Contact Us (KakaoTalk)"
         },
         ko: {
             mainTitle: "🌐 트립닷닷",
@@ -490,6 +504,7 @@
             privacy: "개인정보처리방침",
             invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
             parseError: "입력한 링크의 형식이 올바르지 않습니다.",
+            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기"
         }
     };
 
@@ -582,9 +597,14 @@
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
 
-                tabContents.forEach(content => content.classList.remove('active'));
-                const activeTabContent = document.getElementById(button.dataset.tab + '-tab-content');
-                if(activeTabContent) activeTabContent.classList.add('active');
+                const targetContent = document.getElementById(button.dataset.tab + '-tab-content');
+                tabContents.forEach(content => {
+                    if (content === targetContent) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
             });
         });
     });
@@ -619,8 +639,18 @@
       resultsDiv.innerHTML = '';
       resultsDiv.style.display = 'block';
 
+      function createKakaoButton() {
+          const kakaoBtn = document.createElement('a');
+          kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
+          kakaoBtn.target = '_blank';
+          kakaoBtn.className = 'kakao-chat-btn';
+          kakaoBtn.textContent = translations[currentLang].kakaoTalk; 
+          return kakaoBtn;
+      }
+
       if (!input.includes('trip.com')) {
         resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
+        resultsDiv.appendChild(createKakaoButton());
         return;
       }
       
@@ -661,6 +691,7 @@
 
       } catch (error) {
         resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
+        resultsDiv.appendChild(createKakaoButton());
         console.error("URL Parsing Error:", error);
       }
     }
