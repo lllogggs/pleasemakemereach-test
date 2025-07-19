@@ -402,7 +402,7 @@
     <section class="input-section">
       <input id="inputUrl" data-lang="placeholder" placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
       <button class="main-button" onclick="generateLinks()" data-lang="findButton">최저가 링크 찾기</button>
-      <button id="show-widget-button" class="secondary-button" data-lang="searchPrompt">링크가 없다면? 트립닷컴에서 검색하기</button>
+      <button id="show-widget-button" class="secondary-button" data-lang="searchPrompt">링크가 없다면? 여기서 검색하기</button>
     </section>
 
     <div class="link-list" id="results"></div>
@@ -650,7 +650,9 @@
 
       if (!input.includes('trip.com')) {
         resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
-        resultsDiv.appendChild(createKakaoButton());
+        if (currentLang === 'ko') {
+            resultsDiv.appendChild(createKakaoButton());
+        }
         return;
       }
       
@@ -688,10 +690,15 @@
         });
 
         resultsDiv.appendChild(gridContainer);
+        if (currentLang === 'ko') {
+            resultsDiv.appendChild(createKakaoButton());
+        }
 
       } catch (error) {
         resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
-        resultsDiv.appendChild(createKakaoButton());
+        if (currentLang === 'ko') {
+            resultsDiv.appendChild(createKakaoButton());
+        }
         console.error("URL Parsing Error:", error);
       }
     }
