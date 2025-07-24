@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  </script>
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -9,7 +10,7 @@
   
   <meta content="tripdotdot" name="author">
   <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot, trip.com price comparison" name="keywords">
-  <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 22개국에서 최저가 검색 가능">
+  <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 21개국에서 최저가 검색 가능">
   
   <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
   <meta content="6d36eb0cb19fc826bcba409428fa0d6fddc9c33d" name="naver-site-verification">
@@ -342,7 +343,40 @@
         border: none !important;
     }
 
+    .kakao-chat-btn {
+        display: block;
+        width: 100%;
+        background-color: #FAE100;
+        color: #3C1E1E;
+        text-align: center;
+        padding: 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+    }
+
     @media (max-width: 600px) {
+        /* ▼ 언어 변경 버튼 축소 코드 ▼ */
+        .language-button {
+            padding: 4px 8px;
+            gap: 5px;
+            top: 15px; /* 작아진 크기에 맞춰 위치 미세 조정 */
+            right: -5px;
+        }
+
+        #lang-flag {
+            width: 20px;
+            height: 20px;
+        }
+
+        #lang-text {
+            font-size: 14px;
+        }
+
+        /* ▼ 기존 모바일 코드 ▼ */
         .modal-content {
             width: 95%;
             height: auto;
@@ -363,29 +397,7 @@
         }
     }
 
-    .kakao-chat-btn {
-        display: block;
-        width: 100%;
-        background-color: #FAE100;
-        color: #3C1E1E;
-        text-align: center;
-        padding: 14px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 16px;
-        margin-top: 20px;
-        box-sizing: border-box;
-    }
-
   </style>
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "sd3i2hqjuv");
-  </script>
 </head>
 <body>
   <div class="container">
@@ -486,7 +498,7 @@
             subtitle: "트립닷컴 최저가 링크 찾기",
             placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
             findButton: "최저가 링크 찾기",
-            searchPrompt: "링크가 없다면? 트립닷컴에서 검색하기",
+            searchPrompt: "링크가 없다면? 여기서 검색하기",
             hotelTabTitle: "🏨 호텔 예약",
             flightTabTitle: "✈️ 항공권 예약",
             card1Title: "🌍 최저가 국가를 찾아보세요",
@@ -504,7 +516,7 @@
             privacy: "개인정보처리방침",
             invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
             parseError: "입력한 링크의 형식이 올바르지 않습니다.",
-            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기"
+            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기 (익명)"
         }
     };
 
