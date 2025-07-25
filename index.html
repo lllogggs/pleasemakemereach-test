@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta content="tripdotdot" name="author">
-  <meta content="트립닷닷, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot, trip.com price comparison" name="keywords">
+  <meta content="트립닷닷, 트립닷컴 할인, 트립닷컴 싸게 예약하는법, 트립닷컴 할인코드, 트립닷컴 7월 할인코드, 트립닷컴 8월 할인코드, 트립닷컴 쿠키, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot, trip.com price comparison" name="keywords">
   <meta name="description" content="10초만에 N만원 절약하고 여행가자 | 최대 21개국에서 최저가 검색 가능">
   
   <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
@@ -657,8 +657,8 @@
             langDropdown.classList.toggle('show');
         });
         
-        window.addEventListener('click', () => {
-            if (langDropdown.classList.contains('show')) {
+        window.addEventListener('click', (event) => {
+            if (!langSelector.contains(event.target)) {
                 langDropdown.classList.remove('show');
             }
         });
@@ -758,17 +758,33 @@
       try {
         const url = new URL(input);
         let pathname = url.pathname;
-        const params = new URLSearchParams(url.search);
+        const originalParams = new URLSearchParams(url.search);
 
-        const currency = params.get('curr') || 'KRW';
-        params.delete('curr');
-        params.set('curr', currency.toUpperCase());
+        const essentialParams = new URLSearchParams();
+        const whitelist = [
+            // Hotel Params
+            'hotelId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights',
+            // Flight Params
+            'flighttype', 'dcity', 'acity', 'ddate', 'rdate', 'quantity', 'childqty', 'babyqty', 'class',
+            // Common Param
+            'curr'
+        ];
+
+        whitelist.forEach(paramName => {
+            if (originalParams.has(paramName)) {
+                essentialParams.set(paramName, originalParams.get(paramName));
+            }
+        });
+
+        if (!essentialParams.has('curr')) {
+            essentialParams.set('curr', (originalParams.get('curr') || 'KRW').toUpperCase());
+        }
 
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
         }
 
-        const paramString = params.toString();
+        const paramString = essentialParams.toString();
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
         
         const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
@@ -776,7 +792,15 @@
         const gridContainer = document.createElement('div');
         gridContainer.className = 'link-list-grid';
         
-        domains.forEach(dom => {
+        let sortedDomains = [...domains];
+        if (currentLang === 'ja') {
+            const japan = sortedDomains.find(d => d.code === 'jp');
+            if (japan) {
+                sortedDomains = [japan, ...sortedDomains.filter(d => d.code !== 'jp')];
+            }
+        }
+        
+        sortedDomains.forEach(dom => {
           const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
           const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
           
