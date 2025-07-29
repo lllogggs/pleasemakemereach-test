@@ -85,6 +85,7 @@
         height: 24px;
         border-radius: 50%;
         object-fit: cover;
+        flex-shrink: 0;
     }
 
     #lang-text {
@@ -224,13 +225,47 @@
       margin-bottom: 24px;
     }
 
-    .info-card h2 {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0 0 16px 0;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
     }
+    .info-card h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+    .external-links {
+        display: flex;
+        gap: 8px;
+    }
+    .external-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        color: white;
+        transition: opacity 0.2s;
+    }
+    .external-link-btn:hover {
+        opacity: 0.85;
+    }
+    .external-link-btn svg {
+        width: 14px;
+        height: 14px;
+        fill: white;
+    }
+    .external-link-btn.youtube { background-color: #FF0000; }
+    .external-link-btn.naver { background-color: #03C75A; }
     
     .info-card ul {
         list-style: none;
@@ -408,11 +443,65 @@
         margin-top: 20px;
         box-sizing: border-box;
     }
+    
+    .other-sites-section {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-color);
+        text-align: center;
+    }
+    .other-sites-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin: 0 0 12px 0;
+    }
+    .other-sites-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    .other-site-btn {
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: background-color 0.2s, box-shadow 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .other-site-btn.agoda {
+        background-color: white;
+        color: #1f2937;
+        border: 1px solid var(--border-color);
+    }
+    .other-site-btn.agoda:hover {
+        background-color: #f9fafb;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .agoda-dots {
+        display: flex;
+        gap: 3px;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    .dot.c1 { background-color: #f28c0f; } /* Orange */
+    .dot.c2 { background-color: #f6b800; } /* Yellow */
+    .dot.c3 { background-color: #00a79d; } /* Teal */
+    .dot.c4 { background-color: #006ce4; } /* Blue */
 
     @media (max-width: 600px) {
         .language-selector {
-            top: 15px;
+            top: -20px;
             right: -5px;
+        }
+        .header {
+            margin-top: 24px;
         }
         .language-button {
             padding: 4px 8px;
@@ -448,23 +537,24 @@
         }
     }
 
-  </style>  
+  </style>
 </head>
 <body>
   <div class="container">
+    
     <header class="header">
-        <div class="language-selector">
-            <button id="language-button" class="language-button">
-                <img id="lang-flag" src="" alt="Language flag">
-                <span id="lang-text"></span>
-                <span class="dropdown-arrow">▼</span>
-            </button>
-            <div id="language-dropdown" class="language-dropdown">
-                <a href="#" class="lang-option" data-lang-code="ko"><img src="https://flagcdn.com/w40/kr.png" alt="KR Flag"> 한국어</a>
-                <a href="#" class="lang-option" data-lang-code="en"><img src="https://flagcdn.com/w40/us.png" alt="US Flag"> English</a>
-                <a href="#" class="lang-option" data-lang-code="ja"><img src="https://flagcdn.com/w40/jp.png" alt="JP Flag"> 日本語</a>
-            </div>
-        </div>
+      <div class="language-selector">
+          <button id="language-button" class="language-button">
+              <img id="lang-flag" src="" alt="Language flag">
+              <span id="lang-text"></span>
+              <span class="dropdown-arrow">▼</span>
+          </button>
+          <div id="language-dropdown" class="language-dropdown">
+              <a href="#" class="lang-option" data-lang-code="ko"><img src="https://flagcdn.com/w40/kr.png" alt="KR Flag"> 한국어</a>
+              <a href="#" class="lang-option" data-lang-code="en"><img src="https://flagcdn.com/w40/us.png" alt="US Flag"> English</a>
+              <a href="#" class="lang-option" data-lang-code="ja"><img src="https://flagcdn.com/w40/jp.png" alt="JP Flag"> 日本語</a>
+          </div>
+      </div>
 
       <h1 data-lang="mainTitle">🌐 트립닷닷</h1>
       <p data-lang="subtitle">&nbsp;트립닷컴 최저가 링크 찾기</p>
@@ -479,19 +569,31 @@
     <div class="link-list" id="results"></div>
 
     <section class="info-card">
+        <div class="card-header">
+            <h2 data-lang="card2Title">✅ 사용 방법</h2>
+            <div class="external-links">
+                <a href="https://youtube.com/shorts/reQWEWc72Yw?feature=share" target="_blank" class="external-link-btn youtube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,15 L10,9 L15,12 L10,15 Z M21.5,12 C21.5,12 21.3,13.7 20.6,15.3 C20.3,16.2 19.6,16.8 18.7,17.2 C17.2,17.7 12,17.7 12,17.7 C12,17.7 6.8,17.7 5.3,17.2 C4.4,16.8 3.7,16.2 3.4,15.3 C2.7,13.7 2.5,12 2.5,12 C2.5,12 2.7,10.3 3.4,8.7 C3.7,7.8 4.4,7.2 5.3,6.8 C6.8,6.3 12,6.3 12,6.3 C12,6.3 17.2,6.3 18.7,6.8 C19.6,7.2 20.3,7.8 20.6,8.7 C21.3,10.3 21.5,12 21.5,12 Z"></path></svg>
+                    <span>유튜브</span>
+                </a>
+                <a href="https://blog.naver.com/tripdotdot?Redirect=Update&logNo=223948757114" target="_blank" class="external-link-btn naver">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.273,12.845v-1.742h-3.447v3.49h3.447v-1.748Z M18.02,7.966H7.135v9.224h9.136V7.966H18.02z"></path></svg>
+                    <span>블로그</span>
+                </a>
+            </div>
+        </div>
+        <ul data-lang="card2List">
+            <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
+            <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
+            <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
+        </ul>
+    </section>
+
+    <section class="info-card">
         <h2 data-lang="card1Title">🌍 최저가 국가를 찾아보세요</h2>
         <p data-lang="card1Desc">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight" data-lang="card1Highlight">가장 저렴하게 예약</span>하세요!</p>
     </section>
     
-    <section class="info-card">
-      <h2 data-lang="card2Title">✅ 사용 방법</h2>
-      <ul data-lang="card2List">
-        <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
-        <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
-        <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
-      </ul>
-    </section>
-
     <section class="info-card">
       <h2 data-lang="card3Title">💡 알아두면 좋은 팁</h2>
       <p data-lang="card3List">
@@ -604,10 +706,27 @@
     let currentLang = 'ko';
     
     const langDetails = {
-        ko: { flag: 'kr.png', text: '한국어', privacy: 'privacy_ko.html'},
-        en: { flag: 'us.png', text: 'English', privacy: 'privacy_en.html'},
-        ja: { flag: 'jp.png', text: '日本語', privacy: 'privacy_ja.html'}
+        ko: { flag: 'kr.png', text: '한국어', privacy: 'privacy_ko.html', code: 'KR' },
+        en: { flag: 'us.png', text: 'English', privacy: 'privacy_en.html', code: 'EN' },
+        ja: { flag: 'jp.png', text: '日本語', privacy: 'privacy_ja.html', code: 'JP' }
     };
+
+    const languageToCurrencyMap = {
+        ko: 'KRW', ja: 'JPY', en: 'USD', es: 'EUR', fr: 'EUR', de: 'EUR',
+        nl: 'EUR', pt: 'EUR', vi: 'VND', id: 'IDR', ms: 'MYR',
+        zh: 'TWD', hi: 'INR', ru: 'RUB', ar: 'SAR'
+    };
+
+    function updateLanguageButtonDisplay() {
+        const langText = document.getElementById('lang-text');
+        if (!langText) return;
+
+        if (window.innerWidth <= 600) {
+            langText.textContent = langDetails[currentLang].code;
+        } else {
+            langText.textContent = langDetails[currentLang].text;
+        }
+    }
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -624,13 +743,13 @@
         if(inputEl) inputEl.placeholder = translations[lang].placeholder;
 
         const langFlag = document.getElementById('lang-flag');
-        const langText = document.getElementById('lang-text');
         const privacyLink = document.getElementById('privacy-link');
         
         langFlag.src = `https://flagcdn.com/w40/${langDetails[lang].flag.replace('.png', '')}.png`;
         langFlag.alt = `${langDetails[lang].text} Flag`;
-        langText.textContent = langDetails[lang].text;
         privacyLink.href = langDetails[lang].privacy;
+
+        updateLanguageButtonDisplay();
 
         const hotelWidget = document.getElementById('hotel-widget-modal');
         const flightWidget = document.getElementById('flight-widget-modal');
@@ -670,6 +789,13 @@
                 setLanguage(newLang);
                 langDropdown.classList.remove('show');
             });
+        });
+
+        // --- Resize Logic ---
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateLanguageButtonDisplay, 150);
         });
 
         // --- Modal Logic ---
@@ -747,9 +873,38 @@
           return kakaoBtn;
       }
 
+      function createOtherSitesSection() {
+        const section = document.createElement('div');
+        section.className = 'other-sites-section';
+
+        const title = document.createElement('p');
+        title.className = 'other-sites-title';
+        title.innerHTML = '🔍 다른 호텔 예약 사이트도 둘러보기';
+        
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'other-sites-buttons';
+
+        const agodaBtn = document.createElement('a');
+        agodaBtn.href = 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1941957';
+        agodaBtn.target = '_blank';
+        agodaBtn.className = 'other-site-btn agoda';
+        agodaBtn.innerHTML = `
+            <div class="agoda-dots">
+                <span class="dot c1"></span><span class="dot c2"></span><span class="dot c3"></span><span class="dot c4"></span>
+            </div>
+            <span>아고다에서 검색</span>
+        `;
+        
+        buttonsContainer.appendChild(agodaBtn);
+        section.appendChild(title);
+        section.appendChild(buttonsContainer);
+        return section;
+      }
+
       if (!input.includes('trip.com')) {
         resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
         if (currentLang === 'ko') {
+            resultsDiv.appendChild(createOtherSitesSection());
             resultsDiv.appendChild(createKakaoButton());
         }
         return;
@@ -760,14 +915,17 @@
         let pathname = url.pathname;
         const originalParams = new URLSearchParams(url.search);
 
+        let currency;
+        if (originalParams.has('curr')) {
+            currency = originalParams.get('curr').toUpperCase();
+        } else {
+            currency = languageToCurrencyMap[currentLang] || 'USD';
+        }
+
         const essentialParams = new URLSearchParams();
         const whitelist = [
-            // Hotel Params
             'hotelId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights',
-            // Flight Params
             'flighttype', 'dcity', 'acity', 'ddate', 'rdate', 'quantity', 'childqty', 'babyqty', 'class',
-            // Common Param
-            'curr'
         ];
 
         whitelist.forEach(paramName => {
@@ -775,10 +933,8 @@
                 essentialParams.set(paramName, originalParams.get(paramName));
             }
         });
-
-        if (!essentialParams.has('curr')) {
-            essentialParams.set('curr', (originalParams.get('curr') || 'KRW').toUpperCase());
-        }
+        
+        essentialParams.set('curr', currency);
 
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
@@ -813,13 +969,16 @@
         });
 
         resultsDiv.appendChild(gridContainer);
+        
         if (currentLang === 'ko') {
+            resultsDiv.appendChild(createOtherSitesSection());
             resultsDiv.appendChild(createKakaoButton());
         }
 
       } catch (error) {
         resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
         if (currentLang === 'ko') {
+            resultsDiv.appendChild(createOtherSitesSection());
             resultsDiv.appendChild(createKakaoButton());
         }
         console.error("URL Parsing Error:", error);
