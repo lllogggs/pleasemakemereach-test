@@ -844,10 +844,9 @@
             });
         });
 
-        // URL 파라미터 처리
+        // ▼▼▼ [수정 제안 1] URL 자동 입력 기능 ▼▼▼
         const params = new URLSearchParams(window.location.search);
         const urlToProcess = params.get('url');
-
         if (urlToProcess) {
             const inputEl = document.getElementById('inputUrl');
             inputEl.value = urlToProcess;
@@ -937,26 +936,31 @@
 
         let currency;
         if (originalParams.has('curr')) {
-            // ▼▼▼ 오타 수정된 부분 ▼▼▼
             currency = originalParams.get('curr').toUpperCase();
-            // ▲▲▲ 오타 수정된 부분 ▲▲▲
         } else {
             currency = languageToCurrencyMap[currentLang] || 'USD';
         }
 
+        // ▼▼▼ [수정 제안 2] 링크 분석 로직 강화 ▼▼▼
         const essentialParams = new URLSearchParams();
-        const whitelist = [
-            'hotelId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights',
-            'flighttype', 'dcity', 'acity', 'ddate', 'rdate', 'quantity', 'childqty', 'babyqty', 'class',
-        ];
+        let allowedParams;
 
-        whitelist.forEach(paramName => {
+        if (pathname.includes('/flights')) {
+            // 항공권 링크에 필요한 파라미터 목록
+            allowedParams = ['flighttype', 'dcity', 'acity', 'ddate', 'rdate', 'quantity', 'childqty', 'babyqty', 'class', 'triptype'];
+        } else {
+            // 호텔 링크에 필요한 파라미터 목록 (기본값)
+            allowedParams = ['hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult'];
+        }
+
+        allowedParams.forEach(paramName => {
             if (originalParams.has(paramName)) {
                 essentialParams.set(paramName, originalParams.get(paramName));
             }
         });
         
         essentialParams.set('curr', currency);
+        // ▲▲▲ 링크 분석 로직 강화 끝 ▲▲▲
 
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
