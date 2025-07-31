@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NKHHET1CP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7NKHHET1CP');
+  </script>
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -512,6 +520,23 @@
     .dot.c3 { background-color: #00a79d; } /* Teal */
     .dot.c4 { background-color: #006ce4; } /* Blue */
 
+    .notice-modal-content {
+        width: 90%;
+        max-width: 320px;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    .notice-icon {
+        font-size: 40px;
+        margin: 0 0 16px 0;
+    }
+    .notice-text {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.6;
+        margin: 0;
+    }
+
     @media (max-width: 600px) {
         .language-selector {
             top: -20px;
@@ -555,6 +580,13 @@
     }
 
   </style>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "sd3i2hqjuv");
+  </script>
 </head>
 <body>
   <div class="container">
@@ -643,6 +675,16 @@
               </div>
           </div>
       </div>
+  </div>
+
+  <div id="mobile-notice-modal" class="modal-overlay">
+    <div class="modal-content notice-modal-content">
+      <span class="modal-close">&times;</span>
+      <div class="notice-modal-body">
+        <p class="notice-icon">🖥️</p>
+        <p class="notice-text">PC로 예약하시는 것이<br>더 저렴합니다</p>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -828,7 +870,7 @@
             resizeTimeout = setTimeout(updateLanguageButtonDisplay, 150);
         });
 
-        // --- Modal Logic ---
+        // --- Modal Logic (Search Widget) ---
         const showWidgetButton = document.getElementById('show-widget-button');
         const modal = document.getElementById('search-modal');
         const modalClose = document.getElementById('modal-close');
@@ -872,6 +914,27 @@
             
             const newUrl = window.location.pathname;
             history.replaceState({}, '', newUrl);
+        }
+
+        // --- 모바일 안내 팝업 기능 ---
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            const mobileModal = document.getElementById('mobile-notice-modal');
+            const mobileModalClose = mobileModal.querySelector('.modal-close');
+            
+            setTimeout(() => {
+                mobileModal.style.display = 'flex';
+            }, 500);
+
+            mobileModalClose.addEventListener('click', () => {
+                mobileModal.style.display = 'none';
+            });
+
+            mobileModal.addEventListener('click', (event) => {
+                if (event.target === mobileModal) {
+                    mobileModal.style.display = 'none';
+                }
+            });
         }
     });
 
@@ -955,28 +1018,45 @@
         const url = new URL(input);
         let pathname = url.pathname;
         const originalParams = new URLSearchParams(url.search);
-        const essentialParams = new URLSearchParams();
+        let essentialParams = new URLSearchParams();
 
-        // ▼▼▼ 하이브리드 필터링 로직 시작 ▼▼▼
         if (pathname.includes('/flights')) {
-            // 항공권: 블랙리스트 방식
-            const blacklist = [
-                'gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
-                'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'
-            ];
-            
-            for (const [key, value] of originalParams.entries()) {
-                if (!blacklist.includes(key)) {
-                    essentialParams.append(key, value);
-                }
+            if (pathname.startsWith('/m/')) {
+                // 모바일 항공권 -> PC 항공권 '번역'
+                pathname = '/flights/showfarefirst'; // PC 결과 페이지 경로로 강제 변경
+                
+                // 파라미터 번역
+                if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
+                if (originalParams.has('acitycode')) essentialParams.set('acity', originalParams.get('acitycode'));
+                if (originalParams.has('ddate')) essentialParams.set('ddate', originalParams.get('ddate'));
+                if (originalParams.has('adate')) essentialParams.set('rdate', originalParams.get('adate'));
+                if (originalParams.has('adult')) essentialParams.set('quantity', originalParams.get('adult'));
+                
+                // 값 변환
+                const triptype = originalParams.get('triptype');
+                if (triptype === '1' || triptype === 'rt') essentialParams.set('triptype', 'rt');
+                else essentialParams.set('triptype', 'ow');
+
+                const classtype = originalParams.get('classtype');
+                if (classtype === '0' || classtype === 'y') essentialParams.set('class', 'y');
+                else if (classtype === '1' || classtype === 'c') essentialParams.set('class', 'c');
+                else if (classtype === '2' || classtype === 'f') essentialParams.set('class', 'f');
+                else essentialParams.set('class', 'y');
+
+                // PC 결과 페이지용 고정 파라미터 추가
+                essentialParams.set('lowpricesource', 'searchform');
+                essentialParams.set('searchboxarg', 't');
+                essentialParams.set('nonstoponly', 'off');
+
+            } else {
+                // PC 항공권: 블랙리스트 방식
+                const blacklist = ['gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'];
+                essentialParams = new URLSearchParams(originalParams);
+                blacklist.forEach(param => essentialParams.delete(param));
             }
         } else {
             // 호텔 및 기타: 화이트리스트 방식
-            const whitelist = [
-                'hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 
-                'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'
-            ];
-            
+            const whitelist = ['hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'];
             whitelist.forEach(paramName => {
                 if (originalParams.has(paramName)) {
                     originalParams.getAll(paramName).forEach(value => {
@@ -984,19 +1064,20 @@
                     });
                 }
             });
+            // 호텔 모바일 링크(/m/) 처리
+            if (pathname.startsWith('/m/')) {
+                pathname = pathname.replace('/m/', '/');
+            }
         }
 
-        // 공통 로직: 통화(curr) 처리
+        // 공통: 통화(curr) 처리
         if (!essentialParams.has('curr')) {
-            const currency = languageToCurrencyMap[currentLang] || 'USD';
+            let currency = languageToCurrencyMap[currentLang] || 'USD';
+            if (originalParams.has('curr')) {
+                currency = originalParams.get('curr').toUpperCase();
+            }
             essentialParams.set('curr', currency);
         }
-
-        // 공통 로직: 모바일 경로(/m/) 처리 (조건부)
-        if (pathname.startsWith('/m/') && !pathname.includes('/flights')) {
-            pathname = pathname.replace('/m/', '/');
-        }
-        // ▲▲▲ 하이브리드 필터링 로직 끝 ▲▲▲
 
         const paramString = essentialParams.toString();
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
