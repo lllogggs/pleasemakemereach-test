@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -302,12 +301,24 @@
     .link-list {
       display: none;
       background: var(--card-background);
-      padding: 24px;
+      padding: 8px 24px 24px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       margin-bottom: 24px;
     }
     
+    .results-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .results-title strong {
+        color: var(--primary-blue);
+        font-weight: 500;
+    }
+
     .link-list-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -450,8 +461,8 @@
     }
     
     .other-sites-section {
-        margin-top: 24px;
-        padding-top: 24px;
+        margin-top: 12px;
+        padding-top: 12px;
         border-top: 1px solid var(--border-color);
         text-align: center;
     }
@@ -610,6 +621,7 @@
     
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
       <p><a id="privacy-link" href="privacy_ko.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
+      <p data-lang="disclosure" style="font-size: 12px; padding: 0 10px;"></p>
       <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
   </div>
@@ -653,7 +665,9 @@
             parseError: "The format of the entered link is incorrect.",
             kakaoTalk: "Contact Us (KakaoTalk)",
             otherSitesTitle: "🔍 Explore other hotel booking sites",
-            agodaSearch: "Search on Agoda"
+            agodaSearch: "Search on Agoda",
+            resultsTitle: "🔍 Click the <strong>country buttons</strong> to check prices",
+            disclosure: "This site contains affiliate links and may receive a commission for bookings made through these links."
         },
         ko: {
             mainTitle: "🌐 트립닷닷",
@@ -674,7 +688,9 @@
             parseError: "입력한 링크의 형식이 올바르지 않습니다.",
             kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기 (익명)",
             otherSitesTitle: "🔍 다른 호텔 예약 사이트도 둘러보기",
-            agodaSearch: "아고다에서 검색"
+            agodaSearch: "아고다에서 검색",
+            resultsTitle: "🔍 <strong>국가 버튼</strong>을 눌러 가격을 확인해보세요",
+            disclosure: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 소정의 수수료를 받을 수 있습니다."
         },
         ja: {
             mainTitle: "🌐 Tripdotdot",
@@ -695,7 +711,9 @@
             parseError: "入力されたリンクの形式が正しくありません。",
             kakaoTalk: "お問い合わせ (カカオトーク)",
             otherSitesTitle: "🔍 他のホテル予約サイトも見る",
-            agodaSearch: "Agodaで検索"
+            agodaSearch: "Agodaで検索",
+            resultsTitle: "🔍 <strong>国のボタン</strong>を押して価格を確認してください",
+            disclosure: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。"
         }
     };
 
@@ -844,12 +862,15 @@
             });
         });
 
-        // ▼▼▼ [수정 제안 1] URL 자동 입력 기능 ▼▼▼
+        // URL 자동 입력 및 주소창 정리 기능
         const params = new URLSearchParams(window.location.search);
         const urlToProcess = params.get('url');
         if (urlToProcess) {
             const inputEl = document.getElementById('inputUrl');
             inputEl.value = urlToProcess;
+            
+            const newUrl = window.location.pathname;
+            history.replaceState({}, '', newUrl);
         }
     });
 
@@ -933,35 +954,43 @@
         const url = new URL(input);
         let pathname = url.pathname;
         const originalParams = new URLSearchParams(url.search);
-
-        let currency;
-        if (originalParams.has('curr')) {
-            currency = originalParams.get('curr').toUpperCase();
-        } else {
-            currency = languageToCurrencyMap[currentLang] || 'USD';
-        }
-
-        // ▼▼▼ [수정 제안 2] 링크 분석 로직 강화 ▼▼▼
         const essentialParams = new URLSearchParams();
-        let allowedParams;
 
         if (pathname.includes('/flights')) {
-            // 항공권 링크에 필요한 파라미터 목록
-            allowedParams = ['flighttype', 'dcity', 'acity', 'ddate', 'rdate', 'quantity', 'childqty', 'babyqty', 'class', 'triptype'];
+            // --- 항공권: 블랙리스트 방식 ---
+            const blacklist = [
+                'gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+                'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'
+            ];
+            
+            for (const [key, value] of originalParams.entries()) {
+                if (!blacklist.includes(key)) {
+                    essentialParams.append(key, value);
+                }
+            }
         } else {
-            // 호텔 링크에 필요한 파라미터 목록 (기본값)
-            allowedParams = ['hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult'];
+            // --- 호텔: 화이트리스트 방식 ---
+            const whitelist = [
+                'hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 
+                'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'
+            ];
+            
+            whitelist.forEach(paramName => {
+                if (originalParams.has(paramName)) {
+                    originalParams.getAll(paramName).forEach(value => {
+                        essentialParams.append(paramName, value);
+                    });
+                }
+            });
         }
 
-        allowedParams.forEach(paramName => {
-            if (originalParams.has(paramName)) {
-                essentialParams.set(paramName, originalParams.get(paramName));
-            }
-        });
-        
-        essentialParams.set('curr', currency);
-        // ▲▲▲ 링크 분석 로직 강화 끝 ▲▲▲
+        // 공통 로직: 통화(curr) 처리
+        if (!essentialParams.has('curr')) {
+            const currency = languageToCurrencyMap[currentLang] || 'USD';
+            essentialParams.set('curr', currency);
+        }
 
+        // 공통 로직: 모바일 경로(/m/) 처리
         if (pathname.startsWith('/m/')) {
             pathname = pathname.replace('/m/', '/');
         }
@@ -970,6 +999,11 @@
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
         
         const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
+        
+        const resultsTitle = document.createElement('p');
+        resultsTitle.className = 'results-title';
+        resultsTitle.innerHTML = translations[currentLang].resultsTitle;
+        resultsDiv.appendChild(resultsTitle);
         
         const gridContainer = document.createElement('div');
         gridContainer.className = 'link-list-grid';
@@ -984,7 +1018,7 @@
         
         sortedDomains.forEach(dom => {
           const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
-          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
+          const fullUrl = `https://www.${dom.code === 'kr' ? '' : dom.code + '.'}trip.com${cleanPath}${finalAffix}`;
           
           const a = document.createElement('a');
           a.href = fullUrl;
