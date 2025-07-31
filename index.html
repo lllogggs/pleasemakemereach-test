@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+<head>
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -956,8 +957,9 @@
         const originalParams = new URLSearchParams(url.search);
         const essentialParams = new URLSearchParams();
 
+        // ▼▼▼ 하이브리드 필터링 로직 시작 ▼▼▼
         if (pathname.includes('/flights')) {
-            // --- 항공권: 블랙리스트 방식 ---
+            // 항공권: 블랙리스트 방식
             const blacklist = [
                 'gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
                 'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'
@@ -969,7 +971,7 @@
                 }
             }
         } else {
-            // --- 호텔: 화이트리스트 방식 ---
+            // 호텔 및 기타: 화이트리스트 방식
             const whitelist = [
                 'hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 
                 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'
@@ -990,10 +992,11 @@
             essentialParams.set('curr', currency);
         }
 
-        // 공통 로직: 모바일 경로(/m/) 처리
-        if (pathname.startsWith('/m/')) {
+        // 공통 로직: 모바일 경로(/m/) 처리 (조건부)
+        if (pathname.startsWith('/m/') && !pathname.includes('/flights')) {
             pathname = pathname.replace('/m/', '/');
         }
+        // ▲▲▲ 하이브리드 필터링 로직 끝 ▲▲▲
 
         const paramString = essentialParams.toString();
         const cleanPath = pathname + (paramString ? '?' + paramString : '');
@@ -1018,7 +1021,7 @@
         
         sortedDomains.forEach(dom => {
           const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
-          const fullUrl = `https://www.${dom.code === 'kr' ? '' : dom.code + '.'}trip.com${cleanPath}${finalAffix}`;
+          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
           
           const a = document.createElement('a');
           a.href = fullUrl;
