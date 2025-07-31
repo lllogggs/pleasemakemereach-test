@@ -519,14 +519,18 @@
         padding: 30px 20px;
     }
     .notice-icon {
-        font-size: 40px;
+        font-size: 32px;
         margin: 0 0 16px 0;
     }
     .notice-text {
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 500;
         line-height: 1.6;
-        margin: 0;
+        margin: 0 0 8px 0;
+    }
+    .notice-text small {
+        font-size: 13px;
+        color: var(--text-secondary);
     }
 
     @media (max-width: 600px) {
@@ -664,10 +668,14 @@
 
   <div id="mobile-notice-modal" class="modal-overlay">
     <div class="modal-content notice-modal-content">
-      <span class="modal-close">&times;</span>
-      <div class="notice-modal-body">
-        <p class="notice-icon">🖥️</p>
-        <p class="notice-text">PC로 예약하시는 것이<br>더 저렴합니다</p>
+      <span class="modal-close">×</span>
+      <div class="notice-modal-body" data-lang="mobileNotice">
+        <p class="notice-icon">✨</p>
+        <p class="notice-text">
+          <strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong>
+          <br>
+          <small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small>
+        </p>
       </div>
     </div>
   </div>
@@ -695,7 +703,8 @@
             otherSitesTitle: "🔍 Explore other hotel booking sites",
             agodaSearch: "Search on Agoda",
             resultsTitle: "🔍 Click the <strong>country buttons</strong> to check prices",
-            disclosure: "This site contains affiliate links and may receive a commission for bookings made through these links."
+            disclosure: "This site contains affiliate links and may receive a commission for bookings made through these links.",
+            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>For more accurate price comparison,<br>use the PC (Desktop site) version!</strong><br><small>(Some prices may be the same on mobile)</small></p>`
         },
         ko: {
             mainTitle: "🌐 트립닷닷",
@@ -718,7 +727,8 @@
             otherSitesTitle: "🔍 다른 호텔 예약 사이트도 둘러보기",
             agodaSearch: "아고다에서 검색",
             resultsTitle: "🔍 <strong>국가 버튼</strong>을 눌러 가격을 확인해보세요",
-            disclosure: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 소정의 수수료를 받을 수 있습니다."
+            disclosure: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 소정의 수수료를 받을 수 있습니다.",
+            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong><br><small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small></p>`
         },
         ja: {
             mainTitle: "🌐 Tripdotdot",
@@ -741,7 +751,8 @@
             otherSitesTitle: "🔍 他のホテル予約サイトも見る",
             agodaSearch: "Agodaで検索",
             resultsTitle: "🔍 <strong>国のボタン</strong>を押して価格を確認してください",
-            disclosure: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。"
+            disclosure: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。",
+            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>より正確な価格比較は<br>PC（デスクトップサイト）で可能です！</strong><br><small>（一部の商品はモバイルで各国の価格が同じです）</small></p>`
         }
     };
 
@@ -1007,40 +1018,32 @@
 
         if (pathname.includes('/flights')) {
             if (pathname.startsWith('/m/')) {
-                // 모바일 항공권 -> PC 항공권 '번역'
-                pathname = '/flights/showfarefirst'; // PC 결과 페이지 경로로 강제 변경
+                pathname = '/flights/showfarefirst';
                 
-                // 파라미터 번역
                 if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
                 if (originalParams.has('acitycode')) essentialParams.set('acity', originalParams.get('acitycode'));
                 if (originalParams.has('ddate')) essentialParams.set('ddate', originalParams.get('ddate'));
                 if (originalParams.has('adate')) essentialParams.set('rdate', originalParams.get('adate'));
                 if (originalParams.has('adult')) essentialParams.set('quantity', originalParams.get('adult'));
                 
-                // 값 변환
                 const triptype = originalParams.get('triptype');
-                if (triptype === '1' || triptype === 'rt') essentialParams.set('triptype', 'rt');
-                else essentialParams.set('triptype', 'ow');
+                essentialParams.set('triptype', (triptype === '1' || triptype === 'rt') ? 'rt' : 'ow');
 
                 const classtype = originalParams.get('classtype');
-                if (classtype === '0' || classtype === 'y') essentialParams.set('class', 'y');
-                else if (classtype === '1' || classtype === 'c') essentialParams.set('class', 'c');
+                if (classtype === '1' || classtype === 'c') essentialParams.set('class', 'c');
                 else if (classtype === '2' || classtype === 'f') essentialParams.set('class', 'f');
                 else essentialParams.set('class', 'y');
 
-                // PC 결과 페이지용 고정 파라미터 추가
                 essentialParams.set('lowpricesource', 'searchform');
                 essentialParams.set('searchboxarg', 't');
                 essentialParams.set('nonstoponly', 'off');
 
             } else {
-                // PC 항공권: 블랙리스트 방식
                 const blacklist = ['gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'];
                 essentialParams = new URLSearchParams(originalParams);
                 blacklist.forEach(param => essentialParams.delete(param));
             }
         } else {
-            // 호텔 및 기타: 화이트리스트 방식
             const whitelist = ['hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'];
             whitelist.forEach(paramName => {
                 if (originalParams.has(paramName)) {
@@ -1049,13 +1052,11 @@
                     });
                 }
             });
-            // 호텔 모바일 링크(/m/) 처리
             if (pathname.startsWith('/m/')) {
                 pathname = pathname.replace('/m/', '/');
             }
         }
 
-        // 공통: 통화(curr) 처리
         if (!essentialParams.has('curr')) {
             let currency = languageToCurrencyMap[currentLang] || 'USD';
             if (originalParams.has('curr')) {
