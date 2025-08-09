@@ -419,22 +419,22 @@
     }
 
     .toast-popup {
-        display: none;
+        visibility: hidden;
+        opacity: 0;
         position: fixed;
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgba(0, 0, 0, 0.75);
         color: white;
         padding: 12px 20px;
         border-radius: 20px;
         font-size: 14px;
         z-index: 200;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
+        transition: opacity 0.3s, visibility 0.3s;
     }
     .toast-popup.show {
-        display: block;
+        visibility: visible;
         opacity: 1;
     }
 
@@ -550,7 +550,7 @@
     </div>
   </div>
 
-  <div id="toast-popup" class="toast-popup" data-lang="toastPopup"></div>
+  <div id="toast-popup" class="toast-popup"></div>
 
   <script>
     const translations = {
@@ -777,7 +777,9 @@
 
         if (!input) {
             showToast();
-            window.open(`https://kr.trip.com/?Allianceid=6624731&SID=225753893&trip_sub1=blank_search&trip_sub3=D4136351`, '_blank');
+            setTimeout(() => {
+                window.open(`https://kr.trip.com/?Allianceid=6624731&SID=225753893&trip_sub1=blank_search&trip_sub3=D4136351`, '_blank');
+            }, 1000);
             return;
         }
 
