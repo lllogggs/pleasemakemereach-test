@@ -68,7 +68,6 @@
     .main-button:hover { background-color: #254edc; }
 
     .secondary-button { width: 100%; padding: 10px; margin-top: 12px; font-size: 15px; font-weight: 500; background-color: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); border-radius: 8px; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
-    .secondary-button:hover { background-color: var(--light-blue); }
 
     .info-card { background: var(--card-background); padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); margin-bottom: 24px; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
@@ -261,16 +260,22 @@
     function updateLanguageButtonDisplay(){/* 생략: 기존 그대로 */}
     function setLanguage(lang){/* 생략: 기존 그대로 */}
 
-    // 작은 토스트 표시
-    function showRedirectToast() {
+    // ✅ 토스트 1초 보여준 뒤 같은 탭으로 이동 (팝업 차단 방지)
+    let isRedirecting = false;
+    function goTripCom(delayMs = 1000) {
+      if (isRedirecting) return;
+      isRedirecting = true;
+
       const el = document.getElementById('redirect-toast');
-      if (!el) return;
-      el.style.display = 'block';
-      setTimeout(() => { el.style.display = 'none'; }, 1800);
-    }
-    function goTripCom() {
-      showRedirectToast();
-      window.open(AFF_URL, '_blank');
+      if (el) {
+        el.style.display = 'block';
+      }
+      setTimeout(() => {
+        if (el) el.style.display = 'none';
+        // 같은 탭 이동 (window.open 지양: 지연 후 새탭은 팝업 차단 가능성)
+        window.location.href = AFF_URL;
+        isRedirecting = false;
+      }, delayMs);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -282,19 +287,18 @@
       // 드롭다운/탭/모달/리사이즈/모바일 팝업 로직 (기존 그대로)
       /* ... 기존 코드 동일 ... */
 
-      // 주소창(입력창) 빈클릭 5회 → 트립닷컴 이동
+      // ✅ 주소창(입력창) 빈클릭 5회 → 1초 토스트 → Trip.com 이동
       const inputEl = document.getElementById('inputUrl');
       if (inputEl) {
         inputEl.addEventListener('click', () => {
           if (!inputEl.value.trim()) {
             blankClickCount++;
             if (blankClickCount >= 5) {
-              goTripCom();
               blankClickCount = 0; // 다음을 위해 초기화
+              goTripCom(1000);
             }
           } else {
-            // 뭔가 입력되면 카운트 초기화
-            blankClickCount = 0;
+            blankClickCount = 0; // 값이 생기면 카운트 리셋
           }
         });
       }
@@ -308,8 +312,8 @@
     function generateLinks() {
       const input = document.getElementById('inputUrl').value.trim();
 
-      // 빈 값: 버튼 누르면 즉시 트립닷컴으로
-      if (!input) { goTripCom(); return; }
+      // ✅ 빈 값: 버튼 누르면 1초 토스트 후 Trip.com으로
+      if (!input) { goTripCom(1000); return; }
 
       // 이하 기존 로직 동일 (결과 그리드 생성)
       /* ... 기존 코드 동일 ... */
