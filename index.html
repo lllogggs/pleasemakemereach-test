@@ -257,10 +257,12 @@
         opacity: 0.85;
     }
     .external-link-btn svg {
-        width: 14px;
-        height: 14px;
-        fill: white;
-    }
+          width: 16px;   /* 14 -> 16으로 상향 */
+          height: 16px;
+          fill: white;
+          display: block;     /* 베이스라인 여백 제거 */
+          flex-shrink: 0;     /* 아이콘 찌그러짐 방지 */
+        }
     .external-link-btn.youtube { background-color: #FF0000; }
     .external-link-btn.naver { background-color: #03C75A; }
     
