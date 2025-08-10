@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NKHHET1CP"></script>
   <meta charset="UTF-8">
-  
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <title>트립닷닷 | Trip.com 최저가 링크 찾기</title>
-  <link rel="apple-touch-icon" href="/apple-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="shortcut icon" href="/favicon.ico">
+
   <link rel="alternate" hreflang="ko" href="https://tripdotdot.com/">
   <link rel="alternate" hreflang="en" href="https://tripdotdot.com/">
   <link rel="alternate" hreflang="ja" href="https://tripdotdot.com/">
@@ -59,11 +56,6 @@
       position: relative;
     }
     
-    footer p {
-        margin-top: 3px;
-        margin-bottom: 3px;
-    }
-
     .language-selector {
         position: absolute;
         top: 25px;
@@ -205,6 +197,24 @@
 
     .main-button:hover {
       background-color: #254edc;
+    }
+
+    .secondary-button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 12px;
+        font-size: 15px;
+        font-weight: 500;
+        background-color: transparent;
+        color: var(--primary-blue);
+        border: 2px solid var(--primary-blue);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .secondary-button:hover {
+        background-color: var(--light-blue);
     }
     
     .info-card {
@@ -376,7 +386,7 @@
 
     .modal-content {
         position: relative;
-        background-color: #fff;
+        background-color: var(--background-color);
         padding: 20px;
         border-radius: 14px;
         width: 550px;
@@ -394,6 +404,113 @@
         color: var(--text-secondary);
         cursor: pointer;
     }
+    
+    .tab-nav {
+        display: flex;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-button {
+        flex: 1;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        border: none;
+        background-color: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-button.active {
+        color: var(--primary-blue);
+        border-bottom: 3px solid var(--primary-blue);
+    }
+    
+    .tab-content-container {
+        padding-top: 20px;
+    }
+
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+
+    .tab-content iframe {
+        width: 500px;
+        height: 500px;
+        border: none !important;
+    }
+
+    .kakao-chat-btn {
+        display: block;
+        width: 100%;
+        background-color: #FAE100;
+        color: #3C1E1E;
+        text-align: center;
+        padding: 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+    }
+    
+    .other-sites-section {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-color);
+        text-align: center;
+    }
+    .other-sites-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin: 0 0 12px 0;
+    }
+    .other-sites-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    .other-site-btn {
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: background-color 0.2s, box-shadow 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .other-site-btn.agoda {
+        background-color: white;
+        color: #1f2937;
+        border: 1px solid var(--border-color);
+    }
+    .other-site-btn.agoda:hover {
+        background-color: #f9fafb;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .agoda-dots {
+        display: flex;
+        gap: 3px;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    .dot.c1 { background-color: #f28c0f; } /* Orange */
+    .dot.c2 { background-color: #f6b800; } /* Yellow */
+    .dot.c3 { background-color: #00a79d; } /* Teal */
+    .dot.c4 { background-color: #006ce4; } /* Blue */
 
     .notice-modal-content {
         width: 90%;
@@ -411,34 +528,9 @@
         line-height: 1.6;
         margin: 0 0 8px 0;
     }
-    .notice-text strong {
-        color: var(--primary-blue);
-    }
     .notice-text small {
-        display: inline-block;
-        margin-top: 10px;
         font-size: 13px;
         color: var(--text-secondary);
-    }
-
-    .toast-popup {
-        visibility: hidden;
-        opacity: 0;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0, 0.75);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 20px;
-        font-size: 14px;
-        z-index: 200;
-        transition: opacity 0.3s, visibility 0.3s;
-    }
-    .toast-popup.show {
-        visibility: visible;
-        opacity: 1;
     }
 
     @media (max-width: 600px) {
@@ -470,6 +562,17 @@
             padding: 15px;
             overflow-y: auto;
         }
+        .tab-button {
+            padding: 12px;
+            font-size: 15px;
+        }
+        .tab-content-container {
+            padding-top: 15px;
+        }
+        .tab-content iframe {
+            width: 100%;
+            height: 450px;
+        }
     }
 
   </style>
@@ -498,6 +601,7 @@
     <section class="input-section">
       <input id="inputUrl" data-lang-placeholder placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
       <button class="main-button" onclick="generateLinks()" data-lang="findButton">최저가 링크 찾기</button>
+      <button id="show-widget-button" class="secondary-button" data-lang="searchPrompt">링크가 없다면? 여기서 검색하기</button>
     </section>
 
     <div class="link-list" id="results"></div>
@@ -539,21 +643,42 @@
     
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
       <p><a id="privacy-link" href="privacy_ko.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
-      <p data-lang="disclosureAffiliate" style="font-size: 12px; padding: 0 10px; line-height: 1.6;"></p>
-      <p data-lang="disclosureCollection" style="font-size: 12px; padding: 0 10px; line-height: 1.6;"></p>
-      <p id="copyright" data-lang="copyright"></p>
+      <p data-lang="disclosure" style="font-size: 12px; padding: 0 10px;"></p>
+      <p>© 2025 tripdotdot. All rights reserved.</p>
     </footer>
+  </div>
+
+  <div id="search-modal" class="modal-overlay">
+      <div class="modal-content">
+          <span id="modal-close" class="modal-close">×</span>
+          <div class="tab-nav">
+              <button class="tab-button active" data-tab="hotel" data-lang="hotelTabTitle"></button>
+              <button class="tab-button" data-tab="flight" data-lang="flightTabTitle"></button>
+          </div>
+          <div class="tab-content-container">
+              <div id="hotel-tab-content" class="tab-content active">
+                  <iframe id="hotel-widget-modal" src="" frameborder="0" scrolling="no"></iframe>
+              </div>
+              <div id="flight-tab-content" class="tab-content">
+                  <iframe id="flight-widget-modal" src="" frameborder="0" scrolling="no"></iframe>
+              </div>
+          </div>
+      </div>
   </div>
 
   <div id="mobile-notice-modal" class="modal-overlay">
     <div class="modal-content notice-modal-content">
       <span class="modal-close">×</span>
       <div class="notice-modal-body" data-lang="mobileNotice">
+        <p class="notice-icon">✨</p>
+        <p class="notice-text">
+          <strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong>
+          <br>
+          <small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small>
+        </p>
       </div>
     </div>
   </div>
-
-  <div id="toast-popup" class="toast-popup"></div>
 
   <script>
     const translations = {
@@ -562,80 +687,102 @@
             subtitle: "Trip.com Lowest Price Link Finder",
             placeholder: "Paste Hotel/Flight link from trip.com!",
             findButton: "Find Lowest Price Links",
-            privacy: "Privacy Policy",
-            invalidLink: "Please enter a valid Trip.com link.",
-            parseError: "The format of the entered link is incorrect.",
-            kakaoTalk: "🙋‍♀️🙋‍♂️ Get a coffee for booking confirmation!",
-            kakaoTalkError: "🤔 Contact Us / Report an Error",
-            resultsTitle: "🔍 Click the <strong>country buttons</strong> to check prices",
-            disclosureAffiliate: "This site contains affiliate links and may receive a commission for bookings made through these links.",
-            disclosureCollection: "Entered links may be collected anonymously for service improvement.",
-            copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
-            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text">For more accurate price comparison,<br><strong>use the PC (Desktop site) version!</strong><br><small>(Some prices may be the same across countries on mobile)</small></p>`,
-            toastPopup: "Connecting to Trip.com...",
+            searchPrompt: "No link yet? Search on Trip.com",
+            hotelTabTitle: "🏨 Hotel Booking",
+            flightTabTitle: "✈️ Flight Booking",
             card1Title: "🌍 Find the Cheapest Country",
             card1Desc: "Trip.com prices can <strong>differ by country.</strong><br>Use <strong>Tripdotdot</strong> to book at the <span class=\"highlight\">absolute lowest price!</span>",
             card2Title: "✅ How to Use",
             card2List: `<li>1️⃣ Find a deal on Trip.com and <strong>copy the link.</strong></li><li>2️⃣ Paste the link above and click <strong>'Find'</strong>!</li><li>3️⃣ Click the generated links to <strong>find the best price!</strong></li>`,
             card3Title: "💡 Good to Know",
-            card3List: `👉 Use Chrome's <strong>'Translate'</strong> for foreign pages.<br>⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>💰 Always compare the <strong>'final price'</strong> including taxes.`
+            card3List: `👉 Use Chrome's <strong>'Translate'</strong> for foreign pages.<br>⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>💰 Always compare the <strong>'final price'</strong> including taxes.`,
+            privacy: "Privacy Policy",
+            invalidLink: "Please enter a valid Trip.com link.",
+            parseError: "The format of the entered link is incorrect.",
+            kakaoTalk: "Contact Us (KakaoTalk)",
+            otherSitesTitle: "🔍 Explore other hotel booking sites",
+            agodaSearch: "Search on Agoda",
+            resultsTitle: "🔍 Click the <strong>country buttons</strong> to check prices",
+            disclosure: "This site contains affiliate links and may receive a commission for bookings made through these links.",
+            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>For more accurate price comparison,<br>use the PC (Desktop site) version!</strong><br><small>(Some prices may be the same on mobile)</small></p>`
         },
         ko: {
             mainTitle: "🌐 트립닷닷",
             subtitle: "트립닷컴 최저가 링크 찾기",
             placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
             findButton: "최저가 링크 찾기",
-            privacy: "개인정보처리방침",
-            invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
-            parseError: "입력한 링크의 형식이 올바르지 않습니다.",
-            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 예약 인증하고 커피 받아가세요",
-            kakaoTalkError: "🤔 문의하기 / 오류 제보하기",
-            resultsTitle: "🔍 <strong>국가 버튼</strong>을 눌러 가격을 확인해보세요",
-            disclosureAffiliate: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 수수료를 받을 수 있습니다.",
-            disclosureCollection: "입력된 링크는 서비스 개선을 위해 익명으로 수집될 수 있습니다.",
-            copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
-            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong><br><small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small></p>`,
-            toastPopup: "트립닷컴으로 연결됩니다...",
+            searchPrompt: "링크가 없다면? 여기서 검색하기",
+            hotelTabTitle: "🏨 호텔 예약",
+            flightTabTitle: "✈️ 항공권 예약",
             card1Title: "🌍 최저가 국가를 찾아보세요",
             card1Desc: "트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class=\"highlight\">가장 저렴하게 예약</span>하세요!",
             card2Title: "✅ 사용 방법",
             card2List: `<li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li><li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li><li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>`,
             card3Title: "💡 알아두면 좋은 팁",
-            card3List: `👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`
+            card3List: `👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
+            privacy: "개인정보처리방침",
+            invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
+            parseError: "입력한 링크의 형식이 올바르지 않습니다.",
+            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 카톡 문의하기 (익명)",
+            otherSitesTitle: "🔍 다른 호텔 예약 사이트도 둘러보기",
+            agodaSearch: "아고다에서 검색",
+            resultsTitle: "🔍 <strong>국가 버튼</strong>을 눌러 가격을 확인해보세요",
+            disclosure: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 소정의 수수료를 받을 수 있습니다.",
+            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong><br><small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small></p>`
         },
         ja: {
             mainTitle: "🌐 Tripdotdot",
             subtitle: "Trip.com 最安値リンク検索",
             placeholder: "ホテル・航空券のリンクをペースト",
             findButton: "最安値リンクを検索",
-            privacy: "プライバシーポリシー",
-            invalidLink: "有効なTrip.comのリンクを入力してください。",
-            parseError: "入力されたリンクの形式が正しくありません。",
-            kakaoTalk: "予約認証でコーヒーをゲット！",
-            kakaoTalkError: "🤔 お問い合わせ / エラー報告",
-            resultsTitle: "🔍 <strong>国のボタン</strong>を押して価格を確認してください",
-            disclosureAffiliate: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。",
-            disclosureCollection: "入力されたリンクは、サービス改善のために匿名で収集される場合があります。",
-            copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
-            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>より正確な価格比較は<br>PC（デスクトップサイト）で可能です！</strong><br><small>（一部の商品はモバイルで各国の価格が同じです）</small></p>`,
-            toastPopup: "Trip.comに接続しています...",
+            searchPrompt: "リンクがありませんか？こちらで検索",
+            hotelTabTitle: "🏨 ホテル予約",
+            flightTabTitle: "✈️ 航空券予約",
             card1Title: "🌍 最安値の国を探す",
             card1Desc: "Trip.comの商品は<strong>国によって価格が異なります。</strong><br><strong>Tripdotdot</strong>で<span class=\"highlight\">最安値を予約</span>しましょう！",
             card2Title: "✅ ご利用方法",
             card2List: `<li>1️⃣ Trip.comで商品を検索し、<strong>リンクをコピー</strong>します。</li><li>2️⃣ コピーしたリンクを貼り付けて<strong>「検索」</strong>をクリック！</li><li>3️⃣ 生成された各国のリンクから<strong>最安値を確認！</strong></li>`,
             card3Title: "💡 お役立ち情報",
-            card3List: `👉 外国語のページはChromeの<strong>「翻訳」</strong>機能をご利用ください。<br>⚠️ 一部の商品は国によって価格が<strong>同じ</strong>場合があります。<br>💰 税金/手数料込みの<strong>「最終金額」</strong>で比較してください。`
+            card3List: `👉 外国語のページはChromeの<strong>「翻訳」</strong>機能をご利用ください。<br>⚠️ 一部の商品は国によって価格が<strong>同じ</strong>場合があります。<br>💰 税金/手数料込みの<strong>「最終金額」</strong>で比較してください。`,
+            privacy: "プライバシーポリシー",
+            invalidLink: "有効なTrip.comのリンクを入力してください。",
+            parseError: "入力されたリンクの形式が正しくありません。",
+            kakaoTalk: "お問い合わせ (カカオトーク)",
+            otherSitesTitle: "🔍 他のホテル予約サイトも見る",
+            agodaSearch: "Agodaで検索",
+            resultsTitle: "🔍 <strong>国のボタン</strong>を押して価格を確認してください",
+            disclosure: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。",
+            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>より正確な価格比較は<br>PC（デスクトップサイト）で可能です！</strong><br><small>（一部の商品はモバイルで各国の価格が同じです）</small></p>`
+        }
+    };
+
+    const widgetSrcModal = {
+        ko: {
+            hotel: "https://kr.trip.com/partners/ad/S4477545?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
+            flight: "https://kr.trip.com/partners/ad/S4477048?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
+        },
+        en: {
+            hotel: "https://www.trip.com/partners/ad/S4479596?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
+            flight: "https://www.trip.com/partners/ad/S4479617?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
+        },
+        ja: { // 일본어는 영어 버전으로 대체
+            hotel: "https://www.trip.com/partners/ad/S4479596?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
+            flight: "https://www.trip.com/partners/ad/S4479617?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
         }
     };
 
     let currentLang = 'ko';
-    let linkClickCount = 0;
-    let mobilePopupShown = false;
     
     const langDetails = {
         ko: { flag: 'kr.png', text: '한국어', privacy: 'privacy_ko.html', code: 'KR' },
         en: { flag: 'us.png', text: 'English', privacy: 'privacy_en.html', code: 'EN' },
         ja: { flag: 'jp.png', text: '日本語', privacy: 'privacy_ja.html', code: 'JP' }
+    };
+
+    const languageToCurrencyMap = {
+        ko: 'KRW', ja: 'JPY', en: 'USD', es: 'EUR', fr: 'EUR', de: 'EUR',
+        nl: 'EUR', pt: 'EUR', vi: 'VND', id: 'IDR', ms: 'MYR',
+        zh: 'TWD', hi: 'INR', ru: 'RUB', ar: 'SAR'
     };
 
     function updateLanguageButtonDisplay() {
@@ -671,6 +818,11 @@
         privacyLink.href = langDetails[lang].privacy;
 
         updateLanguageButtonDisplay();
+
+        const hotelWidget = document.getElementById('hotel-widget-modal');
+        const flightWidget = document.getElementById('flight-widget-modal');
+        hotelWidget.src = widgetSrcModal[lang].hotel;
+        flightWidget.src = widgetSrcModal[lang].flight;
     }
     
     document.addEventListener('DOMContentLoaded', () => {
@@ -714,6 +866,41 @@
             resizeTimeout = setTimeout(updateLanguageButtonDisplay, 150);
         });
 
+        // --- Modal Logic (Search Widget) ---
+        const showWidgetButton = document.getElementById('show-widget-button');
+        const modal = document.getElementById('search-modal');
+        const modalClose = document.getElementById('modal-close');
+        
+        showWidgetButton.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // --- Tab Logic ---
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const targetContent = document.getElementById(button.dataset.tab + '-tab-content');
+                tabContents.forEach(content => {
+                    content.classList.toggle('active', content === targetContent);
+                });
+            });
+        });
+
         // URL 자동 입력 및 주소창 정리 기능
         const params = new URLSearchParams(window.location.search);
         const urlToProcess = params.get('url');
@@ -725,11 +912,16 @@
             history.replaceState({}, '', newUrl);
         }
 
-        // --- 모바일 안내 팝업 닫기 기능 ---
-        const mobileModal = document.getElementById('mobile-notice-modal');
-        if (mobileModal) {
+        // --- 모바일 안내 팝업 기능 ---
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            const mobileModal = document.getElementById('mobile-notice-modal');
             const mobileModalClose = mobileModal.querySelector('.modal-close');
             
+            setTimeout(() => {
+                mobileModal.style.display = 'flex';
+            }, 500);
+
             mobileModalClose.addEventListener('click', () => {
                 mobileModal.style.display = 'none';
             });
@@ -766,175 +958,161 @@
       { ko: '사우디', en: 'Saudi Arabia', ja: 'サウジアラビア', code: 'sa', flag: 'sa' }
     ];
 
-    function showToast() {
-        const toast = document.getElementById('toast-popup');
-        toast.textContent = translations[currentLang].toastPopup;
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 1000);
-    }
-
     function generateLinks() {
-        const input = document.getElementById('inputUrl').value.trim();
+      const input = document.getElementById('inputUrl').value.trim();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      resultsDiv.style.display = 'block';
 
-        if (!input) {
-            showToast();
-            setTimeout(() => {
-                window.open(`https://kr.trip.com/?Allianceid=6624731&SID=225753893&trip_sub1=blank_search&trip_sub3=D4136351`, '_blank');
-            }, 1000);
-            return;
+      function createKakaoButton() {
+          const kakaoBtn = document.createElement('a');
+          kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
+          kakaoBtn.target = '_blank';
+          kakaoBtn.className = 'kakao-chat-btn';
+          kakaoBtn.textContent = translations[currentLang].kakaoTalk; 
+          return kakaoBtn;
+      }
+
+      function createOtherSitesSection() {
+        const section = document.createElement('div');
+        section.className = 'other-sites-section';
+
+        const title = document.createElement('p');
+        title.className = 'other-sites-title';
+        title.innerHTML = translations[currentLang].otherSitesTitle;
+        
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'other-sites-buttons';
+
+        const agodaBtn = document.createElement('a');
+        agodaBtn.href = 'https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=1941957';
+        agodaBtn.target = '_blank';
+        agodaBtn.className = 'other-site-btn agoda';
+        agodaBtn.innerHTML = `
+            <div class="agoda-dots">
+                <span class="dot c1"></span><span class="dot c2"></span><span class="dot c3"></span><span class="dot c4"></span>
+            </div>
+            <span>${translations[currentLang].agodaSearch}</span>
+        `;
+        
+        buttonsContainer.appendChild(agodaBtn);
+        section.appendChild(title);
+        section.appendChild(buttonsContainer);
+        return section;
+      }
+
+      if (!input.includes('trip.com')) {
+        resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
+        resultsDiv.appendChild(createOtherSitesSection());
+        if (currentLang === 'ko') {
+            resultsDiv.appendChild(createKakaoButton());
         }
-
-        if (typeof gtag === 'function') {
-            let category = 'Other';
-            if (input.includes('/hotels/')) category = 'Hotel';
-            else if (input.includes('/flights/')) category = 'Flight';
-            else if (input.includes('/things-to-do/')) category = 'Activity';
-            else if (input.includes('/airport-transfers/')) category = 'Airport Pickup';
-            
-            gtag('event', 'submit_url', {
-                'submitted_link': input,
-                'link_category': category
-            });
-        }
-
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
-        resultsDiv.style.display = 'block';
-        linkClickCount = 0;
-        mobilePopupShown = false;
-
-        function createKakaoButton(isError = false) {
-            const kakaoBtn = document.createElement('a');
-            kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
-            kakaoBtn.target = '_blank';
-            kakaoBtn.className = 'kakao-chat-btn';
-            kakaoBtn.textContent = isError ? translations[currentLang].kakaoTalkError : translations[currentLang].kakaoTalk; 
-            return kakaoBtn;
-        }
-
-        if (!input.includes('trip.com')) {
-            resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
-            if (currentLang === 'ko') {
-                resultsDiv.appendChild(createKakaoButton(true));
-            }
-            return;
-        }
+        return;
+      }
       
-        try {
-            const url = new URL(input);
-            let pathname = url.pathname;
-            const originalParams = new URLSearchParams(url.search);
-            let essentialParams = new URLSearchParams();
+      try {
+        const url = new URL(input);
+        let pathname = url.pathname;
+        const originalParams = new URLSearchParams(url.search);
+        let essentialParams = new URLSearchParams();
 
-            if (pathname.includes('/flights')) {
-                if (pathname.startsWith('/m/')) {
-                    pathname = '/flights/showfarefirst';
-                    if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
-                    if (originalParams.has('acitycode')) essentialParams.set('acity', originalParams.get('acitycode'));
-                    if (originalParams.has('ddate')) essentialParams.set('ddate', originalParams.get('ddate'));
-                    if (originalParams.has('adate')) essentialParams.set('rdate', originalParams.get('adate'));
-                    if (originalParams.has('adult')) essentialParams.set('quantity', originalParams.get('adult'));
-                    const triptype = originalParams.get('triptype');
-                    if (triptype === '1' || triptype === 'rt') {
-                      essentialParams.set('triptype', 'rt');
-                    } else {
-                      essentialParams.set('triptype', 'ow');
-                      essentialParams.delete('rdate');
-                    }
-                    const classtype = originalParams.get('classtype');
-                    if (classtype === '1' || classtype === 'c') essentialParams.set('class', 'c');
-                    else if (classtype === '2' || classtype === 'f') essentialParams.set('class', 'f');
-                    else essentialParams.set('class', 'y');
-                    essentialParams.set('lowpricesource', 'searchform');
-                    essentialParams.set('searchboxarg', 't');
-                    essentialParams.set('nonstoponly', 'off');
-                } else {
-                    const blacklist = ['gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'];
-                    essentialParams = new URLSearchParams(originalParams);
-                    blacklist.forEach(param => essentialParams.delete(param));
-                }
-            } else {
-                const whitelist = ['hotelId', 'hotelid', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'];
-                whitelist.forEach(paramName => {
-                    if (originalParams.has(paramName)) {
-                        originalParams.getAll(paramName).forEach(value => {
-                            essentialParams.append(paramName, value);
-                        });
-                    }
-                });
-                if (pathname.startsWith('/m/')) {
-                    pathname = pathname.replace('/m/', '/');
-                }
-            }
-
-            if (!essentialParams.has('curr')) {
-                let currency = languageToCurrencyMap[currentLang] || 'USD';
-                if (originalParams.has('curr')) {
-                    currency = originalParams.get('curr').toUpperCase();
-                }
-                essentialParams.set('curr', currency);
-            }
-
-            const paramString = essentialParams.toString();
-            const cleanPath = pathname + (paramString ? '?' + paramString : '');
-            
-            const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
-            
-            const resultsTitle = document.createElement('p');
-            resultsTitle.className = 'results-title';
-            resultsTitle.innerHTML = translations[currentLang].resultsTitle;
-            resultsDiv.appendChild(resultsTitle);
-            
-            const gridContainer = document.createElement('div');
-            gridContainer.className = 'link-list-grid';
-            
-            let sortedDomains = [...domains];
-            if (currentLang === 'ja') {
-                const japan = sortedDomains.find(d => d.code === 'jp');
-                if (japan) {
-                    sortedDomains = [japan, ...sortedDomains.filter(d => d.code !== 'jp')];
-                }
-            }
-            
-            sortedDomains.forEach(dom => {
-              const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
-              const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
-              
-              const a = document.createElement('a');
-              a.href = fullUrl;
-              a.target = '_blank';
-              a.onclick = () => { 
-                a.classList.toggle('clicked');
+        if (pathname.includes('/flights')) {
+            if (pathname.startsWith('/m/')) {
+                pathname = '/flights/showfarefirst';
                 
-                linkClickCount++;
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                if (isMobile && linkClickCount >= 4 && !mobilePopupShown) {
-                    const mobileModal = document.getElementById('mobile-notice-modal');
-                    if (mobileModal) {
-                        mobileModal.style.display = 'flex';
-                        mobilePopupShown = true;
-                    }
+                if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
+                if (originalParams.has('acitycode')) essentialParams.set('acity', originalParams.get('acitycode'));
+                if (originalParams.has('ddate')) essentialParams.set('ddate', originalParams.get('ddate'));
+                if (originalParams.has('adate')) essentialParams.set('rdate', originalParams.get('adate'));
+                if (originalParams.has('adult')) essentialParams.set('quantity', originalParams.get('adult'));
+                
+                const triptype = originalParams.get('triptype');
+                essentialParams.set('triptype', (triptype === '1' || triptype === 'rt') ? 'rt' : 'ow');
+
+                const classtype = originalParams.get('classtype');
+                if (classtype === '1' || classtype === 'c') essentialParams.set('class', 'c');
+                else if (classtype === '2' || classtype === 'f') essentialParams.set('class', 'f');
+                else essentialParams.set('class', 'y');
+
+                essentialParams.set('lowpricesource', 'searchform');
+                essentialParams.set('searchboxarg', 't');
+                essentialParams.set('nonstoponly', 'off');
+
+            } else {
+                const blacklist = ['gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'];
+                essentialParams = new URLSearchParams(originalParams);
+                blacklist.forEach(param => essentialParams.delete(param));
+            }
+        } else {
+            const whitelist = ['hotelId', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'];
+            whitelist.forEach(paramName => {
+                if (originalParams.has(paramName)) {
+                    originalParams.getAll(paramName).forEach(value => {
+                        essentialParams.append(paramName, value);
+                    });
                 }
-              };
-              a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom[currentLang]} flag"> ${dom[currentLang]}`;
-              gridContainer.appendChild(a);
             });
-
-            resultsDiv.appendChild(gridContainer);
-            
-            if (currentLang === 'ko') {
-                resultsDiv.appendChild(createKakaoButton());
+            if (pathname.startsWith('/m/')) {
+                pathname = pathname.replace('/m/', '/');
             }
-
-        } catch (error) {
-            resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
-            if (currentLang === 'ko') {
-                resultsDiv.appendChild(createKakaoButton(true));
-            }
-            console.error("URL Parsing Error:", error);
         }
+
+        if (!essentialParams.has('curr')) {
+            let currency = languageToCurrencyMap[currentLang] || 'USD';
+            if (originalParams.has('curr')) {
+                currency = originalParams.get('curr').toUpperCase();
+            }
+            essentialParams.set('curr', currency);
+        }
+
+        const paramString = essentialParams.toString();
+        const cleanPath = pathname + (paramString ? '?' + paramString : '');
+        
+        const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
+        
+        const resultsTitle = document.createElement('p');
+        resultsTitle.className = 'results-title';
+        resultsTitle.innerHTML = translations[currentLang].resultsTitle;
+        resultsDiv.appendChild(resultsTitle);
+        
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'link-list-grid';
+        
+        let sortedDomains = [...domains];
+        if (currentLang === 'ja') {
+            const japan = sortedDomains.find(d => d.code === 'jp');
+            if (japan) {
+                sortedDomains = [japan, ...sortedDomains.filter(d => d.code !== 'jp')];
+            }
+        }
+        
+        sortedDomains.forEach(dom => {
+          const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
+          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
+          
+          const a = document.createElement('a');
+          a.href = fullUrl;
+          a.target = '_blank';
+          a.onclick = () => { a.classList.toggle('clicked'); };
+          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom[currentLang]} flag"> ${dom[currentLang]}`;
+          gridContainer.appendChild(a);
+        });
+
+        resultsDiv.appendChild(gridContainer);
+        
+        resultsDiv.appendChild(createOtherSitesSection());
+        if (currentLang === 'ko') {
+            resultsDiv.appendChild(createKakaoButton());
+        }
+
+      } catch (error) {
+        resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
+        resultsDiv.appendChild(createOtherSitesSection());
+        if (currentLang === 'ko') {
+            resultsDiv.appendChild(createKakaoButton());
+        }
+        console.error("URL Parsing Error:", error);
+      }
     }
   </script>
 </body>
