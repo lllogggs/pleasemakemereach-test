@@ -152,7 +152,7 @@
     .header {
       text-align: center;
       margin-bottom: 24px;
-      position: relative;
+      position: relative.
     }
 
     .header h1 {
@@ -541,7 +541,6 @@
     }
 
   </style>
-
 
   <!-- ④ 구조화 데이터 (WebSite + Organization) -->
   <script type="application/ld+json">
@@ -996,6 +995,7 @@
             let category = 'Other';
             if (input.includes('/hotels/')) category = 'Hotel';
             else if (input.includes('/flights/')) category = 'Flight';
+            else if (input.includes('/packages/')) category = 'Package';
             else if (input.includes('/things-to-do/')) category = 'Activity';
             else if (input.includes('/airport-transfers/')) category = 'Airport Pickup';
             
@@ -1040,7 +1040,31 @@
             const originalParams = new URLSearchParams(url.search);
             let essentialParams = new URLSearchParams();
 
-            if (pathname.includes('/flights')) {
+            // ====== NEW: packages(에어텔) 전용 분기 ======
+            if (pathname.includes('/packages/')) {
+                // 모바일 경로 정규화
+                if (pathname.startsWith('/m/')) {
+                    pathname = pathname.replace('/m/', '/');
+                }
+                const packagesWhitelist = [
+                  'dCity','aCity','hCity',
+                  'tripWay',
+                  'room','rooms',
+                  'adult','child','infants',
+                  'cAges','iAges',
+                  'dDate','rDate',
+                  'iDate','oDate',
+                  'locale','curr'
+                ];
+                packagesWhitelist.forEach(paramName => {
+                    if (originalParams.has(paramName)) {
+                        originalParams.getAll(paramName).forEach(v => {
+                            essentialParams.append(paramName, v);
+                        });
+                    }
+                });
+            // ====== 기존 flights 분기 ======
+            } else if (pathname.includes('/flights')) {
                 if (pathname.startsWith('/m/')) {
                     pathname = '/flights/showfarefirst';
                     if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
@@ -1067,6 +1091,7 @@
                     essentialParams = new URLSearchParams(originalParams);
                     blacklist.forEach(param => essentialParams.delete(param));
                 }
+            // ====== (호텔/기타) 기본 분기 ======
             } else {
                 const whitelist = ['hotelId', 'hotelid', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'];
                 whitelist.forEach(paramName => {
@@ -1081,6 +1106,7 @@
                 }
             }
 
+            // 통화(curr)는 원본에 있으면 그대로 사용, 없으면 언어 기준으로 기본값 설정
             if (!essentialParams.has('curr')) {
                 let currency = languageToCurrencyMap[currentLang] || 'USD';
                 if (originalParams.has('curr')) {
