@@ -87,80 +87,57 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         transition: transform 0.2s;
     }
-
-    .language-button:hover {
-        transform: translateY(-1px);
-    }
-
+    .language-button:hover { transform: translateY(-1px); }
     #lang-flag {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        object-fit: cover;
-        flex-shrink: 0;
+        width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
     }
-
-    #lang-text {
-        color: white;
-        font-size: 15px;
-        font-weight: 700;
-    }
-    
-    .dropdown-arrow {
-        color: white;
-        font-size: 12px;
-        margin-left: 4px;
-    }
+    #lang-text { color: white; font-size: 15px; font-weight: 700; }
+    .dropdown-arrow { color: white; font-size: 12px; margin-left: 4px; }
 
     .language-dropdown {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        margin-top: 8px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        padding: 8px;
-        min-width: 150px;
+        display: none; position: absolute; top: 100%; right: 0; margin-top: 8px;
+        background-color: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        padding: 8px; min-width: 150px;
     }
-    
-    .language-dropdown.show {
-        display: block;
-    }
-
+    .language-dropdown.show { display: block; }
     .lang-option {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px;
-        text-decoration: none;
-        color: var(--text-primary);
-        border-radius: 6px;
-        font-size: 15px;
+        display: flex; align-items: center; gap: 10px; padding: 10px; text-decoration: none;
+        color: var(--text-primary); border-radius: 6px; font-size: 15px;
     }
-    .lang-option:hover {
-        background-color: var(--light-blue);
-    }
-    .lang-option img {
-        width: 24px;
-        height: 16px;
-        object-fit: cover;
-        border-radius: 3px;
-    }
+    .lang-option:hover { background-color: var(--light-blue); }
+    .lang-option img { width: 24px; height: 16px; object-fit: cover; border-radius: 3px; }
 
     .header {
       text-align: center;
       margin-bottom: 24px;
-      position: relative.
+      position: relative; /* ← 오타 수정 */
     }
 
-    .header h1 {
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--primary-blue);
+    /* ===== 브랜드 로고 ===== */
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       margin: 0;
       padding-top: 10px;
+    }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      box-shadow: 0 6px 14px rgba(50,100,255,.25), inset 0 0 0 1px rgba(0,0,0,.05);
+      /* 더 또렷하게 보이도록 살짝 확장 */
+      transform: translateZ(0);
+    }
+    .brand-name {
+      font-size: 36px; font-weight: 800; line-height: 1;
+      background: linear-gradient(180deg, #4E79FF 0%, #3264FF 70%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 1px 0 rgba(255,255,255,.6),   /* 위쪽 하이라이트 */
+        0 2px 0 rgba(255,255,255,.4),
+        0 6px 14px rgba(50,100,255,.35); /* 아래쪽 그림자 */
+      letter-spacing: -0.5px;
     }
 
     .header p {
@@ -187,34 +164,20 @@
       box-sizing: border-box;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    
     #inputUrl:focus {
         outline: none;
         border-color: var(--primary-blue);
         box-shadow: 0 0 0 3px var(--light-blue);
     }
-    
     .main-button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 500;
-      background-color: var(--primary-blue);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      width: 100%; padding: 14px; font-size: 16px; font-weight: 500;
+      background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; cursor: pointer;
       transition: background-color 0.2s;
     }
-
-    .main-button:hover {
-      background-color: #254edc;
-    }
+    .main-button:hover { background-color: #254edc; }
 
     /* ① "링크가 없다면?" 버튼 숨김 */
-    .secondary-button#show-widget-button {
-        display: none !important;
-    }
+    .secondary-button#show-widget-button { display: none !important; }
     
     .info-card {
       background: var(--card-background);
@@ -225,309 +188,96 @@
     }
 
     .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--border-color);
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);
     }
-    .info-card h2 {
-        font-size: 20px;
-        font-weight: 700;
-        margin: 0 0 16px 0;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .card-header h2 {
-        margin: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-    .external-links {
-        display: flex;
-        gap: 8px;
-    }
+    .info-card h2 { font-size: 20px; font-weight: 700; margin: 0 0 16px 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .card-header h2 { margin: 0; padding-bottom: 0; border-bottom: none; }
+    .external-links { display: flex; gap: 8px; }
     .external-link-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 10px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        color: white;
-        transition: opacity 0.2s;
+        display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px;
+        text-decoration: none; font-size: 13px; font-weight: 500; color: white; transition: opacity 0.2s;
     }
-    .external-link-btn:hover {
-        opacity: 0.85;
-    }
-    .external-link-btn svg {
-          width: 16px;
-          height: 16px;
-          fill: white;
-          display: block;
-          flex-shrink: 0;
-        }
+    .external-link-btn:hover { opacity: 0.85; }
+    .external-link-btn svg { width: 16px; height: 16px; fill: white; display: block; flex-shrink: 0; }
     .external-link-btn.youtube { background-color: #FF0000; }
     .external-link-btn.naver { background-color: #03C75A; }
     
-    .info-card ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.7; 
-    }
-
-    .info-card ul li {
-        margin-bottom: 4px;  
-    }
-
-    .info-card ul li:last-child {
-        margin-bottom: 0; 
-    }
-    
-    .info-card ul li strong,
-    .info-card p strong {
-        color: var(--primary-blue);
-    }
-
-    .info-card p {
-        font-size: 16px;
-        line-height: 1.7;
-        margin: 0;
-    }
+    .info-card ul { list-style: none; padding: 0; margin: 0; font-size: 16px; line-height: 1.7; }
+    .info-card ul li { margin-bottom: 4px; }
+    .info-card ul li:last-child { margin-bottom: 0; }
+    .info-card ul li strong, .info-card p strong { color: var(--primary-blue); }
+    .info-card p { font-size: 16px; line-height: 1.7; margin: 0; }
 
     .link-list {
-      display: none;
-      background: var(--card-background);
-      padding: 8px 24px 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
+      display: none; background: var(--card-background); padding: 8px 24px 24px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); margin-bottom: 24px;
     }
-    
-    .results-title {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 16px;
-    }
-    .results-title strong {
-        color: var(--primary-blue);
-        font-weight: 500;
-    }
+    .results-title { text-align: center; font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 16px; }
+    .results-title strong { color: var(--primary-blue); font-weight: 500; }
 
     .link-list-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;
     }
-
     .link-list-grid a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 14px;
-      background: #fff;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text-primary);
-      font-size: 15px;
-      font-weight: 500;
-      transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
-      box-sizing: border-box;
-      word-break: keep-all;  
+      display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; background: #fff;
+      border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: var(--text-primary);
+      font-size: 15px; font-weight: 500; transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+      box-sizing: border-box; word-break: keep-all;
     }
+    .link-list-grid a:hover { background-color: var(--light-blue); border-color: var(--primary-blue); transform: translateY(-2px); }
+    .link-list-grid a.clicked { background-color: var(--light-blue); border-color: var(--primary-blue); font-weight: 700; }
 
-    .link-list-grid a:hover {
-      background-color: var(--light-blue);
-      border-color: var(--primary-blue);
-      transform: translateY(-2px);
-    }
-
-    .link-list-grid a.clicked {
-      background-color: var(--light-blue);
-      border-color: var(--primary-blue);
-      font-weight: 700;
-    }
-
-    .flag {
-      width: 24px;
-      height: 16px;
-      object-fit: cover;
-      border-radius: 3px;
-      flex-shrink: 0;  
-    }
-    
-    .highlight {
-      background-color: rgba(255, 247, 0, 0.6);
-      font-weight: 700;
-      padding: 2px 0 2px 4px;
-      border-radius: 3px;
-    }
+    .flag { width: 24px; height: 16px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
+    .highlight { background-color: rgba(255, 247, 0, 0.6); font-weight: 700; padding: 2px 0 2px 4px; border-radius: 3px; }
 
     .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        justify-content: center;
-        align-items: center;
-        z-index: 100;
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 100;
     }
-
     .modal-content {
-        position: relative;
-        background-color: var(--background-color);
-        padding: 20px;
-        border-radius: 14px;
-        width: 550px;
-        height: auto;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        box-sizing: border-box;
+        position: relative; background-color: var(--background-color); padding: 20px; border-radius: 14px;
+        width: 550px; height: auto; box-shadow: 0 5px 20px rgba(0,0,0,0.2); box-sizing: border-box;
     }
-
-    .modal-close {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 28px;
-        font-weight: bold;
-        color: var(--text-secondary);
-        cursor: pointer;
-    }
+    .modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: var(--text-secondary); cursor: pointer; }
     
-    .tab-nav {
-        display: flex;
-        border-bottom: 1px solid var(--border-color);
-    }
-
+    .tab-nav { display: flex; border-bottom: 1px solid var(--border-color); }
     .tab-button {
-        flex: 1;
-        padding: 15px;
-        font-size: 16px;
-        font-weight: 600;
-        text-align: center;
-        border: none;
-        background-color: transparent;
-        color: var(--text-secondary);
-        cursor: pointer;
-        border-bottom: 3px solid transparent;
-        transition: color 0.2s, border-color 0.2s;
+        flex: 1; padding: 15px; font-size: 16px; font-weight: 600; text-align: center; border: none; background-color: transparent;
+        color: var(--text-secondary); cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s;
     }
-
-    .tab-button.active {
-        color: var(--primary-blue);
-        border-bottom: 3px solid var(--primary-blue);
-    }
+    .tab-button.active { color: var(--primary-blue); border-bottom: 3px solid var(--primary-blue); }
     
-    .tab-content-container {
-        padding-top: 20px;
-    }
-
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-    }
-
-    .tab-content iframe {
-        width: 500px;
-        height: 500px;
-        border: none !important;
-    }
+    .tab-content-container { padding-top: 20px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .tab-content iframe { width: 500px; height: 500px; border: none !important; }
 
     .kakao-chat-btn {
-        display: block;
-        width: 100%;
-        background-color: #FAE100;
-        color: #3C1E1E;
-        text-align: center;
-        padding: 14px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 16px;
-        margin-top: 20px;
-        box-sizing: border-box;
+        display: block; width: 100%; background-color: #FAE100; color: #3C1E1E; text-align: center; padding: 14px;
+        border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; margin-top: 20px; box-sizing: border-box;
     }
 
-    .notice-modal-content {
-        width: 90%;
-        max-width: 320px;
-        text-align: center;
-        padding: 30px 20px;
-    }
-    .notice-icon {
-        font-size: 32px;
-        margin: 0 0 16px 0;
-    }
-    .notice-text {
-        font-size: 17px;
-        font-weight: 500;
-        line-height: 1.6;
-        margin: 0 0 8px 0;
-    }
-    .notice-text strong {
-        color: var(--primary-blue);
-    }
-    .notice-text small {
-        display: inline-block;
-        margin-top: 10px;
-        font-size: 13px;
-        color: var(--text-secondary);
-    }
+    .notice-modal-content { width: 90%; max-width: 320px; text-align: center; padding: 30px 20px; }
+    .notice-icon { font-size: 32px; margin: 0 0 16px 0; }
+    .notice-text { font-size: 17px; font-weight: 500; line-height: 1.6; margin: 0 0 8px 0; }
+    .notice-text strong { color: var(--primary-blue); }
+    .notice-text small { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--text-secondary); }
 
     @media (max-width: 600px) {
-        .language-selector {
-            top: -20px;
-            right: -5px;
-        }
-        .header {
-            margin-top: 24px;
-        }
-        .language-button {
-            padding: 4px 8px;
-            gap: 5px;
-        }
+        .language-selector { top: -20px; right: -5px; }
+        .header { margin-top: 24px; }
+        .language-button { padding: 4px 8px; gap: 5px; }
+        #lang-flag { width: 20px; height: 20px; }
+        #lang-text { font-size: 14px; }
+        .brand { gap: 8px; }
+        .brand-icon { width: 34px; height: 34px; border-radius: 7px; }
+        .brand-name { font-size: 30px; }
 
-        #lang-flag {
-            width: 20px;
-            height: 20px;
-        }
-
-        #lang-text {
-            font-size: 14px;
-        }
-
-        .modal-content {
-            width: 95%;
-            height: auto;
-            max-height: 85vh;
-            padding: 15px;
-            overflow-y: auto;
-        }
-        .tab-button {
-            padding: 12px;
-            font-size: 15px;
-        }
-        .tab-content-container {
-            padding-top: 15px;
-        }
-        .tab-content iframe {
-            width: 100%;
-            height: 450px;
-        }
+        .modal-content { width: 95%; height: auto; max-height: 85vh; padding: 15px; overflow-y: auto; }
+        .tab-button { padding: 12px; font-size: 15px; }
+        .tab-content-container { padding-top: 15px; }
+        .tab-content iframe { width: 100%; height: 450px; }
     }
 
     /* ④ 가운데 모달(토스트) */
@@ -539,8 +289,9 @@
       background:#fff; padding:14px 18px; border-radius:10px; border:1px solid var(--border-color);
       font-size:14px; color:var(--text-primary); box-shadow:0 8px 24px rgba(0,0,0,.2);
     }
-
   </style>
+
+  
 
   <!-- ④ 구조화 데이터 (WebSite + Organization) -->
   <script type="application/ld+json">
@@ -590,7 +341,12 @@
           </div>
       </div>
 
-      <h1 data-lang="mainTitle">🌐 트립닷닷</h1>
+      <!-- 변경: 브랜드 로고(파비콘 + 3D 텍스트) -->
+      <h1 class="brand">
+        <img class="brand-icon" src="/favicon-48x48.png" alt="트립닷닷 아이콘">
+        <span class="brand-name" data-lang="mainTitleText">트립닷닷</span>
+      </h1>
+
       <p data-lang="subtitle"> 트립닷컴 최저가 링크 찾기</p>
     </header>
 
@@ -679,7 +435,7 @@
   <script>
     const translations = {
         en: {
-            mainTitle: "🌐 Tripdotdot",
+            mainTitleText: "Tripdotdot",
             subtitle: "Trip.com Lowest Price Link Finder",
             placeholder: "Paste Hotel/Flight link from trip.com!",
             findButton: "Find Lowest Price Links",
@@ -704,7 +460,7 @@
             mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text">For more accurate price comparison,<br><strong>use the PC (Desktop site) version!</strong><br><small>(Some prices may be the same across countries on mobile)</small></p>`
         },
         ko: {
-            mainTitle: "🌐 트립닷닷",
+            mainTitleText: "트립닷닷",
             subtitle: "트립닷컴 최저가 링크 찾기",
             placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
             findButton: "최저가 링크 찾기",
@@ -729,7 +485,7 @@
             mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong><br><small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small></p>`
         },
         ja: {
-            mainTitle: "🌐 Tripdotdot",
+            mainTitleText: "Tripdotdot",
             subtitle: "Trip.com 最安値リンク検索",
             placeholder: "ホテル・航空券のリンクをペースト",
             findButton: "最安値リンクを検索",
@@ -805,12 +561,8 @@
     function updateLanguageButtonDisplay() {
         const langText = document.getElementById('lang-text');
         if (!langText) return;
-
-        if (window.innerWidth <= 600) {
-            langText.textContent = langDetails[currentLang].code;
-        } else {
-            langText.textContent = langDetails[currentLang].text;
-        }
+        if (window.innerWidth <= 600) { langText.textContent = langDetails[currentLang].code; }
+        else { langText.textContent = langDetails[currentLang].text; }
     }
 
     function setLanguage(lang) {
@@ -845,9 +597,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
         let initialLang = 'en'; // Default
-        if (userLang === 'ko' || userLang === 'ja') {
-            initialLang = userLang;
-        }
+        if (userLang === 'ko' || userLang === 'ja') { initialLang = userLang; }
         setLanguage(initialLang);
         
         // --- Dropdown Logic ---
@@ -860,13 +610,11 @@
             event.stopPropagation();
             langDropdown.classList.toggle('show');
         });
-        
         window.addEventListener('click', (event) => {
             if (!langSelector.contains(event.target)) {
                 langDropdown.classList.remove('show');
             }
         });
-
         langOptions.forEach(option => {
             option.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -887,36 +635,19 @@
         const showWidgetButton = document.getElementById('show-widget-button');
         const modal = document.getElementById('search-modal');
         const modalClose = modal.querySelector('.modal-close');
-        
-        if (showWidgetButton) {
-          showWidgetButton.addEventListener('click', () => {
-              modal.style.display = 'flex';
-          });
-        }
-
-        modalClose.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
+        if (showWidgetButton) { showWidgetButton.addEventListener('click', () => { modal.style.display = 'flex'; }); }
+        modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+        modal.addEventListener('click', (event) => { if (event.target === modal) { modal.style.display = 'none'; } });
         
         // --- Tab Logic ---
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
-
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-
                 const targetContent = document.getElementById(button.dataset.tab + '-tab-content');
-                tabContents.forEach(content => {
-                    content.classList.toggle('active', content === targetContent);
-                });
+                tabContents.forEach(content => { content.classList.toggle('active', content === targetContent); });
             });
         });
 
@@ -926,7 +657,6 @@
         if (urlToProcess) {
             const inputEl = document.getElementById('inputUrl');
             inputEl.value = urlToProcess;
-            
             const newUrl = window.location.pathname;
             history.replaceState({}, '', newUrl);
         }
@@ -935,16 +665,8 @@
         const mobileModal = document.getElementById('mobile-notice-modal');
         if (mobileModal) {
             const mobileModalClose = mobileModal.querySelector('.modal-close');
-            
-            mobileModalClose.addEventListener('click', () => {
-                mobileModal.style.display = 'none';
-            });
-
-            mobileModal.addEventListener('click', (event) => {
-                if (event.target === mobileModal) {
-                    mobileModal.style.display = 'none';
-                }
-            });
+            mobileModalClose.addEventListener('click', () => { mobileModal.style.display = 'none'; });
+            mobileModal.addEventListener('click', (event) => { if (event.target === mobileModal) { mobileModal.style.display = 'none'; } });
         }
 
         // ③ 입력창 빈 상태 3회 클릭 시 → 모달 0.8s → 새 탭 이동
@@ -1028,9 +750,7 @@
 
         if (!input.includes('trip.com')) {
             resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
-            if (currentLang === 'ko') {
-                resultsDiv.appendChild(createKakaoButton(true));
-            }
+            if (currentLang === 'ko') { resultsDiv.appendChild(createKakaoButton(true)); }
             return;
         }
       
