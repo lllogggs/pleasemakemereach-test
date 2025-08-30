@@ -9,30 +9,36 @@
   <link rel="apple-touch-icon" href="/apple-icon.png">
   <title>트립닷닷 | Trip.com 최저가 링크 찾기</title>
 
-  <!-- ① canonical + hreflang 정리 -->
+  <!-- Canonical + hreflang: 각 페이지는 자기 자신을 canonical로! -->
   <link rel="canonical" href="https://tripdotdot.com/">
   <link rel="alternate" hreflang="ko" href="https://tripdotdot.com/">
+  <link rel="alternate" hreflang="en" href="https://tripdotdot.com/en/">
+  <link rel="alternate" hreflang="ja" href="https://tripdotdot.com/ja/">
   <link rel="alternate" hreflang="x-default" href="https://tripdotdot.com/">
 
-  <!-- ③ robots 메타 -->
+  <!-- Robots -->
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="googlebot" content="index,follow">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <meta content="tripdotdot" name="author">
   <meta content="트립닷닷, 트립닷컴 할인, 트립닷컴 싸게 예약하는법, 트립닷컴 할인코드, 트립닷컴 7월 할인코드, 트립닷컴 8월 할인코드, 트립닷컴 쿠키, 트립닷컴 가격비교, Trip.com 최저가, 국가별 링크, 호텔 최저가, 항공권 비교, tripdotdot, trip.com price comparison" name="keywords">
   <meta name="description" content="트립닷컴 국가별 할인코드 적용링크 | N만원 절약하고 여행가자 | 최대 21개국 사이트에서 최저가 검색 가능">
-  
+
+  <!-- Site verification -->
   <meta content="0BzhAaMapguH_MeU7EZbSDla0DlHq7RNCMnAcujXNzM" name="google-site-verification">
   <meta content="6d36eb0cb19fc826bcba409428fa0d6fddc9c33d" name="naver-site-verification">
-  
+
+  <!-- Open Graph -->
   <meta property="og:title" content="트립닷닷 | Trip.com 최저가 링크 찾기">
   <meta property="og:site_name" content="트립닷닷">
   <meta property="og:description" content="10초만에 N만원 절약하고 여행가자">
   <meta property="og:image" content="https://tripdotdot.com/thumbnail.jpg">
   <meta property="og:url" content="https://tripdotdot.com/">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="ja_JP">
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
@@ -42,7 +48,7 @@
       --light-blue: #eaf0ff;
       --background-color: #f5f7fa;
       --card-background: #ffffff;
-      --text-primary: #1f2937; /* 남색 */
+      --text-primary: #1f2937;
       --text-secondary: #6b7280;
       --border-color: #e5e7eb;
     }
@@ -57,118 +63,54 @@
       color: var(--text-primary);
     }
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-      position: relative;
-    }
-    
-    footer p {
-        margin-top: 3px;
-        margin-bottom: 3px;
-    }
+    .container { width: 100%; max-width: 600px; position: relative; }
 
-    .language-selector {
-        position: absolute;
-        top: 25px;
-        right: 0;
-        z-index: 10;
-    }
+    footer p { margin-top: 3px; margin-bottom: 3px; }
+
+    .language-selector { position: absolute; top: 25px; right: 0; z-index: 10; }
 
     .language-button {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background-color: var(--text-primary);
-        border: none;
-        border-radius: 8px;
-        padding: 6px 12px;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
+      display: flex; align-items: center; gap: 8px;
+      background-color: var(--text-primary);
+      border: none; border-radius: 8px; padding: 6px 12px; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s;
     }
     .language-button:hover { transform: translateY(-1px); }
-    #lang-flag {
-        width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
-    }
+
+    #lang-flag { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
     #lang-text { color: white; font-size: 15px; font-weight: 700; }
     .dropdown-arrow { color: white; font-size: 12px; margin-left: 4px; }
 
     .language-dropdown {
-        display: none; position: absolute; top: 100%; right: 0; margin-top: 8px;
-        background-color: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        padding: 8px; min-width: 150px;
+      display: none; position: absolute; top: 100%; right: 0; margin-top: 8px;
+      background-color: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 8px; min-width: 150px;
     }
     .language-dropdown.show { display: block; }
+
     .lang-option {
-        display: flex; align-items: center; gap: 10px; padding: 10px; text-decoration: none;
-        color: var(--text-primary); border-radius: 6px; font-size: 15px;
+      display: flex; align-items: center; gap: 10px; padding: 10px;
+      text-decoration: none; color: var(--text-primary); border-radius: 6px; font-size: 15px;
     }
     .lang-option:hover { background-color: var(--light-blue); }
     .lang-option img { width: 24px; height: 16px; object-fit: cover; border-radius: 3px; }
 
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-      position: relative; /* ← 오타 수정 */
-    }
-
-    /* ===== 브랜드 로고 ===== */
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0;
-      padding-top: 10px;
-    }
-    .brand-icon {
-      width: 40px; height: 40px; border-radius: 8px;
-      box-shadow: 0 6px 14px rgba(50,100,255,.25), inset 0 0 0 1px rgba(0,0,0,.05);
-      /* 더 또렷하게 보이도록 살짝 확장 */
-      transform: translateZ(0);
-    }
-    .brand-name {
-      font-size: 36px; font-weight: 800; line-height: 1;
-      background: linear-gradient(180deg, #4E79FF 0%, #3264FF 70%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow:
-        0 1px 0 rgba(255,255,255,.6),   /* 위쪽 하이라이트 */
-        0 2px 0 rgba(255,255,255,.4),
-        0 6px 14px rgba(50,100,255,.35); /* 아래쪽 그림자 */
-      letter-spacing: -0.5px;
-    }
-
-    .header p {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin: 0;
-    }
+    .header { text-align: center; margin-bottom: 24px; position: relative; }
+    .header h1 { font-size: 36px; font-weight: 700; color: var(--primary-blue); margin: 0; padding-top: 10px; }
+    .header p { font-size: 16px; color: var(--text-secondary); margin: 0; }
 
     .input-section {
-      background: var(--card-background);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
+      background: var(--card-background); padding: 24px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px;
     }
 
     #inputUrl {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
+      width: 100%; padding: 14px 16px; font-size: 16px; border: 1px solid var(--border-color);
+      border-radius: 8px; margin-bottom: 12px; box-sizing: border-box;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    #inputUrl:focus {
-        outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px var(--light-blue);
-    }
+    #inputUrl:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px var(--light-blue); }
+
     .main-button {
       width: 100%; padding: 14px; font-size: 16px; font-weight: 500;
       background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; cursor: pointer;
@@ -176,49 +118,38 @@
     }
     .main-button:hover { background-color: #254edc; }
 
-    /* ① "링크가 없다면?" 버튼 숨김 */
+    /* "링크가 없다면?" 버튼 숨김 */
     .secondary-button#show-widget-button { display: none !important; }
-    
-    .info-card {
-      background: var(--card-background);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
-    }
 
-    .card-header {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);
+    .info-card {
+      background: var(--card-background); padding: 24px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px;
     }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
     .info-card h2 { font-size: 20px; font-weight: 700; margin: 0 0 16px 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
     .card-header h2 { margin: 0; padding-bottom: 0; border-bottom: none; }
+
     .external-links { display: flex; gap: 8px; }
     .external-link-btn {
-        display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px;
-        text-decoration: none; font-size: 13px; font-weight: 500; color: white; transition: opacity 0.2s;
+      display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px;
+      text-decoration: none; font-size: 13px; font-weight: 500; color: white; transition: opacity 0.2s;
     }
     .external-link-btn:hover { opacity: 0.85; }
     .external-link-btn svg { width: 16px; height: 16px; fill: white; display: block; flex-shrink: 0; }
     .external-link-btn.youtube { background-color: #FF0000; }
-    .external-link-btn.naver { background-color: #03C75A; }
-    
+    .external-link-btn.naver  { background-color: #03C75A; }
+
     .info-card ul { list-style: none; padding: 0; margin: 0; font-size: 16px; line-height: 1.7; }
     .info-card ul li { margin-bottom: 4px; }
     .info-card ul li:last-child { margin-bottom: 0; }
     .info-card ul li strong, .info-card p strong { color: var(--primary-blue); }
     .info-card p { font-size: 16px; line-height: 1.7; margin: 0; }
 
-    .link-list {
-      display: none; background: var(--card-background); padding: 8px 24px 24px; border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); margin-bottom: 24px;
-    }
+    .link-list { display: none; background: var(--card-background); padding: 8px 24px 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; }
     .results-title { text-align: center; font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 16px; }
     .results-title strong { color: var(--primary-blue); font-weight: 500; }
 
-    .link-list-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;
-    }
+    .link-list-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
     .link-list-grid a {
       display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; background: #fff;
       border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: var(--text-primary);
@@ -232,30 +163,30 @@
     .highlight { background-color: rgba(255, 247, 0, 0.6); font-weight: 700; padding: 2px 0 2px 4px; border-radius: 3px; }
 
     .modal-overlay {
-        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 100;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 100;
     }
     .modal-content {
-        position: relative; background-color: var(--background-color); padding: 20px; border-radius: 14px;
-        width: 550px; height: auto; box-shadow: 0 5px 20px rgba(0,0,0,0.2); box-sizing: border-box;
+      position: relative; background-color: var(--background-color); padding: 20px; border-radius: 14px; width: 550px; height: auto;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2); box-sizing: border-box;
     }
     .modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: var(--text-secondary); cursor: pointer; }
-    
+
     .tab-nav { display: flex; border-bottom: 1px solid var(--border-color); }
     .tab-button {
-        flex: 1; padding: 15px; font-size: 16px; font-weight: 600; text-align: center; border: none; background-color: transparent;
-        color: var(--text-secondary); cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s;
+      flex: 1; padding: 15px; font-size: 16px; font-weight: 600; text-align: center; border: none; background-color: transparent;
+      color: var(--text-secondary); cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s;
     }
     .tab-button.active { color: var(--primary-blue); border-bottom: 3px solid var(--primary-blue); }
-    
+
     .tab-content-container { padding-top: 20px; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .tab-content iframe { width: 500px; height: 500px; border: none !important; }
 
     .kakao-chat-btn {
-        display: block; width: 100%; background-color: #FAE100; color: #3C1E1E; text-align: center; padding: 14px;
-        border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; margin-top: 20px; box-sizing: border-box;
+      display: block; width: 100%; background-color: #FAE100; color: #3C1E1E; text-align: center; padding: 14px; border-radius: 8px;
+      text-decoration: none; font-weight: bold; font-size: 16px; margin-top: 20px; box-sizing: border-box;
     }
 
     .notice-modal-content { width: 90%; max-width: 320px; text-align: center; padding: 30px 20px; }
@@ -265,35 +196,26 @@
     .notice-text small { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--text-secondary); }
 
     @media (max-width: 600px) {
-        .language-selector { top: -20px; right: -5px; }
-        .header { margin-top: 24px; }
-        .language-button { padding: 4px 8px; gap: 5px; }
-        #lang-flag { width: 20px; height: 20px; }
-        #lang-text { font-size: 14px; }
-        .brand { gap: 8px; }
-        .brand-icon { width: 34px; height: 34px; border-radius: 7px; }
-        .brand-name { font-size: 30px; }
-
-        .modal-content { width: 95%; height: auto; max-height: 85vh; padding: 15px; overflow-y: auto; }
-        .tab-button { padding: 12px; font-size: 15px; }
-        .tab-content-container { padding-top: 15px; }
-        .tab-content iframe { width: 100%; height: 450px; }
+      .language-selector { top: -20px; right: -5px; }
+      .header { margin-top: 24px; }
+      .language-button { padding: 4px 8px; gap: 5px; }
+      #lang-flag { width: 20px; height: 20px; }
+      #lang-text { font-size: 14px; }
+      .modal-content { width: 95%; height: auto; max-height: 85vh; padding: 15px; overflow-y: auto; }
+      .tab-button { padding: 12px; font-size: 15px; }
+      .tab-content-container { padding-top: 15px; }
+      .tab-content iframe { width: 100%; height: 450px; }
     }
 
-    /* ④ 가운데 모달(토스트) */
-    #redirect-modal{
-      display:none; position:fixed; inset:0; background:rgba(0,0,0,.45);
-      z-index:9999; align-items:center; justify-content:center;
-    }
+    /* 가운데 모달(토스트) */
+    #redirect-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9999; align-items:center; justify-content:center; }
     #redirect-modal .redirect-box{
       background:#fff; padding:14px 18px; border-radius:10px; border:1px solid var(--border-color);
       font-size:14px; color:var(--text-primary); box-shadow:0 8px 24px rgba(0,0,0,.2);
     }
   </style>
 
-  
-
-  <!-- ④ 구조화 데이터 (WebSite + Organization) -->
+  <!-- 구조화 데이터 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -326,32 +248,26 @@
 </head>
 <body>
   <div class="container">
-    
     <header class="header">
       <div class="language-selector">
-          <button id="language-button" class="language-button">
-              <img id="lang-flag" src="" alt="Language flag">
-              <span id="lang-text"></span>
-              <span class="dropdown-arrow">▼</span>
-          </button>
-          <div id="language-dropdown" class="language-dropdown">
-              <a href="#" class="lang-option" data-lang-code="ko"><img src="https://flagcdn.com/w40/kr.png" alt="KR Flag"> 한국어</a>
-              <a href="#" class="lang-option" data-lang-code="en"><img src="https://flagcdn.com/w40/us.png" alt="US Flag"> English</a>
-              <a href="#" class="lang-option" data-lang-code="ja"><img src="https://flagcdn.com/w40/jp.png" alt="JP Flag"> 日本語</a>
-          </div>
+        <button id="language-button" class="language-button" aria-haspopup="true" aria-expanded="false">
+          <img id="lang-flag" src="" alt="Language flag">
+          <span id="lang-text"></span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div id="language-dropdown" class="language-dropdown" role="menu">
+          <a href="/" class="lang-option" data-lang-code="ko"><img src="https://flagcdn.com/w40/kr.png" alt="KR Flag"> 한국어</a>
+          <a href="/en/" class="lang-option" data-lang-code="en"><img src="https://flagcdn.com/w40/us.png" alt="US Flag"> English</a>
+          <a href="/ja/" class="lang-option" data-lang-code="ja"><img src="https://flagcdn.com/w40/jp.png" alt="JP Flag"> 日本語</a>
+        </div>
       </div>
 
-      <!-- 변경: 브랜드 로고(파비콘 + 3D 텍스트) -->
-      <h1 class="brand">
-        <img class="brand-icon" src="/favicon-48x48.png" alt="트립닷닷 아이콘">
-        <span class="brand-name" data-lang="mainTitleText">트립닷닷</span>
-      </h1>
-
+      <h1 data-lang="mainTitle">🌐 트립닷닷</h1>
       <p data-lang="subtitle"> 트립닷컴 최저가 링크 찾기</p>
     </header>
 
     <section class="input-section">
-      <input id="inputUrl" data-lang-placeholder placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text">
+      <input id="inputUrl" data-lang-placeholder placeholder="https://kr.trip.com/~ 호텔/항공권 링크 복붙!" type="text" inputmode="url">
       <button class="main-button" onclick="generateLinks()" data-lang="findButton">최저가 링크 찾기</button>
       <button id="show-widget-button" class="secondary-button" data-lang="searchPrompt">링크가 없다면? 여기서 검색하기</button>
     </section>
@@ -359,31 +275,31 @@
     <div class="link-list" id="results"></div>
 
     <section class="info-card">
-        <div class="card-header">
-            <h2 data-lang="card2Title">✅ 사용 방법</h2>
-            <div class="external-links">
-                <a href="https://youtube.com/shorts/reQWEWc72Yw?feature=share" target="_blank" class="external-link-btn youtube" aria-label="유튜브">
-                  <span aria-hidden="true" style="font-size:16px; line-height:1; display:inline-block;">▶</span>
-                  <span>유튜브</span>
-                </a>
-                <a href="https://blog.naver.com/tripdotdot/223948757114" target="_blank" class="external-link-btn naver">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="14px" height="14px"><path d="M16.273 12.845v-1.742h-3.447v3.49h3.447v-1.748zM18.02 7.966H7.135v9.224h9.136V7.966H18.02z"></path></svg>
-                    <span>블로그</span>
-                </a>
-            </div>
+      <div class="card-header">
+        <h2 data-lang="card2Title">✅ 사용 방법</h2>
+        <div class="external-links">
+          <a href="https://youtube.com/shorts/reQWEWc72Yw?feature=share" target="_blank" class="external-link-btn youtube" aria-label="유튜브">
+            <span aria-hidden="true" style="font-size:16px; line-height:1; display:inline-block;">▶</span>
+            <span>유튜브</span>
+          </a>
+          <a href="https://blog.naver.com/tripdotdot/223948757114" target="_blank" class="external-link-btn naver">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="14" height="14"><path d="M16.273 12.845v-1.742h-3.447v3.49h3.447v-1.748zM18.02 7.966H7.135v9.224h9.136V7.966H18.02z"></path></svg>
+            <span>블로그</span>
+          </a>
         </div>
-        <ul data-lang="card2List">
-            <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
-            <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
-            <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
-        </ul>
+      </div>
+      <ul data-lang="card2List">
+        <li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li>
+        <li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li>
+        <li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>
+      </ul>
     </section>
 
     <section class="info-card">
-        <h2 data-lang="card1Title">🌍 최저가 국가를 찾아보세요</h2>
-        <p data-lang="card1Desc">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight" data-lang="card1Highlight">가장 저렴하게 예약</span>하세요!</p>
+      <h2 data-lang="card1Title">🌍 최저가 국가를 찾아보세요</h2>
+      <p data-lang="card1Desc">트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class="highlight" data-lang="card1Highlight">가장 저렴하게 예약</span>하세요!</p>
     </section>
-    
+
     <section class="info-card">
       <h2 data-lang="card3Title">💡 알아두면 좋은 팁</h2>
       <p data-lang="card3List">
@@ -392,160 +308,161 @@
         💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.
       </p>
     </section>
-    
+
     <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
-      <p><a id="privacy-link" href="privacy_ko.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
+      <p><a id="privacy-link" href="/privacy_ko.html" target="_blank" style="color: #aaa;" data-lang="privacy">개인정보처리방침</a></p>
       <p data-lang="disclosureAffiliate" style="font-size: 12px; padding: 0 10px; line-height: 1.6;"></p>
       <p data-lang="disclosureCollection" style="font-size: 12px; padding: 0 10px; line-height: 1.6;"></p>
       <p id="copyright" data-lang="copyright"></p>
     </footer>
   </div>
 
-  <!-- ④ 가운데 모달 -->
+  <!-- 가운데 모달 -->
   <div id="redirect-modal" role="dialog" aria-live="polite" aria-label="트립닷컴 연결 안내">
     <div class="redirect-box">트립닷컴으로 연결합니다...</div>
   </div>
 
   <div id="search-modal" class="modal-overlay">
-      <div class="modal-content">
-          <span id="modal-close" class="modal-close">×</span>
-          <div class="tab-nav">
-              <button class="tab-button active" data-tab="hotel" data-lang="hotelTabTitle"></button>
-              <button class="tab-button" data-tab="flight" data-lang="flightTabTitle"></button>
-          </div>
-          <div class="tab-content-container">
-              <div id="hotel-tab-content" class="tab-content active">
-                  <iframe id="hotel-widget-modal" src="" frameborder="0" scrolling="no"></iframe>
-              </div>
-              <div id="flight-tab-content" class="tab-content">
-                  <iframe id="flight-widget-modal" src="" frameborder="0" scrolling="no"></iframe>
-              </div>
-          </div>
+    <div class="modal-content">
+      <span id="modal-close" class="modal-close">×</span>
+      <div class="tab-nav">
+        <button class="tab-button active" data-tab="hotel" data-lang="hotelTabTitle"></button>
+        <button class="tab-button" data-tab="flight" data-lang="flightTabTitle"></button>
       </div>
+      <div class="tab-content-container">
+        <div id="hotel-tab-content" class="tab-content active">
+          <iframe id="hotel-widget-modal" src="" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <div id="flight-tab-content" class="tab-content">
+          <iframe id="flight-widget-modal" src="" frameborder="0" scrolling="no"></iframe>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="mobile-notice-modal" class="modal-overlay">
     <div class="modal-content notice-modal-content">
       <span class="modal-close">×</span>
-      <div class="notice-modal-body" data-lang="mobileNotice">
-      </div>
+      <div class="notice-modal-body" data-lang="mobileNotice"></div>
     </div>
   </div>
 
   <script>
+    /* ===== 텍스트 리소스 ===== */
     const translations = {
-        en: {
-            mainTitleText: "Tripdotdot",
-            subtitle: "Trip.com Lowest Price Link Finder",
-            placeholder: "Paste Hotel/Flight link from trip.com!",
-            findButton: "Find Lowest Price Links",
-            searchPrompt: "No link yet? Search on Trip.com",
-            hotelTabTitle: "🏨 Hotel Booking",
-            flightTabTitle: "✈️ Flight Booking",
-            card1Title: "🌍 Find the Cheapest Country",
-            card1Desc: "Trip.com prices can <strong>differ by country.</strong><br>Use <strong>Tripdotdot</strong> to book at the <span class=\"highlight\">absolute lowest price!</span>",
-            card2Title: "✅ How to Use",
-            card2List: `<li>1️⃣ Find a deal on Trip.com and <strong>copy the link.</strong></li><li>2️⃣ Paste the link above and click <strong>'Find'</strong>!</li><li>3️⃣ Click the generated links to <strong>find the best price!</strong></li>`,
-            card3Title: "💡 Good to Know",
-            card3List: `👉 Use Chrome's <strong>'Translate'</strong> for foreign pages.<br>⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>💰 Always compare the <strong>'final price'</strong> including taxes.`,
-            privacy: "Privacy Policy",
-            invalidLink: "Please enter a valid Trip.com link.",
-            parseError: "The format of the entered link is incorrect.",
-            kakaoTalk: "🙋‍♀️🙋‍♂️ Get a coffee for booking confirmation!",
-            kakaoTalkError: "🤔 Report an Error",
-            resultsTitle: "🔍 Click the <strong>country buttons</strong> to check prices",
-            disclosureAffiliate: "This site contains affiliate links and may receive a commission for bookings made through these links.",
-            disclosureCollection: "Entered links may be collected anonymously for service improvement.",
-            copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
-            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text">For more accurate price comparison,<br><strong>use the PC (Desktop site) version!</strong><br><small>(Some prices may be the same across countries on mobile)</small></p>`
-        },
-        ko: {
-            mainTitleText: "트립닷닷",
-            subtitle: "트립닷컴 최저가 링크 찾기",
-            placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
-            findButton: "최저가 링크 찾기",
-            searchPrompt: "링크가 없다면? 여기서 검색하기",
-            hotelTabTitle: "🏨 호텔 예약",
-            flightTabTitle: "✈️ 항공권 예약",
-            card1Title: "🌍 최저가 국가를 찾아보세요",
-            card1Desc: "트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class=\"highlight\">가장 저렴하게 예약</span>하세요!",
-            card2Title: "✅ 사용 방법",
-            card2List: `<li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li><li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li><li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>`,
-            card3Title: "💡 알아두면 좋은 팁",
-            card3List: `👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
-            privacy: "개인정보처리방침",
-            invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
-            parseError: "입력한 링크의 형식이 올바르지 않습니다.",
-            kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 예약 인증하고 커피 받아가세요",
-            kakaoTalkError: "🤔 문의하기 / 오류 제보하기",
-            resultsTitle: "🔍 <strong>국가 버튼</strong>을 눌러 가격을 확인해보세요",
-            disclosureAffiliate: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 수수료를 받을 수 있습니다.",
-            disclosureCollection: "입력된 링크는 서비스 개선을 위해 익명으로 수집될 수 있습니다.",
-            copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
-            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong><br><small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small></p>`
-        },
-        ja: {
-            mainTitleText: "Tripdotdot",
-            subtitle: "Trip.com 最安値リンク検索",
-            placeholder: "ホテル・航空券のリンクをペースト",
-            findButton: "最安値リンクを検索",
-            searchPrompt: "リンクがありませんか？こちらで検索",
-            hotelTabTitle: "🏨 ホテル予約",
-            flightTabTitle: "✈️ 航空券予約",
-            card1Title: "🌍 最安値の国を探す",
-            card1Desc: "Trip.comの商品は<strong>国によって価格が異なります。</strong><br><strong>Tripdotdot</strong>で<span class=\"highlight\">最安値を予約</span>しましょう！",
-            card2Title: "✅ ご利用方法",
-            card2List: `<li>1️⃣ Trip.comで商品を検索し、<strong>リンクをコピー</strong>します。</li><li>2️⃣ コピーしたリンクを貼り付けて<strong>「検索」</strong>をクリック！</li><li>3️⃣ 生成された各国のリンクから<strong>最安値を確認！</strong></li>`,
-            card3Title: "💡 お役立ち情報",
-            card3List: `👉 外国語のページはChromeの<strong>「翻訳」</strong>機能をご利用ください。<br>⚠️ 一部の商品は国によって価格が<strong>同じ</strong>場合があります。<br>💰 税金/手数料込みの<strong>「最終金額」</strong>で比較してください。`,
-            privacy: "プライバシーポリシー",
-            invalidLink: "有効なTrip.comのリンクを入力してください。",
-            parseError: "入力されたリンクの形式が正しくありません。",
-            kakaoTalk: "予約認証でコーヒーをゲット！",
-            kakaoTalkError: "🤔 お問い合わせ / エラー報告",
-            resultsTitle: "🔍 <strong>国のボタン</strong>を押して価格を確認してください",
-            disclosureAffiliate: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。",
-            disclosureCollection: "入力されたリンクは、サービス改善のために匿名で収集される場合があります。",
-            copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
-            mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>より正確な価格比較は<br>PC（デスクトップサイト）で可能です！</strong><br><small>（一部の商品はモバイルで各国の価格が同じです）</small></p>`
-        }
+      en: {
+        mainTitle: "🌐 Tripdotdot",
+        subtitle: "Trip.com Lowest Price Link Finder",
+        placeholder: "Paste Hotel/Flight link from trip.com!",
+        findButton: "Find Lowest Price Links",
+        searchPrompt: "No link yet? Search on Trip.com",
+        hotelTabTitle: "🏨 Hotel Booking",
+        flightTabTitle: "✈️ Flight Booking",
+        card1Title: "🌍 Find the Cheapest Country",
+        card1Desc: "Trip.com prices can <strong>differ by country.</strong><br>Use <strong>Tripdotdot</strong> to book at the <span class=\"highlight\">absolute lowest price!</span>",
+        card2Title: "✅ How to Use",
+        card2List: `<li>1️⃣ Find a deal on Trip.com and <strong>copy the link.</strong></li><li>2️⃣ Paste the link above and click <strong>'Find'</strong>!</li><li>3️⃣ Click the generated links to <strong>find the best price!</strong></li>`,
+        card3Title: "💡 Good to Know",
+        card3List: `👉 Use Chrome's <strong>'Translate'</strong> for foreign pages.<br>⚠️ Some deals may have the <strong>same price</strong> in all countries.<br>💰 Always compare the <strong>'final price'</strong> including taxes.`,
+        privacy: "Privacy Policy",
+        invalidLink: "Please enter a valid Trip.com link.",
+        parseError: "The format of the entered link is incorrect.",
+        kakaoTalk: "🙋‍♀️🙋‍♂️ Get a coffee for booking confirmation!",
+        kakaoTalkError: "🤔 Report an Error",
+        resultsTitle: "🔍 Click the <strong>country buttons</strong> to check prices",
+        disclosureAffiliate: "This site contains affiliate links and may receive a commission for bookings made through these links.",
+        disclosureCollection: "Entered links may be collected anonymously for service improvement.",
+        copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
+        mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text">For more accurate price comparison,<br><strong>use the PC (Desktop site) version!</strong><br><small>(Some prices may be the same across countries on mobile)</small></p>`
+      },
+      ko: {
+        mainTitle: "🌐 트립닷닷",
+        subtitle: "트립닷컴 최저가 링크 찾기",
+        placeholder: "https://kr.trip.com/~ 호텔/항공권 링크 복붙!",
+        findButton: "최저가 링크 찾기",
+        searchPrompt: "링크가 없다면? 여기서 검색하기",
+        hotelTabTitle: "🏨 호텔 예약",
+        flightTabTitle: "✈️ 항공권 예약",
+        card1Title: "🌍 최저가 국가를 찾아보세요",
+        card1Desc: "트립닷컴 상품은 <strong>국가별로 가격이 다를 수 있습니다.</strong><br><strong>트립닷닷</strong>으로 <span class=\"highlight\">가장 저렴하게 예약</span>하세요!",
+        card2Title: "✅ 사용 방법",
+        card2List: `<li>1️⃣ 트립닷컴에서 상품 검색 후, <strong>링크를 복사</strong>하세요.</li><li>2️⃣ 복사한 링크를 붙여넣고 <strong>'찾기'</strong> 버튼을 클릭!</li><li>3️⃣ 생성된 국가별 링크를 눌러 <strong>최저가 확인!</strong></li>`,
+        card3Title: "💡 알아두면 좋은 팁",
+        card3List: `👉 외국어 페이지는 크롬 <strong>'번역'</strong> 기능을 사용하세요.<br>⚠️ 일부 상품은 국가별 가격이 <strong>동일</strong>할 수도 있습니다.<br>💰 세금/수수료 포함 <strong>'최종 금액'</strong>으로 비교하세요.`,
+        privacy: "개인정보처리방침",
+        invalidLink: "유효한 트립닷컴 링크를 입력해주세요.",
+        parseError: "입력한 링크의 형식이 올바르지 않습니다.",
+        kakaoTalk: "🙋‍♀️🙋‍♂️ 트립닷닷 예약 인증하고 커피 받아가세요",
+        kakaoTalkError: "🤔 문의하기 / 오류 제보하기",
+        resultsTitle: "🔍 <strong>국가 버튼</strong>을 눌러 가격을 확인해보세요",
+        disclosureAffiliate: "이 사이트는 제휴 링크를 포함하며, 링크를 통해 발생한 예약에 대해 수수료를 받을 수 있습니다.",
+        disclosureCollection: "입력된 링크는 서비스 개선을 위해 익명으로 수집될 수 있습니다.",
+        copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
+        mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>더 정확한 최저가 비교는<br>PC(데스크톱 사이트)에서 가능해요!</strong><br><small>(일부 상품은 모바일에서 국가별 가격이 동일해요)</small></p>`
+      },
+      ja: {
+        mainTitle: "🌐 Tripdotdot",
+        subtitle: "Trip.com 最安値リンク検索",
+        placeholder: "ホテル・航空券のリンクをペースト",
+        findButton: "最安値リンクを検索",
+        searchPrompt: "リンクがありませんか？こちらで検索",
+        hotelTabTitle: "🏨 ホテル予約",
+        flightTabTitle: "✈️ 航空券予約",
+        card1Title: "🌍 最安値の国を探す",
+        card1Desc: "Trip.comの商品は<strong>国によって価格が異なります。</strong><br><strong>Tripdotdot</strong>で<span class=\"highlight\">最安値を予約</span>しましょう！",
+        card2Title: "✅ ご利用方法",
+        card2List: `<li>1️⃣ Trip.comで商品を検索し、<strong>リンクをコピー</strong>します。</li><li>2️⃣ コピーしたリンクを貼り付けて<strong>「検索」</strong>をクリック！</li><li>3️⃣ 生成された各国のリンクから<strong>最安値を確認！</strong></li>`,
+        card3Title: "💡 お役立ち情報",
+        card3List: `👉 外国語のページはChromeの<strong>「翻訳」</strong>機能をご利用ください。<br>⚠️ 一部の商品は国によって価格が<strong>同じ</strong>場合があります。<br>💰 税金/手数料込みの<strong>「最終金額」</strong>で比較してください。`,
+        privacy: "プライバシーポリシー",
+        invalidLink: "有効なTrip.comのリンクを入力してください。",
+        parseError: "入力されたリンクの形式が正しくありません。",
+        kakaoTalk: "予約認証でコーヒーをゲット！",
+        kakaoTalkError: "🤔 お問い合わせ / エラー報告",
+        resultsTitle: "🔍 <strong>国のボタン</strong>を押して価格を確認してください",
+        disclosureAffiliate: "このサイトにはアフィリエイトリンクが含まれており、これらのリンクを通じて行われた予約に対して手数料を受け取ることがあります。",
+        disclosureCollection: "入力されたリンクは、サービス改善のために匿名で収集される場合があります。",
+        copyright: `© ${new Date().getFullYear()} tripdotdot. All rights reserved.`,
+        mobileNotice: `<p class="notice-icon">✨</p><p class="notice-text"><strong>より正確な価格比較は<br>PC（デスクトップサイト）で可能です！</strong><br><small>（一部の商品はモバイルで各国の価格が同じです）</small></p>`
+      }
     };
 
+    /* 위젯 소스: 언어별 */
     const widgetSrcModal = {
-        ko: {
-            hotel: "https://kr.trip.com/partners/ad/S4477545?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
-            flight: "https://kr.trip.com/partners/ad/S4477048?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
-        },
-        en: {
-            hotel: "https://www.trip.com/partners/ad/S4479596?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
-            flight: "https://www.trip.com/partners/ad/S4479617?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
-        },
-        ja: { // 일본어는 영어 버전으로 대체
-            hotel: "https://www.trip.com/partners/ad/S4479596?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
-            flight: "https://www.trip.com/partners/ad/S4479617?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
-        }
+      ko: {
+        hotel: "https://kr.trip.com/partners/ad/S4477545?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
+        flight:"https://kr.trip.com/partners/ad/S4477048?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
+      },
+      en: {
+        hotel: "https://www.trip.com/partners/ad/S4479596?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
+        flight:"https://www.trip.com/partners/ad/S4479617?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
+      },
+      ja: { // 일본어는 영어 위젯 사용
+        hotel: "https://www.trip.com/partners/ad/S4479596?Allianceid=6624731&SID=225753893&trip_sub1=hotelsearch_b",
+        flight:"https://www.trip.com/partners/ad/S4479617?Allianceid=6624731&SID=225753893&trip_sub1=flightsearch_b"
+      }
     };
 
     let currentLang = 'ko';
     let linkClickCount = 0;
     let mobilePopupShown = false;
-    
+
+    /* 언어 표시/프라이버시 링크(절대경로로 고정) */
     const langDetails = {
-        ko: { flag: 'kr.png', text: '한국어', privacy: 'privacy_ko.html', code: 'KR' },
-        en: { flag: 'us.png', text: 'English', privacy: 'privacy_en.html', code: 'EN' },
-        ja: { flag: 'jp.png', text: '日本語', privacy: 'privacy_ja.html', code: 'JP' }
+      ko: { flag: 'kr.png', text: '한국어', privacy: '/privacy_ko.html', code: 'KR' },
+      en: { flag: 'us.png', text: 'English', privacy: '/privacy_en.html', code: 'EN' },
+      ja: { flag: 'jp.png', text: '日本語', privacy: '/privacy_ja.html', code: 'JP' }
     };
 
     const languageToCurrencyMap = {
-        ko: 'KRW', ja: 'JPY', en: 'USD', es: 'EUR', fr: 'EUR', de: 'EUR',
-        nl: 'EUR', pt: 'EUR', vi: 'VND', id: 'IDR', ms: 'MYR',
-        zh: 'TWD', hi: 'INR', ru: 'RUB', ar: 'SAR'
+      ko:'KRW', ja:'JPY', en:'USD', es:'EUR', fr:'EUR', de:'EUR',
+      nl:'EUR', pt:'EUR', vi:'VND', id:'IDR', ms:'MYR',
+      zh:'TWD', hi:'INR', ru:'RUB', ar:'SAR'
     };
 
-    // ②,③ 공통: 제휴 URL & 모달 후 새 탭 이동 (0.8s)
+    /* 제휴 URL 모달 */
     const AFF_URL = 'https://kr.trip.com/?curr=KRW&Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
-    let blankClickCount = 0;
-    let isRedirecting = false;
+    let blankClickCount = 0, isRedirecting = false;
     function redirectWithModal(delayMs = 800) {
       if (isRedirecting) return;
       isRedirecting = true;
@@ -553,347 +470,312 @@
       if (modal) modal.style.display = 'flex';
       setTimeout(() => {
         if (modal) modal.style.display = 'none';
-        window.open(AFF_URL, '_blank'); // 새 탭
+        window.open(AFF_URL, '_blank');
         isRedirecting = false;
       }, delayMs);
     }
 
     function updateLanguageButtonDisplay() {
-        const langText = document.getElementById('lang-text');
-        if (!langText) return;
-        if (window.innerWidth <= 600) { langText.textContent = langDetails[currentLang].code; }
-        else { langText.textContent = langDetails[currentLang].text; }
+      const langText = document.getElementById('lang-text');
+      if (!langText) return;
+      if (window.innerWidth <= 600) { langText.textContent = langDetails[currentLang].code; }
+      else { langText.textContent = langDetails[currentLang].text; }
+    }
+
+    /* ✅ URL 이동 방식 언어 전환 (쿼리스트링 보존) */
+    function goLang(newLang){
+      const qs = window.location.search || '';
+      const target = newLang === 'ko' ? '/' : `/${newLang}/`;
+      window.location.href = target + qs;
     }
 
     function setLanguage(lang) {
-        currentLang = lang;
-        document.documentElement.lang = lang;
-        
-        document.querySelectorAll('[data-lang]').forEach(el => {
-            const key = el.getAttribute('data-lang');
-            if (translations[lang][key]) {
-                el.innerHTML = translations[lang][key];
-            }
-        });
-        
-        const inputEl = document.getElementById('inputUrl');
-        if(inputEl) inputEl.placeholder = translations[lang].placeholder;
+      currentLang = lang;
+      document.documentElement.lang = lang;
 
-        const langFlag = document.getElementById('lang-flag');
-        const privacyLink = document.getElementById('privacy-link');
-        
-        langFlag.src = `https://flagcdn.com/w40/${langDetails[lang].flag.replace('.png', '')}.png`;
-        langFlag.alt = `${langDetails[lang].text} Flag`;
-        privacyLink.href = langDetails[lang].privacy;
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (translations[lang][key]) el.innerHTML = translations[lang][key];
+      });
 
-        updateLanguageButtonDisplay();
+      const inputEl = document.getElementById('inputUrl');
+      if (inputEl) inputEl.placeholder = translations[lang].placeholder;
 
-        const hotelWidget = document.getElementById('hotel-widget-modal');
-        const flightWidget = document.getElementById('flight-widget-modal');
-        hotelWidget.src = widgetSrcModal[lang].hotel;
-        flightWidget.src = widgetSrcModal[lang].flight;
+      const langFlag = document.getElementById('lang-flag');
+      const privacyLink = document.getElementById('privacy-link');
+
+      langFlag.src = `https://flagcdn.com/w40/${langDetails[lang].flag.replace('.png','')}.png`;
+      langFlag.alt = `${langDetails[lang].text} Flag`;
+      privacyLink.href = langDetails[lang].privacy;
+
+      updateLanguageButtonDisplay();
+
+      const hotelWidget = document.getElementById('hotel-widget-modal');
+      const flightWidget = document.getElementById('flight-widget-modal');
+      hotelWidget.src = widgetSrcModal[lang].hotel;
+      flightWidget.src = widgetSrcModal[lang].flight;
     }
-    
+
     document.addEventListener('DOMContentLoaded', () => {
-        const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
-        let initialLang = 'en'; // Default
-        if (userLang === 'ko' || userLang === 'ja') { initialLang = userLang; }
-        setLanguage(initialLang);
-        
-        // --- Dropdown Logic ---
-        const langSelector = document.querySelector('.language-selector');
-        const langButton = document.getElementById('language-button');
-        const langDropdown = document.getElementById('language-dropdown');
-        const langOptions = document.querySelectorAll('.lang-option');
+      /* ✅ 경로 기반 초기 언어 결정 */
+      const pathLang = (location.pathname.split('/')[1] || '').toLowerCase();
+      const supported = ['en','ja'];
+      const initialLang = supported.includes(pathLang) ? pathLang : 'ko';
+      setLanguage(initialLang);
 
-        langButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            langDropdown.classList.toggle('show');
-        });
-        window.addEventListener('click', (event) => {
-            if (!langSelector.contains(event.target)) {
-                langDropdown.classList.remove('show');
-            }
-        });
-        langOptions.forEach(option => {
-            option.addEventListener('click', (event) => {
-                event.preventDefault();
-                const newLang = option.getAttribute('data-lang-code');
-                setLanguage(newLang);
-                langDropdown.classList.remove('show');
-            });
-        });
+      // Dropdown
+      const langSelector = document.querySelector('.language-selector');
+      const langButton = document.getElementById('language-button');
+      const langDropdown = document.getElementById('language-dropdown');
+      const langOptions = document.querySelectorAll('.lang-option');
 
-        // --- Resize Logic ---
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(updateLanguageButtonDisplay, 150);
-        });
+      langButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        langDropdown.classList.toggle('show');
+        langButton.setAttribute('aria-expanded', langDropdown.classList.contains('show') ? 'true' : 'false');
+      });
 
-        // --- Modal Logic (Search Widget) ---
-        const showWidgetButton = document.getElementById('show-widget-button');
-        const modal = document.getElementById('search-modal');
-        const modalClose = modal.querySelector('.modal-close');
-        if (showWidgetButton) { showWidgetButton.addEventListener('click', () => { modal.style.display = 'flex'; }); }
-        modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
-        modal.addEventListener('click', (event) => { if (event.target === modal) { modal.style.display = 'none'; } });
-        
-        // --- Tab Logic ---
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                const targetContent = document.getElementById(button.dataset.tab + '-tab-content');
-                tabContents.forEach(content => { content.classList.toggle('active', content === targetContent); });
-            });
-        });
-
-        // URL 자동 입력 및 주소창 정리 기능
-        const params = new URLSearchParams(window.location.search);
-        const urlToProcess = params.get('url');
-        if (urlToProcess) {
-            const inputEl = document.getElementById('inputUrl');
-            inputEl.value = urlToProcess;
-            const newUrl = window.location.pathname;
-            history.replaceState({}, '', newUrl);
+      window.addEventListener('click', (event) => {
+        if (!langSelector.contains(event.target)) {
+          langDropdown.classList.remove('show');
+          langButton.setAttribute('aria-expanded','false');
         }
+      });
 
-        // --- 모바일 안내 팝업 닫기 기능 ---
-        const mobileModal = document.getElementById('mobile-notice-modal');
-        if (mobileModal) {
-            const mobileModalClose = mobileModal.querySelector('.modal-close');
-            mobileModalClose.addEventListener('click', () => { mobileModal.style.display = 'none'; });
-            mobileModal.addEventListener('click', (event) => { if (event.target === mobileModal) { mobileModal.style.display = 'none'; } });
-        }
+      /* ✅ 스위처가 setLanguage가 아니라 URL 이동(goLang) 하도록 */
+      langOptions.forEach(option => {
+        option.addEventListener('click', (event) => {
+          event.preventDefault();
+          const newLang = option.getAttribute('data-lang-code');
+          goLang(newLang);
+        });
+      });
 
-        // ③ 입력창 빈 상태 3회 클릭 시 → 모달 0.8s → 새 탭 이동
-        const inputEl2 = document.getElementById('inputUrl');
-        if (inputEl2) {
-          inputEl2.addEventListener('click', () => {
-            if (!inputEl2.value.trim()) {
-              blankClickCount++;
-              if (blankClickCount >= 3) {
-                blankClickCount = 0;
-                redirectWithModal(800);
-              }
-            } else {
+      // Resize: 버튼 텍스트 KR/EN 표기
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(updateLanguageButtonDisplay, 150);
+      });
+
+      // Modal (검색 위젯)
+      const showWidgetButton = document.getElementById('show-widget-button');
+      const modal = document.getElementById('search-modal');
+      const modalClose = modal.querySelector('.modal-close');
+      if (showWidgetButton) showWidgetButton.addEventListener('click', () => { modal.style.display = 'flex'; });
+      modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+      // 탭
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          const targetContent = document.getElementById(button.dataset.tab + '-tab-content');
+          tabContents.forEach(content => content.classList.toggle('active', content === targetContent));
+        });
+      });
+
+      // ?url= 처리 (표시만 하고 주소창은 깔끔하게)
+      const params = new URLSearchParams(window.location.search);
+      const urlToProcess = params.get('url');
+      if (urlToProcess) {
+        const inputEl = document.getElementById('inputUrl');
+        inputEl.value = urlToProcess;
+        const newUrl = window.location.pathname;
+        history.replaceState({}, '', newUrl);
+      }
+
+      // 모바일 안내 팝업 닫기
+      const mobileModal = document.getElementById('mobile-notice-modal');
+      if (mobileModal) {
+        const mobileModalClose = mobileModal.querySelector('.modal-close');
+        mobileModalClose.addEventListener('click', () => { mobileModal.style.display = 'none'; });
+        mobileModal.addEventListener('click', (e) => { if (e.target === mobileModal) mobileModal.style.display = 'none'; });
+      }
+
+      // 입력창 빈 상태 3회 클릭 시 → 모달 → 새 탭
+      const inputEl2 = document.getElementById('inputUrl');
+      if (inputEl2) {
+        inputEl2.addEventListener('click', () => {
+          if (!inputEl2.value.trim()) {
+            blankClickCount++;
+            if (blankClickCount >= 3) {
               blankClickCount = 0;
+              redirectWithModal(800);
             }
-          });
-        }
+          } else {
+            blankClickCount = 0;
+          }
+        });
+      }
     });
 
+    /* 국가 도메인 목록 */
     const domains = [
-      { ko: '한국', en: 'Korea', ja: '韓国', code: 'kr', flag: 'kr' },
-      { ko: '미국', en: 'USA', ja: 'アメリカ', code: 'us', flag: 'us' },
-      { ko: '일본', en: 'Japan', ja: '日本', code: 'jp', flag: 'jp' },
-      { ko: '스페인', en: 'Spain', ja: 'スペイン', code: 'es', flag: 'es' },
-      { ko: '프랑스', en: 'France', ja: 'フランス', code: 'fr', flag: 'fr' },
-      { ko: '베트남', en: 'Vietnam', ja: 'ベトナム', code: 'vn', flag: 'vn' },
-      { ko: '독일', en: 'Germany', ja: 'ドイツ', code: 'de', flag: 'de' },
-      { ko: '캐나다', en: 'Canada', ja: 'カナダ', code: 'ca', flag: 'ca' },
-      { ko: '호주', en: 'Australia', ja: 'オーストラリア', code: 'au', flag: 'au' },
-      { ko: '네덜란드', en: 'Netherlands', ja: 'オランダ', code: 'nl', flag: 'nl' },
-      { ko: '싱가포르', en: 'Singapore', ja: 'シンガポール', code: 'sg', flag: 'sg' },
-      { ko: '인도네시아', en: 'Indonesia', ja: 'インドネシア', code: 'id', flag: 'id' },
-      { ko: '말레이시아', en: 'Malaysia', ja: 'マレーシア', code: 'my', flag: 'my' },
-      { ko: '대만', en: 'Taiwan', ja: '台湾', code: 'tw', flag: 'tw' },
-      { ko: '인도', en: 'India', ja: 'インド', code: 'in', flag: 'in' },
-      { ko: '멕시코', en: 'Mexico', ja: 'メキシコ', code: 'mx', flag: 'mx' },
-      { ko: '영국', en: 'U.K.', ja: 'イギリス', code: 'uk', flag: 'gb' },
-      { ko: '러시아', en: 'Russia', ja: 'ロシア', code: 'ru', flag: 'ru' },
-      { ko: '아르헨티나', en: 'Argentina', ja: 'アルゼンチン', code: 'ar', flag: 'ar' },
-      { ko: '포르투갈', en: 'Portugal', ja: 'ポルトガル', code: 'pt', flag: 'pt' },
-      { ko: '사우디', en: 'Saudi Arabia', ja: 'サウジアラビア', code: 'sa', flag: 'sa' }
+      { ko:'한국', en:'Korea', ja:'韓国', code:'kr', flag:'kr' },
+      { ko:'미국', en:'USA',   ja:'アメリカ', code:'us', flag:'us' },
+      { ko:'일본', en:'Japan', ja:'日本',     code:'jp', flag:'jp' },
+      { ko:'스페인', en:'Spain', ja:'スペイン', code:'es', flag:'es' },
+      { ko:'프랑스', en:'France', ja:'フランス', code:'fr', flag:'fr' },
+      { ko:'베트남', en:'Vietnam', ja:'ベトナム', code:'vn', flag:'vn' },
+      { ko:'독일', en:'Germany', ja:'ドイツ', code:'de', flag:'de' },
+      { ko:'캐나다', en:'Canada', ja:'カナダ', code:'ca', flag:'ca' },
+      { ko:'호주', en:'Australia', ja:'オーストラリア', code:'au', flag:'au' },
+      { ko:'네덜란드', en:'Netherlands', ja:'オランダ', code:'nl', flag:'nl' },
+      { ko:'싱가포르', en:'Singapore', ja:'シンガポール', code:'sg', flag:'sg' },
+      { ko:'인도네시아', en:'Indonesia', ja:'インドネシア', code:'id', flag:'id' },
+      { ko:'말레이시아', en:'Malaysia', ja:'マレーシア', code:'my', flag:'my' },
+      { ko:'대만', en:'Taiwan', ja:'台湾', code:'tw', flag:'tw' },
+      { ko:'인도', en:'India', ja:'インド', code:'in', flag:'in' },
+      { ko:'멕시코', en:'Mexico', ja:'メキシコ', code:'mx', flag:'mx' },
+      { ko:'영국', en:'U.K.', ja:'イギリス', code:'uk', flag:'gb' },
+      { ko:'러시아', en:'Russia', ja:'ロシア', code:'ru', flag:'ru' },
+      { ko:'아르헨티나', en:'Argentina', ja:'アルゼンチン', code:'ar', flag:'ar' },
+      { ko:'포르투갈', en:'Portugal', ja:'ポルトガル', code:'pt', flag:'pt' },
+      { ko:'사우디', en:'Saudi Arabia', ja:'サウジアラビア', code:'sa', flag:'sa' }
     ];
 
     function generateLinks() {
-        const input = document.getElementById('inputUrl').value.trim();
+      const input = document.getElementById('inputUrl').value.trim();
 
-        if (input && typeof gtag === 'function') {
-            let category = 'Other';
-            if (input.includes('/hotels/')) category = 'Hotel';
-            else if (input.includes('/flights/')) category = 'Flight';
-            else if (input.includes('/packages/')) category = 'Package';
-            else if (input.includes('/things-to-do/')) category = 'Activity';
-            else if (input.includes('/airport-transfers/')) category = 'Airport Pickup';
-            
-            gtag('event', 'submit_url', {
-                'submitted_link': input,
-                'link_category': category
-            });
+      if (input && typeof gtag === 'function') {
+        let category = 'Other';
+        if (input.includes('/hotels/')) category = 'Hotel';
+        else if (input.includes('/flights/')) category = 'Flight';
+        else if (input.includes('/packages/')) category = 'Package';
+        else if (input.includes('/things-to-do/')) category = 'Activity';
+        else if (input.includes('/airport-transfers/')) category = 'Airport Pickup';
+        gtag('event', 'submit_url', { 'submitted_link': input, 'link_category': category });
+      }
+
+      if (!input) { redirectWithModal(800); return; }
+
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      resultsDiv.style.display = 'block';
+      linkClickCount = 0;
+      mobilePopupShown = false;
+
+      function createKakaoButton(isError = false) {
+        const kakaoBtn = document.createElement('a');
+        kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
+        kakaoBtn.target = '_blank';
+        kakaoBtn.className = 'kakao-chat-btn';
+        kakaoBtn.textContent = isError ? translations[currentLang].kakaoTalkError : translations[currentLang].kakaoTalk;
+        return kakaoBtn;
+      }
+
+      if (!input.includes('trip.com')) {
+        resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
+        if (currentLang === 'ko') resultsDiv.appendChild(createKakaoButton(true));
+        return;
+      }
+
+      try {
+        const url = new URL(input);
+        let pathname = url.pathname;
+        const originalParams = new URLSearchParams(url.search);
+        let essentialParams = new URLSearchParams();
+
+        if (pathname.includes('/packages/')) {
+          if (pathname.startsWith('/m/')) pathname = pathname.replace('/m/','/');
+          const packagesWhitelist = [
+            'dCity','aCity','hCity','tripWay','room','rooms','adult','child','infants',
+            'cAges','iAges','dDate','rDate','iDate','oDate','locale','curr'
+          ];
+          packagesWhitelist.forEach(p => {
+            if (originalParams.has(p)) originalParams.getAll(p).forEach(v => essentialParams.append(p, v));
+          });
+
+        } else if (pathname.includes('/flights')) {
+          if (pathname.startsWith('/m/')) {
+            pathname = '/flights/showfarefirst';
+            if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
+            if (originalParams.has('acitycode')) essentialParams.set('acity', originalParams.get('acitycode'));
+            if (originalParams.has('ddate')) essentialParams.set('ddate', originalParams.get('ddate'));
+            if (originalParams.has('adate')) essentialParams.set('rdate', originalParams.get('adate'));
+            if (originalParams.has('adult')) essentialParams.set('quantity', originalParams.get('adult'));
+            const triptype = originalParams.get('triptype');
+            if (triptype === '1' || triptype === 'rt') { essentialParams.set('triptype','rt'); }
+            else { essentialParams.set('triptype','ow'); essentialParams.delete('rdate'); }
+            const classtype = originalParams.get('classtype');
+            if (classtype === '1' || classtype === 'c') essentialParams.set('class','c');
+            else if (classtype === '2' || classtype === 'f') essentialParams.set('class','f');
+            else essentialParams.set('class','y');
+            essentialParams.set('lowpricesource','searchform');
+            essentialParams.set('searchboxarg','t');
+            essentialParams.set('nonstoponly','off');
+          } else {
+            const blacklist = ['gclid','msclkid','utm_source','utm_medium','utm_campaign','utm_term','utm_content','Allianceid','SID','trip_sub1','trip_sub3'];
+            essentialParams = new URLSearchParams(originalParams);
+            blacklist.forEach(param => essentialParams.delete(param));
+          }
+
+        } else {
+          const whitelist = ['hotelId','hotelid','cityId','checkIn','checkOut','adults','children','rooms','nights','crn','ages','travelpurpose','adult','curr'];
+          whitelist.forEach(p => {
+            if (originalParams.has(p)) originalParams.getAll(p).forEach(v => essentialParams.append(p, v));
+          });
+          if (pathname.startsWith('/m/')) pathname = pathname.replace('/m/','/');
         }
 
-        // ② 입력이 비어있으면 → 모달 0.8s → 새 탭 이동
-        if (!input) {
-          redirectWithModal(800);
-          return;
+        if (!essentialParams.has('curr')) {
+          let currency = languageToCurrencyMap[currentLang] || 'USD';
+          if (originalParams.has('curr')) currency = originalParams.get('curr').toUpperCase();
+          essentialParams.set('curr', currency);
         }
 
+        const paramString = essentialParams.toString();
+        const cleanPath = pathname + (paramString ? '?' + paramString : '');
+
+        const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
+
+        const resultsTitle = document.createElement('p');
+        resultsTitle.className = 'results-title';
+        resultsTitle.innerHTML = translations[currentLang].resultsTitle;
+        resultsDiv.appendChild(resultsTitle);
+
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'link-list-grid';
+
+        let sortedDomains = [...domains];
+        if (currentLang === 'ja') {
+          const japan = sortedDomains.find(d => d.code === 'jp');
+          if (japan) sortedDomains = [japan, ...sortedDomains.filter(d => d.code !== 'jp')];
+        }
+
+        sortedDomains.forEach(dom => {
+          const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
+          const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
+
+          const a = document.createElement('a');
+          a.href = fullUrl;
+          a.target = '_blank';
+          a.onclick = () => {
+            a.classList.toggle('clicked');
+            linkClickCount++;
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            if (isMobile && linkClickCount >= 4 && !mobilePopupShown) {
+              const mobileModal = document.getElementById('mobile-notice-modal');
+              if (mobileModal) { mobileModal.style.display = 'flex'; mobilePopupShown = true; }
+            }
+          };
+          a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom[currentLang]} flag"> ${dom[currentLang]}`;
+          gridContainer.appendChild(a);
+        });
+
+        resultsDiv.appendChild(gridContainer);
+        if (currentLang === 'ko') resultsDiv.appendChild(createKakaoButton());
+
+      } catch (error) {
         const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
-        resultsDiv.style.display = 'block';
-        linkClickCount = 0;
-        mobilePopupShown = false;
-
-        function createKakaoButton(isError = false) {
-            const kakaoBtn = document.createElement('a');
-            kakaoBtn.href = 'https://open.kakao.com/o/sKGmxMDh';
-            kakaoBtn.target = '_blank';
-            kakaoBtn.className = 'kakao-chat-btn';
-            kakaoBtn.textContent = isError ? translations[currentLang].kakaoTalkError : translations[currentLang].kakaoTalk; 
-            return kakaoBtn;
-        }
-
-        if (!input.includes('trip.com')) {
-            resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].invalidLink}</p>`;
-            if (currentLang === 'ko') { resultsDiv.appendChild(createKakaoButton(true)); }
-            return;
-        }
-      
-        try {
-            const url = new URL(input);
-            let pathname = url.pathname;
-            const originalParams = new URLSearchParams(url.search);
-            let essentialParams = new URLSearchParams();
-
-            // ====== NEW: packages(에어텔) 전용 분기 ======
-            if (pathname.includes('/packages/')) {
-                // 모바일 경로 정규화
-                if (pathname.startsWith('/m/')) {
-                    pathname = pathname.replace('/m/', '/');
-                }
-                const packagesWhitelist = [
-                  'dCity','aCity','hCity',
-                  'tripWay',
-                  'room','rooms',
-                  'adult','child','infants',
-                  'cAges','iAges',
-                  'dDate','rDate',
-                  'iDate','oDate',
-                  'locale','curr'
-                ];
-                packagesWhitelist.forEach(paramName => {
-                    if (originalParams.has(paramName)) {
-                        originalParams.getAll(paramName).forEach(v => {
-                            essentialParams.append(paramName, v);
-                        });
-                    }
-                });
-            // ====== 기존 flights 분기 ======
-            } else if (pathname.includes('/flights')) {
-                if (pathname.startsWith('/m/')) {
-                    pathname = '/flights/showfarefirst';
-                    if (originalParams.has('dcitycode')) essentialParams.set('dcity', originalParams.get('dcitycode'));
-                    if (originalParams.has('acitycode')) essentialParams.set('acity', originalParams.get('acitycode'));
-                    if (originalParams.has('ddate')) essentialParams.set('ddate', originalParams.get('ddate'));
-                    if (originalParams.has('adate')) essentialParams.set('rdate', originalParams.get('adate'));
-                    if (originalParams.has('adult')) essentialParams.set('quantity', originalParams.get('adult'));
-                    const triptype = originalParams.get('triptype');
-                    if (triptype === '1' || triptype === 'rt') {
-                      essentialParams.set('triptype', 'rt');
-                    } else {
-                      essentialParams.set('triptype', 'ow');
-                      essentialParams.delete('rdate');
-                    }
-                    const classtype = originalParams.get('classtype');
-                    if (classtype === '1' || classtype === 'c') essentialParams.set('class', 'c');
-                    else if (classtype === '2' || classtype === 'f') essentialParams.set('class', 'f');
-                    else essentialParams.set('class', 'y');
-                    essentialParams.set('lowpricesource', 'searchform');
-                    essentialParams.set('searchboxarg', 't');
-                    essentialParams.set('nonstoponly', 'off');
-                } else {
-                    const blacklist = ['gclid', 'msclkid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'Allianceid', 'SID', 'trip_sub1', 'trip_sub3'];
-                    essentialParams = new URLSearchParams(originalParams);
-                    blacklist.forEach(param => essentialParams.delete(param));
-                }
-            // ====== (호텔/기타) 기본 분기 ======
-            } else {
-                const whitelist = ['hotelId', 'hotelid', 'cityId', 'checkIn', 'checkOut', 'adults', 'children', 'rooms', 'nights', 'crn', 'ages', 'travelpurpose', 'adult', 'curr'];
-                whitelist.forEach(paramName => {
-                    if (originalParams.has(paramName)) {
-                        originalParams.getAll(paramName).forEach(value => {
-                            essentialParams.append(paramName, value);
-                        });
-                    }
-                });
-                if (pathname.startsWith('/m/')) {
-                    pathname = pathname.replace('/m/', '/');
-                }
-            }
-
-            // 통화(curr)는 원본에 있으면 그대로 사용, 없으면 언어 기준으로 기본값 설정
-            if (!essentialParams.has('curr')) {
-                let currency = languageToCurrencyMap[currentLang] || 'USD';
-                if (originalParams.has('curr')) {
-                    currency = originalParams.get('curr').toUpperCase();
-                }
-                essentialParams.set('curr', currency);
-            }
-
-            const paramString = essentialParams.toString();
-            const cleanPath = pathname + (paramString ? '?' + paramString : '');
-            
-            const affix = 'Allianceid=6624731&SID=225753893&trip_sub1=&trip_sub3=D4136351';
-            
-            const resultsTitle = document.createElement('p');
-            resultsTitle.className = 'results-title';
-            resultsTitle.innerHTML = translations[currentLang].resultsTitle;
-            resultsDiv.appendChild(resultsTitle);
-            
-            const gridContainer = document.createElement('div');
-            gridContainer.className = 'link-list-grid';
-            
-            let sortedDomains = [...domains];
-            if (currentLang === 'ja') {
-                const japan = sortedDomains.find(d => d.code === 'jp');
-                if (japan) {
-                    sortedDomains = [japan, ...sortedDomains.filter(d => d.code !== 'jp')];
-                }
-            }
-            
-            sortedDomains.forEach(dom => {
-              const finalAffix = (cleanPath.includes('?') ? '&' : '?') + affix;
-              const fullUrl = `https://${dom.code}.trip.com${cleanPath}${finalAffix}`;
-              
-              const a = document.createElement('a');
-              a.href = fullUrl;
-              a.target = '_blank';
-              a.onclick = () => { 
-                a.classList.toggle('clicked');
-                
-                linkClickCount++;
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                if (isMobile && linkClickCount >= 4 && !mobilePopupShown) {
-                    const mobileModal = document.getElementById('mobile-notice-modal');
-                    if (mobileModal) {
-                        mobileModal.style.display = 'flex';
-                        mobilePopupShown = true;
-                    }
-                }
-              };
-              a.innerHTML = `<img class="flag" src="https://flagcdn.com/h40/${dom.flag}.png" alt="${dom[currentLang]} flag"> ${dom[currentLang]}`;
-              gridContainer.appendChild(a);
-            });
-
-            resultsDiv.appendChild(gridContainer);
-            
-            if (currentLang === 'ko') {
-                resultsDiv.appendChild(createKakaoButton());
-            }
-
-        } catch (error) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
-            if (currentLang === 'ko') {
-                resultsDiv.appendChild(createKakaoButton(true));
-            }
-            console.error("URL Parsing Error:", error);
-        }
+        resultsDiv.innerHTML = `<p style="color: red; text-align: center;">${translations[currentLang].parseError}</p>`;
+        if (currentLang === 'ko') resultsDiv.appendChild(createKakaoButton(true));
+        console.error("URL Parsing Error:", error);
+      }
     }
   </script>
 </body>
