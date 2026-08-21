@@ -18,33 +18,30 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Probe Naver Bing Google web results
+      - name: Inspect Naver exact SKU result payload
         shell: bash
         run: |
           node <<'NODE'
           const query='005DO0005 리바이스';
-          const targets=[
-            ['naver-mobile',`https://m.search.naver.com/search.naver?query=${encodeURIComponent(query)}`],
-            ['naver-pc',`https://search.naver.com/search.naver?where=nexearch&query=${encodeURIComponent(query)}`],
-            ['bing',`https://www.bing.com/search?q=${encodeURIComponent(query)}&setlang=ko-kr&cc=kr`],
-            ['google',`https://www.google.com/search?q=${encodeURIComponent(query)}&hl=ko&gl=kr`],
-          ];
-          for(const [name,url] of targets){
-            try{
-              const r=await fetch(url,{redirect:'follow',headers:{
-                'user-agent':'Mozilla/5.0 (Linux; Android 14; SM-S928N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
-                'accept-language':'ko-KR,ko;q=0.9,en;q=0.7',
-                'accept':'text/html,application/xhtml+xml,*/*;q=0.8',
-              }});
-              const t=await r.text();
-              console.log(`\n=== ${name} status=${r.status} len=${t.length} final=${r.url}`);
-              console.log('sku',/005DO[-_\s]?0005/i.test(t));
-              console.log('levi.co.kr',t.includes('levi.co.kr'));
-              console.log('lotteon',t.includes('lotteon.com'));
-              console.log('gmarket',t.includes('gmarket.co.kr'));
-              console.log('hmall',t.includes('hmall.com'));
-              const urls=[...t.matchAll(/https?:\\?\/\\?\/[^\n\"'<> ]+/g)].map(m=>m[0].replace(/\\u0026/g,'&').replace(/\\\//g,'/')).filter(x=>/levi|lotteon|gmarket|hmall|himart/i.test(x));
-              console.log('urls',JSON.stringify([...new Set(urls)].slice(0,20)));
-            }catch(e){console.log(`\n=== ${name} ERROR`,e?.stack||String(e));}
+          const url=`https://m.search.naver.com/search.naver?query=${encodeURIComponent(query)}`;
+          const r=await fetch(url,{redirect:'follow',headers:{
+            'user-agent':'Mozilla/5.0 (Linux; Android 14; SM-S928N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
+            'accept-language':'ko-KR,ko;q=0.9,en;q=0.7',
+            'accept':'text/html,application/xhtml+xml,*/*;q=0.8',
+          }});
+          const t=await r.text();
+          console.log(`status=${r.status} len=${t.length} final=${r.url}`);
+          const needles=['005DO0005','levi.co.kr','lotteon.com','gmarket.co.kr','hmall.com','e-himart.co.kr'];
+          for(const needle of needles){
+            console.log(`\n### ${needle}`);
+            let pos=0,count=0;
+            while((pos=t.toLowerCase().indexOf(needle.toLowerCase(),pos))>=0&&count<8){
+              console.log(`-- hit ${count+1} @ ${pos}`);
+              console.log(t.slice(Math.max(0,pos-700),Math.min(t.length,pos+1200)).replace(/\s+/g,' '));
+              pos+=needle.length; count++;
+            }
           }
+          const hrefs=[...t.matchAll(/href=(?:"|')([^"']+)(?:"|')/gi)].map(m=>m[1].replace(/&amp;/g,'&'));
+          console.log('\n### href candidates');
+          for(const h of [...new Set(hrefs)].filter(h=>/levi|lotteon|gmarket|hmall|himart/i.test(h)).slice(0,80)) console.log(h);
           NODE
