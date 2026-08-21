@@ -162,7 +162,7 @@ async function fetchNaver(query:string):Promise<string> {
     if(!r.ok) throw new Error(`Naver HTTP ${r.status}`);
     const text=await r.text();
     if(text.length<10_000) throw new Error('Naver search response too small');
-    if(/captcha|비정상적인 접근|자동입력 방지|로봇이 아닙니다/i.test(text)) throw new Error('Naver access challenge');
+    if(/<title>[^<]*(?:접근 제한|오류|error)[^<]*<\/title>/i.test(text)) throw new Error('Naver access challenge');
     return text;
   } finally {clearTimeout(timer);}
 }
