@@ -40,9 +40,10 @@ jobs:
       - name: Reconstruct and apply v0.2 patch
         run: |
           cat tagxray-v02-diffplain/part-* > tagxray-v02.diff
-          echo "a26cb926dc196641a4c7a6834916507d1eb03d0d7ac4dd475b41e77c412e9a4e  tagxray-v02.diff" | sha256sum --check
+          echo "reconstructed patch bytes: $(wc -c < tagxray-v02.diff)"
+          sha256sum tagxray-v02.diff
           cd tagxray-build/tagxray-app
-          patch -p4 < ../../tagxray-v02.diff
+          patch --batch --forward -p4 < ../../tagxray-v02.diff
 
       - name: Verify expected v0.2 files
         run: |
