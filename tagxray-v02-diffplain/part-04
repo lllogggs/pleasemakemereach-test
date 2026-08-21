@@ -1,0 +1,100 @@
+-    searchUrl:q=>`https://browse.gmarket.co.kr/search?keyword=${encodeURIComponent(q)}`,
++    searchUrl:q=>`https://www.gmarket.co.kr/n/search?keyword=${encodeURIComponent(q)}`,
+     hrefPatterns:[/gmarket\.co\.kr\/(?:Item|vi\/product)/i,/goodscode=/i],
+     productId:url=>safeUrl(url)?.searchParams.get('goodscode')||url.match(/product\/(\d+)/i)?.[1]||null,
+     affiliate:{domain:'https://click.linkprice.com/click.php',m:'gmarket',lCd1:'D',lCd2:'H'},
+   },
+   {
+     id:'lotteon', base:'https://www.lotteon.com',
+-    searchUrl:q=>`https://www.lotteon.com/csearch/search/search?render=search&platform=m&q=${encodeURIComponent(q)}`,
++    searchUrl:q=>`https://www.lotteon.com/csearch/search/search?mallId=2&render=search&platform=m&q=${encodeURIComponent(q)}`,
+     hrefPatterns:[/lotteon\.com\/p\/product\/LO\d+/i,/productNo=LO\d+/i],
+     productId:url=>url.match(/\/product\/(LO\d+)/i)?.[1]||safeUrl(url)?.searchParams.get('productNo')||null,
+     affiliate:{domain:'https://click.linkprice.com/click.php',m:'lotteon',lCd1:'D',lCd2:'H'},
+   },
+   {
+-    id:'hmall', base:'https://www.hmall.com',
+-    searchUrl:q=>`https://www.hmall.com/p/sm/search?searchTerm=${encodeURIComponent(q)}`,
++    id:'hmall', base:'https://wwwca.hmall.com',
++    searchUrl:q=>`https://wwwca.hmall.com/?tagxrayQuery=${encodeURIComponent(q)}`,
+     hrefPatterns:[/hmall\.com\/md\/pda\/itemPtc/i,/slitmCd=/i],
+     productId:url=>safeUrl(url)?.searchParams.get('slitmCd')||null,
+     affiliate:{domain:'https://lase.kr/click.php',m:'hmall',lCd1:'3',lCd2:'0'},
+   },
+   {
+     id:'himart', base:'https://www.e-himart.co.kr',
+-    searchUrl:q=>`https://www.e-himart.co.kr/app/search/search?query=${encodeURIComponent(q)}`,
++    searchUrl:q=>`https://www.e-himart.co.kr/?tagxrayQuery=${encodeURIComponent(q)}`,
+     hrefPatterns:[/e-himart\.co\.kr\/app\/goods\/goodsDetail/i,/goodsNo=/i],
+     productId:url=>safeUrl(url)?.searchParams.get('goodsNo')||null,
+     affiliate:{domain:'https://click.linkprice.com/click.php',m:'himart',lCd1:'D',lCd2:'H'},
+@@ -49,7 +50,7 @@
+ const absolute=(base:string,href:string)=>{try{return new URL(decodeEntities(href),base).toString();}catch{return null;}};
+ function decodeEntities(s:string){return s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>');}
+ 
+-function variants(raw:string){
++export function searchVariants(raw:string){
+   const base=normalize(raw), chars=[...base]; const out:string[]=[]; const seen=new Set<string>();
+   const add=(v:string)=>{const c=compact(v);if(c.length>=5&&!seen.has(c)){seen.add(c);out.push(v);}};
+   add(base);
+@@ -68,9 +69,6 @@
+   return values.length?Math.min(...values):null;
+ }
+ 
+-function buildAffiliate(cfg:ProviderConfig,url:string){
+-  const u=new URL(cfg.affiliate.domain);u.searchParams.set('m',cfg.affiliate.m);u.searchParams.set('a',A_CODE);u.searchParams.set('l','9999');u.searchParams.set('l_cd1',cfg.affiliate.lCd1);u.searchParams.set('l_cd2',cfg.affiliate.lCd2);u.searchParams.set('tu',url);return u.toString();
+-}
+ 
+ function parseHtml(cfg:ProviderConfig,html:string,allVariants:string[]):Offer[]{
+   const result:Offer[]=[]; const seen=new Set<string>();
+@@ -83,16 +81,16 @@
+     const price=parsePrice(segment); if(!price)continue;
+     seen.add(url);
+     const title=(segment.match(/.{0,80}(?:[A-Z0-9][A-Z0-9\-\/]{4,20}).{0,80}/i)?.[0]||segment.slice(0,150)).trim();
+-    result.push({provider:cfg.id,providerProductId:id,productName:title,price,finalPrice:price,productUrl:url,affiliateUrl:buildAffiliate(cfg,url),inStock:!/품절|sold\s*out|판매종료/i.test(segment),matchConfidence:.96,checkedAt:new Date().toISOString()});
++    result.push({provider:cfg.id,providerProductId:id,productName:title,price,finalPrice:price,productUrl:url,affiliateUrl:buildAffiliateUrl(cfg.id,url),inStock:!/품절|sold\s*out|판매종료/i.test(segment),matchConfidence:.96,checkedAt:new Date().toISOString()});
+     if(result.length>=8)break;
+   }
+   return result.filter(x=>x.inStock).sort((a,b)=>a.finalPrice-b.finalPrice);
+ }
+ 
+ async function searchProvider(cfg:ProviderConfig,rawCode:string,brand?:string){
+-  const vs=variants(rawCode); let lastError='';
+-  for(const v of vs.slice(0,4)){
+-    const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),4500);
++  const vs=searchVariants(rawCode); let lastError='';
++  for(const v of vs.slice(0,3)){
++    const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),3200);
+     try{
+       const q=[brand,v].filter(Boolean).join(' ');
+       const res=await fetch(cfg.searchUrl(q),{signal:controller.signal,headers:{'Accept-Language':'ko-KR,ko;q=0.9,en;q=0.6','Accept':'text/html,application/xhtml+xml,*/*;q=0.8'}});
+@@ -110,11 +108,11 @@
+   const settled=await Promise.allSettled(PROVIDERS.map(p=>searchProvider(p,input.rawCode,input.brand)));
+   const failures:string[]=[]; const offers:Offer[]=[];
+   settled.forEach((r,i)=>{if(r.status==='fulfilled')offers.push(...r.value);else failures.push(`${PROVIDERS[i].id}: ${r.reason instanceof Error?r.reason.message:String(r.reason)}`);});
+-  offers.sort((a,b)=>a.finalPrice-b.finalPrice);
+-  const lowest=offers[0]||null; const storePrice=input.storePrice??null; const saving=lowest&&storePrice!=null?storePrice-lowest.finalPrice:null;
++  const mergedOffers=mergeOffers(offers);
++  const lowest=mergedOffers[0]||null; const storePrice=input.storePrice??null; const saving=lowest&&storePrice!=null?storePrice-lowest.finalPrice:null;
+   return {
+-    query:{rawCode:input.rawCode,normalizedCode:normalize(input.rawCode),variants:variants(input.rawCode),brand:input.brand},
+-    offers,
++    query:{rawCode:input.rawCode,normalizedCode:normalize(input.rawCode),variants:searchVariants(input.rawCode),brand:input.brand},
++    offers:mergedOffers,
+     failures,
+     summary:{lowestOnlinePrice:lowest?.finalPrice??null,lowestProvider:lowest?.provider??null,storePrice,savingAmount:saving,recommendation:!lowest?'NO_ONLINE_STOCK':storePrice==null?'ONLINE_FOUND':saving!>0?'ONLINE_WIN':saving!<0?'STORE_WIN':'SAME_PRICE'},
+   };
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/screens/HistoryScreens.tsx /mnt/data/tagxray-app/apps/mobile/src/screens/HistoryScreens.tsx
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/screens/HistoryScreens.tsx	2026-08-21 05:31:57.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/screens/HistoryScreens.tsx	2026-08-21 06:26:49.430980264 +0000
+@@ -5,6 +5,7 @@
+ import type {ScanHistoryItem} from '../types';
+ import {money,providerName} from '../components';
+ import {theme} from '../theme';
++import {formatHistoryDate} from '../date';
+ 
+ function List({favoritesOnly,navigation}:{favoritesOnly:boolean;navigation:any}) {
+   const [items,setItems]=useState<ScanHistoryItem[]>([]);
+@@ -18,6 +19,7 @@
+     barcode:item.barcode,
+     storePrice:item.storePrice,

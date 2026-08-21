@@ -1,0 +1,101 @@
+   const [permission,request]=useCameraPermissions(); const cam=useRef<CameraView>(null); const [barcode,setBarcode]=useState<string>(); const [busy,setBusy]=useState(false);
+   if(!permission) return <View style={s.fill}/>;
+   if(!permission.granted) return <SafeAreaView style={s.permission}><Text style={s.permissionTitle}>카메라 권한이 필요합니다</Text><Text style={s.permissionSub}>상품 택을 촬영하기 위해 카메라 접근을 허용해주세요.</Text><PrimaryButton title="카메라 허용" onPress={request}/></SafeAreaView>;
+-  const shoot=async()=>{if(!cam.current||busy)return;setBusy(true);try{const p=await cam.current.takePictureAsync({quality:.95,skipProcessing:false});if(p?.uri)navigation.replace('Review',{imageUri:p.uri,barcode});}finally{setBusy(false)}};
++  const shoot=async()=>{if(!cam.current||busy)return;setBusy(true);try{const p=await cam.current.takePictureAsync({quality:.95,skipProcessing:false});if(p?.uri)navigation.replace('Review',{imageUri:p.uri,barcode,capturedAt:new Date().toISOString()});}finally{setBusy(false)}};
+   return <View style={s.fill}><CameraView ref={cam} style={s.fill} facing="back" barcodeScannerSettings={{barcodeTypes:['ean13','ean8','upc_a','upc_e','code128']}} onBarcodeScanned={e=>setBarcode(e.data)}><SafeAreaView style={s.overlay}><Text style={s.hint}>가격과 상품코드가 선명하게 보이도록 택을 맞춰주세요</Text><View style={s.frame}/><Pressable onPress={shoot} style={s.shutter}><View style={s.inner}/></Pressable></SafeAreaView></CameraView></View>;
+ }
+ const s=StyleSheet.create({fill:{flex:1,backgroundColor:'#000'},permission:{flex:1,justifyContent:'center',padding:24,backgroundColor:theme.bg},permissionTitle:{fontSize:25,fontWeight:'800',marginBottom:10},permissionSub:{color:theme.muted,lineHeight:22,marginBottom:24},overlay:{flex:1,alignItems:'center',justifyContent:'space-between',padding:24},hint:{color:'#fff',backgroundColor:'rgba(0,0,0,.48)',paddingHorizontal:14,paddingVertical:10,borderRadius:12,marginTop:16,textAlign:'center'},frame:{width:'88%',height:'55%',borderWidth:2,borderColor:'rgba(255,255,255,.85)',borderRadius:22},shutter:{width:76,height:76,borderRadius:38,borderWidth:5,borderColor:'#fff',alignItems:'center',justifyContent:'center',marginBottom:18},inner:{width:56,height:56,borderRadius:28,backgroundColor:'#fff'}});
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/searchMerge.ts /mnt/data/tagxray-app/apps/mobile/src/searchMerge.ts
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/searchMerge.ts	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/searchMerge.ts	2026-08-21 06:26:13.196389125 +0000
+@@ -0,0 +1,41 @@
++import type {Offer, SearchResponse} from './types';
++
++export function mergeOffers(...groups: Offer[][]): Offer[] {
++  const byProvider = new Map<Offer['provider'], Offer>();
++  for (const offer of groups.flat()) {
++    if (!offer.inStock || offer.matchConfidence < 0.9 || !Number.isFinite(offer.finalPrice) || offer.finalPrice <= 0) continue;
++    const prev = byProvider.get(offer.provider);
++    if (!prev || offer.finalPrice < prev.finalPrice || (offer.finalPrice === prev.finalPrice && offer.matchConfidence > prev.matchConfidence)) {
++      byProvider.set(offer.provider, offer);
++    }
++  }
++  return [...byProvider.values()].sort((a,b)=>a.finalPrice-b.finalPrice);
++}
++
++export function withOffers(base: SearchResponse, offers: Offer[], extraFailures: string[] = []): SearchResponse {
++  const merged = mergeOffers(base.offers, offers);
++  const lowest = merged[0] || null;
++  const storePrice = base.summary.storePrice;
++  const saving = lowest && storePrice != null ? storePrice - lowest.finalPrice : null;
++  const recommendation: SearchResponse['summary']['recommendation'] = !lowest
++    ? 'NO_ONLINE_STOCK'
++    : storePrice == null
++      ? 'ONLINE_FOUND'
++      : saving! > 0
++        ? 'ONLINE_WIN'
++        : saving! < 0
++          ? 'STORE_WIN'
++          : 'SAME_PRICE';
++  return {
++    ...base,
++    offers: merged,
++    failures: [...new Set([...base.failures, ...extraFailures])],
++    summary: {
++      ...base.summary,
++      lowestOnlinePrice: lowest?.finalPrice ?? null,
++      lowestProvider: lowest?.provider ?? null,
++      savingAmount: saving,
++      recommendation,
++    },
++  };
++}
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/types.ts /mnt/data/tagxray-app/apps/mobile/src/types.ts
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/types.ts	2026-08-21 05:22:42.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/types.ts	2026-08-21 06:26:40.179810095 +0000
+@@ -1,8 +1,8 @@
+ export type RootStackParamList = {
+   Tabs: undefined;
+   Scan: undefined;
+-  Review: { imageUri: string; barcode?: string };
+-  Result: { rawCode: string; brand?: string; barcode?: string; storePrice?: number; imageUri?: string };
++  Review: { imageUri: string; barcode?: string; capturedAt?: string };
++  Result: { rawCode: string; brand?: string; barcode?: string; storePrice?: number; imageUri?: string; capturedAt?: string };
+ };
+ 
+ export type TabsParamList = { Home: undefined; History: undefined; Favorites: undefined };
+@@ -39,6 +39,8 @@
+ export interface ScanHistoryItem {
+   id: number;
+   scannedAt: string;
++  capturedAt: string;
++  lastViewedAt: string;
+   imageUri?: string;
+   brand?: string;
+   productName?: string;
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/package.json /mnt/data/tagxray-app/package.json
+--- /mnt/data/tagxray-orig/tagxray-app/package.json	2026-08-21 05:30:29.000000000 +0000
++++ /mnt/data/tagxray-app/package.json	2026-08-21 06:27:56.056756040 +0000
+@@ -1,13 +1,18 @@
+ {
+   "name": "tagxray",
+   "private": true,
+-  "version": "0.1.0",
+-  "workspaces": ["apps/*", "packages/*"],
++  "version": "0.2.0",
++  "workspaces": [
++    "apps/*",
++    "packages/*"
++  ],
+   "scripts": {
+     "mobile": "npm --workspace apps/mobile run start",
+     "api": "npm --workspace apps/api run dev",
+     "typecheck": "npm -ws run typecheck --if-present",
+     "test": "npm -ws run test --if-present"
+   },
+-  "engines": {"node": ">=22.13"}
++  "engines": {
++    "node": ">=22.13"
++  }
+ }

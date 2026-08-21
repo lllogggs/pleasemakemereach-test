@@ -1,0 +1,151 @@
++        const input=inputs[0];
++        if(!input)return false;
++        try{sessionStorage.setItem(key,'1');}catch{}
++        input.focus();
++        setNativeValue(input,query);
++        const form=input.closest('form');
++        if(form){
++          try{if(form.requestSubmit){form.requestSubmit();return true;}}catch{}
++          try{form.submit();return true;}catch{}
++        }
++        // Current Hmall/HiMart front pages also expose search via JS buttons.
++        const scope=input.parentElement?.parentElement || document;
++        const buttons=[...scope.querySelectorAll('button,a')];
++        const btn=buttons.find(b=>/검색|search/i.test((b.innerText||'')+' '+(b.getAttribute('aria-label')||'')+' '+(b.title||'')));
++        if(btn){btn.click();return true;}
++        try{
++          for(const type of ['keydown','keypress','keyup']) input.dispatchEvent(new KeyboardEvent(type,{key:'Enter',code:'Enter',keyCode:13,which:13,bubbles:true}));
++          return true;
++        }catch{return false;}
++      }
++
++      let submitted=false;
++      let ticks=0;
++      const timer=setInterval(()=>{
++        ticks++;
++        const rows=extract();
++        if(rows.length){
++          clearInterval(timer);
++          window.ReactNativeWebView.postMessage(JSON.stringify({kind:'result',provider,rows}));
++          return;
++        }
++        // Give the retailer JS a moment to hydrate before operating its own search box.
++        if(!submitted && ticks>=3){submitted=trySiteSearch();}
++        // Cloudflare + SPA hydration can take several seconds on a real phone.
++        if(now()-started>=10500){
++          clearInterval(timer);
++          window.ReactNativeWebView.postMessage(JSON.stringify({kind:'result',provider,rows:[]}));
++        }
++      },500);
++    })(); true;
++  `;
++}
++
++function Probe({cfg,variants,onResult,onDone}:{cfg:Config;variants:string[];onResult:(provider:Provider,offers:Offer[])=>void;onDone:(provider:Provider)=>void}){
++  const [variantIdx,setVariantIdx]=useState(0);
++  const [pageIdx,setPageIdx]=useState(0);
++  const [finished,setFinished]=useState(false);
++  const query=variants[variantIdx];
++  const pages=cfg.searchPages(query);
++  const uri=pages[Math.min(pageIdx,pages.length-1)];
++  const injected=useMemo(()=>script(cfg.id,variants,query),[cfg.id,variants.join('|'),query]);
++
++  const advance=()=>{
++    const currentPages=cfg.searchPages(variants[variantIdx]);
++    if(pageIdx<currentPages.length-1){setPageIdx(x=>x+1);return;}
++    if(variantIdx<variants.length-1){setPageIdx(0);setVariantIdx(x=>x+1);return;}
++    setFinished(true);onDone(cfg.id);
++  };
++
++  const handle=(e:WebViewMessageEvent)=>{
++    if(finished)return;
++    try{
++      const msg=JSON.parse(e.nativeEvent.data);
++      if(msg.kind!=='result')return;
++      const rows=Array.isArray(msg.rows)?msg.rows:[];
++      const offers:Offer[]=rows.map((r:any)=>{
++        const url=String(r.url||'');
++        const id=productId(cfg.id,url);
++        const price=Number(r.price);
++        if(!id||!url||!Number.isFinite(price))return null;
++        return {
++          provider:cfg.id,
++          providerProductId:id,
++          productName:String(r.title||'동일 상품'),
++          price,
++          finalPrice:price,
++          productUrl:url,
++          affiliateUrl:buildAffiliateUrl(cfg.id,url),
++          inStock:true,
++          matchConfidence:.98,
++          checkedAt:new Date().toISOString(),
++        } as Offer;
++      }).filter(Boolean) as Offer[];
++      if(offers.length){setFinished(true);onResult(cfg.id,offers);onDone(cfg.id);return;}
++      advance();
++    }catch{advance();}
++  };
++
++  if(finished)return null;
++  return <WebView
++    key={`${cfg.id}-${variantIdx}-${pageIdx}-${uri}`}
++    source={{uri}}
++    onMessage={handle}
++    onError={advance}
++    onHttpError={(e)=>{if(e.nativeEvent.statusCode>=400)advance();}}
++    injectedJavaScript={injected}
++    injectedJavaScriptForMainFrameOnly
++    javaScriptEnabled
++    domStorageEnabled
++    cacheEnabled={false}
++    thirdPartyCookiesEnabled
++    sharedCookiesEnabled
++    setSupportMultipleWindows={false}
++    originWhitelist={['https://*','http://*']}
++    userAgent="Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
++    style={s.web}
++  />;
++}
++
++export function RetailerWebSearch({rawCode,variants,onResult,onProviderDone}:{rawCode:string;variants:string[];brand?:string;onResult:(provider:Provider,offers:Offer[])=>void;onProviderDone:(provider:Provider)=>void}){
++  const vs=useMemo(()=>preferredVariants(rawCode,variants),[rawCode,variants.join('|')]);
++  return <View pointerEvents="none" style={s.host}>{CONFIGS.map(cfg=><Probe key={cfg.id} cfg={cfg} variants={vs} onResult={onResult} onDone={onProviderDone}/>)}</View>;
++}
++
++const s=StyleSheet.create({
++  host:{position:'absolute',left:-1200,top:0,width:390,height:760,overflow:'hidden',opacity:.01},
++  web:{width:390,height:760},
++});
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/affiliate.ts /mnt/data/tagxray-app/apps/mobile/src/affiliate.ts
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/affiliate.ts	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/affiliate.ts	2026-08-21 06:26:13.197004940 +0000
+@@ -0,0 +1,21 @@
++import type {Offer} from './types';
++
++const A_CODE = process.env.EXPO_PUBLIC_LINKPRICE_A_CODE || 'A100707018';
++const LINK_CONFIG: Record<Offer['provider'], {domain:string;m:string;lCd1:string;lCd2:string}> = {
++  gmarket: {domain:'https://click.linkprice.com/click.php',m:'gmarket',lCd1:'D',lCd2:'H'},
++  lotteon: {domain:'https://click.linkprice.com/click.php',m:'lotteon',lCd1:'D',lCd2:'H'},
++  hmall: {domain:'https://lase.kr/click.php',m:'hmall',lCd1:'3',lCd2:'0'},
++  himart: {domain:'https://click.linkprice.com/click.php',m:'himart',lCd1:'D',lCd2:'H'},
++};
++
++export function buildAffiliateUrl(provider: Offer['provider'], productUrl: string) {
++  const cfg=LINK_CONFIG[provider];
++  const u=new URL(cfg.domain);
++  u.searchParams.set('m',cfg.m);
++  u.searchParams.set('a',A_CODE);
++  u.searchParams.set('l','9999');
++  u.searchParams.set('l_cd1',cfg.lCd1);
++  u.searchParams.set('l_cd2',cfg.lCd2);
++  u.searchParams.set('tu',productUrl);
++  return u.toString();
++}
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/date.ts /mnt/data/tagxray-app/apps/mobile/src/date.ts
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/date.ts	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/date.ts	2026-08-21 06:26:40.316812432 +0000
+@@ -0,0 +1,7 @@
++export function formatHistoryDate(iso:string) {
++  const d=new Date(iso);
++  if(Number.isNaN(d.getTime())) return '';
++  const pad=(n:number)=>String(n).padStart(2,'0');

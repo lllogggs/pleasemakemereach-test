@@ -1,0 +1,112 @@
+name: tagX-ray APK Build
+
+on:
+  push:
+    branches: ["tagxray-build-20260821"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Reconstruct original tagX-ray source
+        run: |
+          cat tagxray-parts/part-* > tagX-ray-source.b64
+          base64 --decode tagX-ray-source.b64 > tagX-ray-source.zip
+          echo "6e2e30d7eb343bf74a74c3c3fcaacfd68147f7669a25d7bad65f8c94d49c3480  tagX-ray-source.zip" | sha256sum --check
+          unzip -t tagX-ray-source.zip >/dev/null
+
+      - name: Unpack original source
+        run: |
+          rm -rf tagxray-build
+          mkdir tagxray-build
+          unzip -q tagX-ray-source.zip -d tagxray-build
+          test -f tagxray-build/tagxray-app/package.json
+
+      - name: Reconstruct and apply v0.2 patch
+        run: |
+          cat tagxray-v02-diffplain/part-* > tagxray-v02.diff
+          cd tagxray-build/tagxray-app
+          patch --batch --forward -p4 < ../../tagxray-v02.diff
+
+      - name: Apply v0.3 discovery overlay
+        run: |
+          cp -a tagxray-v03-overlay/. tagxray-build/tagxray-app/
+          node <<'NODE'
+          const fs=require('fs');
+          const root='tagxray-build/tagxray-app/package.json';
+          const rp=JSON.parse(fs.readFileSync(root,'utf8')); rp.version='0.3.0'; fs.writeFileSync(root,JSON.stringify(rp,null,2)+'\n');
+          const app='tagxray-build/tagxray-app/apps/mobile/app.json';
+          const ap=JSON.parse(fs.readFileSync(app,'utf8')); ap.expo.version='0.3.0'; ap.expo.android=ap.expo.android||{}; ap.expo.android.versionCode=3; fs.writeFileSync(app,JSON.stringify(ap,null,2)+'\n');
+          NODE
+
+      - name: Verify expected v0.3 files
+        run: |
+          test -f tagxray-build/tagxray-app/apps/mobile/src/naverDiscovery.ts
+          test -f tagxray-build/tagxray-app/apps/mobile/src/naverDiscovery.test.ts
+          grep -q 'naverDiscoverySearch' tagxray-build/tagxray-app/apps/mobile/src/directSearch.ts
+          grep -q 'idx_scan_history_product_unique' tagxray-build/tagxray-app/apps/mobile/src/db.ts
+          grep -q 'formatHistoryDate' tagxray-build/tagxray-app/apps/mobile/src/screens/HistoryScreens.tsx
+          grep -q '네이버 쇼핑 검색 기준' tagxray-build/tagxray-app/apps/mobile/src/screens/ResultScreen.tsx
+
+      - name: Install dependencies
+        working-directory: tagxray-build/tagxray-app
+        run: npm install
+
+      - name: Typecheck
+        working-directory: tagxray-build/tagxray-app
+        run: npm run typecheck
+
+      - name: Unit tests
+        working-directory: tagxray-build/tagxray-app
+        run: npm run test
+
+      - name: Live Levi discovery regression
+        working-directory: tagxray-build/tagxray-app
+        shell: bash
+        run: |
+          npx tsx <<'TS'
+          import {naverDiscoverySearch} from './apps/mobile/src/naverDiscovery.ts';
+          const r=await naverDiscoverySearch({rawCode:'005DO0005',brand:'리바이스',storePrice:159000},['005DO0005','005DO-0005']);
+          console.log(JSON.stringify({discovery:r.discovery,offers:r.offers.map(o=>({provider:o.provider,id:o.providerProductId,price:o.finalPrice,url:o.productUrl,name:o.productName}))},null,2));
+          const providers=new Set(r.offers.map(o=>o.provider));
+          for(const required of ['gmarket','lotteon','hmall']) if(!providers.has(required as any)) throw new Error(`Live regression missing ${required}`);
+          if(r.offers.some(o=>!o.productName.toUpperCase().replace(/[-_./\s]/g,'').includes('005DO0005'))) throw new Error('Non-exact SKU leaked into offers');
+          TS
+
+      - name: Expo doctor
+        working-directory: tagxray-build/tagxray-app/apps/mobile
+        run: npx expo-doctor@latest
+        continue-on-error: true
+
+      - name: Prebuild Android
+        working-directory: tagxray-build/tagxray-app/apps/mobile
+        run: npx expo prebuild --platform android --clean --no-install
+
+      - name: Build release APK
+        working-directory: tagxray-build/tagxray-app/apps/mobile/android
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Collect APK
+        run: cp tagxray-build/tagxray-app/apps/mobile/android/app/build/outputs/apk/release/app-release.apk tagX-ray-v0.3.0.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tagX-ray-v0.3.0-apk
+          path: tagX-ray-v0.3.0.apk
+          if-no-files-found: error
+          retention-days: 7
