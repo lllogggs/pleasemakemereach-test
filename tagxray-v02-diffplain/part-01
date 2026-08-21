@@ -1,0 +1,155 @@
++import type {Offer} from './types';
++import {buildAffiliateUrl} from './affiliate';
++
++type Provider = Offer['provider'];
++type Config = {
++  id: Provider;
++  base: string;
++  searchPages: (q:string)=>string[];
++};
++
++/**
++ * Retailer pages change often. Keep every retailer isolated here so a single
++ * broken search page never blocks the other three providers.
++ *
++ * For Hmall/HiMart we deliberately start from their current shopping front
++ * page and let the injected script use the site's own search input. Their old
++ * public search URLs now return 404/empty shells, so hard-coding those URLs is
++ * less reliable than driving the site's own search UI.
++ */
++const CONFIGS: Config[] = [
++  {
++    id:'gmarket',
++    base:'https://www.gmarket.co.kr',
++    searchPages:q=>[`https://www.gmarket.co.kr/n/search?keyword=${encodeURIComponent(q)}`],
++  },
++  {
++    id:'lotteon',
++    base:'https://www.lotteon.com',
++    // mallId=2 catches department-store inventory (important for fashion),
++    // mallId=1 is kept as a second pass for the general mall inventory.
++    searchPages:q=>[
++      `https://www.lotteon.com/csearch/search/search?mallId=2&render=search&platform=m&q=${encodeURIComponent(q)}`,
++      `https://www.lotteon.com/csearch/search/search?mallId=1&render=search&platform=m&q=${encodeURIComponent(q)}`,
++    ],
++  },
++  {
++    id:'hmall',
++    base:'https://wwwca.hmall.com',
++    searchPages:()=>['https://wwwca.hmall.com/'],
++  },
++  {
++    id:'himart',
++    base:'https://www.e-himart.co.kr',
++    searchPages:()=>['https://www.e-himart.co.kr/'],
++  },
++];
++
++function compact(s:string){return s.toUpperCase().replace(/\s+/g,'').replace(/[\-\/_.]/g,'');}
++
++function preferredVariants(raw:string, variants:string[]) {
++  const all=[raw,...variants];
++  const out:string[]=[];
++  const seen=new Set<string>();
++  for(const v of all){
++    const c=compact(v);
++    if(c.length>=5&&!seen.has(c)){seen.add(c);out.push(v);}
++    if(out.length>=3)break;
++  }
++  return out;
++}
++
++function productId(provider:Provider,url:string){
++  try{
++    const u=new URL(url);
++    if(provider==='gmarket') return u.searchParams.get('goodscode')||url.match(/product\/(\d+)/i)?.[1]||url.match(/Item\?goodscode=(\d+)/i)?.[1]||null;
++    if(provider==='lotteon') return url.match(/\/product\/(LO\d+)/i)?.[1]||u.searchParams.get('productNo')||null;
++    if(provider==='hmall') return u.searchParams.get('slitmCd')||url.match(/slitmCd[=/](\d+)/i)?.[1]||null;
++    return u.searchParams.get('goodsNo')||url.match(/goodsNo[=/](\d+)/i)?.[1]||null;
++  }catch{return null;}
++}
++
++/** JavaScript executed inside each hidden retailer WebView. */
++function script(provider:Provider, variants:string[], query:string) {
++  const patterns:Record<Provider,string[]>={
++    gmarket:['item.gmarket.co.kr/item','gmarket.co.kr/item','goodscode='],
++    lotteon:['lotteon.com/p/product/lo','productno=lo'],
++    hmall:['hmall.com/md/pda/itemptc','slitmcd='],
++    himart:['e-himart.co.kr/app/goods/goodsdetail','goodsno='],
++  };
++  return `
++    (function(){
++      const provider=${JSON.stringify(provider)};
++      const query=${JSON.stringify(query)};
++      const variants=${JSON.stringify(variants.map(compact))};
++      const hrefHints=${JSON.stringify(patterns[provider].map(x=>x.toLowerCase()))};
++      const compact=s=>(s||'').toUpperCase().replace(/\\s+/g,'').replace(/[\\-\\/_.]/g,'');
++      const now=()=>Date.now();
++      const started=now();
++
++      const priceFrom=text=>{
++        const lines=(text||'').split(/\\n+/).map(x=>x.trim()).filter(Boolean);
++        const strong=[]; const normal=[];
++        for(const line of lines){
++          // Avoid monthly instalments/reward points becoming the product price.
++          if(/(?:월\\s*\\d+|개월|적립|포인트|P\\s*$)/i.test(line) && !/(?:판매가|최대혜택가|쿠폰가|할인가|즉시할인가)/.test(line)) continue;
++          const nums=[...line.matchAll(/(?:₩\\s*)?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,9})\\s*원?/g)]
++            .map(m=>Number(m[1].replace(/,/g,'')))
++            .filter(n=>n>=5000&&n<=100000000);
++          if(!nums.length) continue;
++          normal.push(...nums);
++          if(/최대혜택가|쿠폰가|할인가|즉시할인가|판매가|최종가/.test(line)) strong.push(...nums);
++        }
++        const list=strong.length?strong:normal;
++        return list.length?Math.min(...list):null;
++      };
++
++      const cleanTitle=(text)=>{
++        const lines=(text||'').split(/\\n+/).map(x=>x.trim()).filter(x=>x.length>2 && !/^\\d[\\d,]*원?$/.test(x));
++        return (lines.find(x=>variants.some(v=>compact(x).includes(v))) || lines.find(x=>x.length>=6) || '동일 상품').slice(0,180);
++      };
++
++      const extract=()=>{
++        const rows=[]; const seen=new Set();
++        const anchors=[...document.querySelectorAll('a[href]')];
++        for(const a of anchors){
++          const href=(a.href||'').replace(/&amp;/g,'&');
++          const low=href.toLowerCase();
++          if(!hrefHints.some(h=>low.includes(h))) continue;
++          let node=a; let best=a;
++          for(let i=0;i<7 && node?.parentElement;i++){
++            node=node.parentElement;
++            const t=(node.innerText||'');
++            // Product cards are usually compact. Stop before we swallow an entire list page.
++            if(t.length>20&&t.length<3500) best=node;
++          }
++          const blob=((best.innerText||'')+' '+(best.outerHTML||'')+' '+href);
++          const hay=compact(blob);
++          if(!variants.some(v=>hay.includes(v))) continue;
++          const price=priceFrom(best.innerText||'');
++          if(!price) continue;
++          if(seen.has(href)) continue;
++          seen.add(href);
++          rows.push({url:href,price,title:cleanTitle(best.innerText||''),stock:!/(품절|판매종료|sold\\s*out)/i.test(blob)});
++        }
++        return rows.filter(x=>x.stock).sort((a,b)=>a.price-b.price).slice(0,4);
++      };
++
++      function setNativeValue(input,value){
++        try{
++          const proto=input instanceof HTMLTextAreaElement?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;
++          const setter=Object.getOwnPropertyDescriptor(proto,'value')?.set;
++          if(setter)setter.call(input,value);else input.value=value;
++        }catch{input.value=value;}
++        input.dispatchEvent(new Event('input',{bubbles:true}));
++        input.dispatchEvent(new Event('change',{bubbles:true}));
++      }
++
++      function trySiteSearch(){
++        if(provider!=='hmall'&&provider!=='himart') return false;
++        const key='tagxray-search-'+provider+'-'+compact(query);
++        try{if(sessionStorage.getItem(key)==='1')return false;}catch{}
++        const inputs=[...document.querySelectorAll('input')].filter(el=>{
++          const meta=[el.placeholder,el.getAttribute('aria-label'),el.name,el.id].filter(Boolean).join(' ');
++          return /검색|search|query|keyword|srch/i.test(meta) && !/최소|최대|가격|금액/.test(meta);
++        });

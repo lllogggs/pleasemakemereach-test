@@ -1,0 +1,138 @@
++  const weekday=['일','월','화','수','목','금','토'][d.getDay()];
++  return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}(${weekday}) ${pad(d.getHours())}:${pad(d.getMinutes())}`;
++}
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/db.ts /mnt/data/tagxray-app/apps/mobile/src/db.ts
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/db.ts	2026-08-21 05:31:57.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/db.ts	2026-08-21 06:26:39.684119710 +0000
+@@ -4,6 +4,11 @@
+ let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
+ let initialized = false;
+ 
++async function ensureColumn(d: SQLite.SQLiteDatabase, name: string, sqlType: string) {
++  const cols = await d.getAllAsync<{name:string}>('PRAGMA table_info(scan_history)');
++  if (!cols.some(c => c.name === name)) await d.execAsync(`ALTER TABLE scan_history ADD COLUMN ${name} ${sqlType};`);
++}
++
+ async function db() {
+   if (!dbPromise) dbPromise = SQLite.openDatabaseAsync('tagxray.db');
+   const d = await dbPromise;
+@@ -25,10 +30,24 @@
+         lowest_provider_at_scan TEXT,
+         saving_amount_at_scan INTEGER,
+         recommendation_at_scan TEXT,
+-        favorite INTEGER NOT NULL DEFAULT 0
++        favorite INTEGER NOT NULL DEFAULT 0,
++        captured_at TEXT,
++        last_viewed_at TEXT
+       );
++    `);
++    await ensureColumn(d, 'captured_at', 'TEXT');
++    await ensureColumn(d, 'last_viewed_at', 'TEXT');
++    await d.execAsync(`
++      UPDATE scan_history SET captured_at=COALESCE(captured_at, scanned_at), last_viewed_at=COALESCE(last_viewed_at, scanned_at);
++      UPDATE scan_history
++      SET favorite=(SELECT MAX(x.favorite) FROM scan_history x WHERE x.normalized_product_code=scan_history.normalized_product_code),
++          captured_at=(SELECT MIN(COALESCE(x.captured_at,x.scanned_at)) FROM scan_history x WHERE x.normalized_product_code=scan_history.normalized_product_code),
++          last_viewed_at=(SELECT MAX(COALESCE(x.last_viewed_at,x.scanned_at)) FROM scan_history x WHERE x.normalized_product_code=scan_history.normalized_product_code)
++      WHERE id IN (SELECT MAX(id) FROM scan_history GROUP BY normalized_product_code);
++      DELETE FROM scan_history WHERE id NOT IN (SELECT MAX(id) FROM scan_history GROUP BY normalized_product_code);
+       CREATE INDEX IF NOT EXISTS idx_scan_history_scanned_at ON scan_history(scanned_at DESC);
+       CREATE INDEX IF NOT EXISTS idx_scan_history_favorite ON scan_history(favorite, scanned_at DESC);
++      CREATE UNIQUE INDEX IF NOT EXISTS idx_scan_history_product_unique ON scan_history(normalized_product_code);
+     `);
+     initialized = true;
+   }
+@@ -41,21 +60,52 @@
+   barcode?: string;
+   storePrice?: number;
+   imageUri?: string;
++  capturedAt?: string;
+   result: SearchResponse;
+-}): Promise<number> {
++}): Promise<{id:number;favorite:boolean}> {
+   const d = await db();
+   const lowest = args.result.offers[0];
++  const normalized = args.result.query.normalizedCode;
++  const now = new Date().toISOString();
++  const existing = await d.getFirstAsync<any>('SELECT * FROM scan_history WHERE normalized_product_code=? LIMIT 1', normalized);
++  if (existing) {
++    await d.runAsync(
++      `UPDATE scan_history SET
++        scanned_at=?, last_viewed_at=?, image_uri=?, brand=?, product_name=?, raw_product_code=?, barcode=?, store_price=?,
++        lowest_online_price_at_scan=?, lowest_provider_at_scan=?, saving_amount_at_scan=?, recommendation_at_scan=?,
++        captured_at=COALESCE(captured_at, ?)
++       WHERE id=?`,
++      now,
++      now,
++      args.imageUri ?? existing.image_uri ?? null,
++      args.brand ?? existing.brand ?? null,
++      lowest?.productName ?? existing.product_name ?? null,
++      args.rawCode,
++      args.barcode ?? existing.barcode ?? null,
++      args.storePrice ?? existing.store_price ?? null,
++      args.result.summary.lowestOnlinePrice ?? null,
++      args.result.summary.lowestProvider ?? null,
++      args.result.summary.savingAmount ?? null,
++      args.result.summary.recommendation,
++      args.capturedAt ?? existing.scanned_at ?? now,
++      existing.id,
++    );
++    return {id:Number(existing.id),favorite:Boolean(existing.favorite)};
++  }
++  const capturedAt = args.capturedAt ?? now;
+   const r = await d.runAsync(
+     `INSERT INTO scan_history (
+-      scanned_at,image_uri,brand,product_name,raw_product_code,normalized_product_code,barcode,store_price,
++      scanned_at,last_viewed_at,captured_at,image_uri,brand,product_name,raw_product_code,normalized_product_code,barcode,store_price,
+       lowest_online_price_at_scan,lowest_provider_at_scan,saving_amount_at_scan,recommendation_at_scan
+-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+-    new Date().toISOString(),
++    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
++    now,
++    now,
++    capturedAt,
+     args.imageUri ?? null,
+     args.brand ?? null,
+     lowest?.productName ?? null,
+     args.rawCode,
+-    args.result.query.normalizedCode,
++    normalized,
+     args.barcode ?? null,
+     args.storePrice ?? null,
+     args.result.summary.lowestOnlinePrice ?? null,
+@@ -63,18 +113,20 @@
+     args.result.summary.savingAmount ?? null,
+     args.result.summary.recommendation,
+   );
+-  return Number(r.lastInsertRowId);
++  return {id:Number(r.lastInsertRowId),favorite:false};
+ }
+ 
+ export async function listHistory(favoritesOnly = false, limit = 200): Promise<ScanHistoryItem[]> {
+   const d = await db();
+   const safeLimit = Math.max(1, Math.min(500, Math.trunc(limit)));
+   const rows = await d.getAllAsync<any>(
+-    `SELECT * FROM scan_history ${favoritesOnly ? 'WHERE favorite=1' : ''} ORDER BY scanned_at DESC LIMIT ${safeLimit}`,
++    `SELECT * FROM scan_history ${favoritesOnly ? 'WHERE favorite=1' : ''} ORDER BY COALESCE(last_viewed_at,scanned_at) DESC LIMIT ${safeLimit}`,
+   );
+   return rows.map((r) => ({
+     id: r.id,
+     scannedAt: r.scanned_at,
++    capturedAt: r.captured_at ?? r.scanned_at,
++    lastViewedAt: r.last_viewed_at ?? r.scanned_at,
+     imageUri: r.image_uri ?? undefined,
+     brand: r.brand ?? undefined,
+     productName: r.product_name ?? undefined,
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/directSearch.ts /mnt/data/tagxray-app/apps/mobile/src/directSearch.ts
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/directSearch.ts	2026-08-21 05:34:54.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/directSearch.ts	2026-08-21 06:42:04.982403972 +0000
+@@ -10,32 +10,33 @@
+   affiliate: {domain:string;m:string;lCd1:string;lCd2:string};
+ };
+ 
+-const A_CODE = process.env.EXPO_PUBLIC_LINKPRICE_A_CODE || 'A100707018';
++import {buildAffiliateUrl} from './affiliate';
++import {mergeOffers} from './searchMerge';
+ const PROVIDERS: ProviderConfig[] = [
+   {
+     id:'gmarket', base:'https://www.gmarket.co.kr',

@@ -1,0 +1,144 @@
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/README.md /mnt/data/tagxray-app/README.md
+--- /mnt/data/tagxray-orig/tagxray-app/README.md	2026-08-21 05:36:23.000000000 +0000
++++ /mnt/data/tagxray-app/README.md	2026-08-21 06:28:08.137948855 +0000
+@@ -106,3 +106,9 @@
+ ## 운영상 중요한 점
+ 
+ 쇼핑몰 검색 HTML과 접근 정책은 외부 서비스 변경에 따라 깨질 수 있습니다. CAPTCHA/접근통제 우회는 구현하지 않았습니다. Provider별 파서를 독립시켜 변경 시 해당 Provider만 수정하도록 설계했습니다.
++
++## v0.2.0 changes (2026-08-21)
++- Retailer lookup is now hybrid: direct HTTP parsing plus hidden Android WebView rendering fallback for Gmarket, LotteON, Hmall, and HiMart. This is intended to recover product links/prices from JS-rendered retailer search pages without requiring a Vercel API.
++- Search results are deduplicated to the cheapest exact-SKU offer per retailer (maximum four retailer rows).
++- History is deduplicated by normalized product code. Reopening/researching the same product updates the existing history row and moves it to the top instead of creating duplicates.
++- History stores the original capture time separately from the latest view time. UI format: `2026.08.20(목) 00:00`.
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/STATUS.md /mnt/data/tagxray-app/STATUS.md
+--- /mnt/data/tagxray-orig/tagxray-app/STATUS.md	2026-08-21 05:36:23.000000000 +0000
++++ /mnt/data/tagxray-app/STATUS.md	2026-08-21 06:28:08.139999943 +0000
+@@ -1,60 +1,20 @@
+-# tagX-ray 구현/검증 상태
++# tagX-ray Status
+ 
+-## 코드 구현 완료
++Version: 0.2.0
+ 
+-- [x] 앱명 tagX-ray / 택스레이 반영
+-- [x] Android package `com.tagxray.app`
+-- [x] 카메라 촬영
+-- [x] 사진첩 불러오기
+-- [x] ML Kit OCR adapter
+-- [x] 바코드 스캔
+-- [x] 품번 후보 자동 분류 + 직접 수정
+-- [x] OCR 혼동 후보 생성
+-- [x] 매장가 인식/수정
+-- [x] G마켓 Provider
+-- [x] 롯데ON Provider
+-- [x] Hmall Provider
+-- [x] 하이마트 Provider
+-- [x] 부분 실패/timeout
+-- [x] 매장가 vs 온라인가
+-- [x] LinkPrice 직접조립 adapter
+-- [x] 히스토리/조회 날짜/가격 snapshot
+-- [x] 찜 ♥
+-- [x] 최근 조회
+-- [x] SQLite persistence
+-- [x] API 미배포 시 모바일 직접 검색 fallback
+-- [x] EAS preview APK / production AAB 설정
+-
+-## 이 환경에서 수행한 검증
+-
+-- TypeScript/TSX 27개 파일 transpile syntax check: **0 errors**
+-- Levi's `005D00005`에서 `005DO0005` 후보 생성 확인: **PASS**
+-- 4개 LinkPrice builder 파라미터 확인: **PASS**
+-  - G마켓: `D/H`
+-  - 롯데ON: `D/H`
+-  - 하이마트: `D/H`
+-  - Hmall: `3/0`
+-- 타깃 URL이 `tu`로 원복되는지 확인: **PASS**
+-
+-## APK native build 상태
+-
+-**이 ChatGPT 실행 컨테이너에서는 APK를 실제 생성하지 못함.**
+-
+-원인:
+-
+-1. 컨테이너에 Android SDK/Gradle SDK가 설치되어 있지 않음.
+-2. `npm install`을 시도했으나 외부 DNS/network가 차단되어 dependency 다운로드가 timeout 됨.
+-3. 연결 가능한 Expo/EAS 빌드 커넥터가 현재 제공되지 않음.
+-
+-따라서 `APK 빌드 성공`을 허위로 표시하지 않습니다. 소스에는 로컬 Gradle 빌드와 EAS APK 빌드를 위한 설정을 포함했습니다.
+-
+-## APK 이후 반드시 해야 할 실기기 검증
+-
+-- 카메라 권한 허용/거부/재허용
+-- 실제 택 촬영 → OCR
+-- Levi's `005D00005` 케이스
+-- ZARA `6861/320/420` 케이스
+-- 4개 Provider 현재 검색 surface
+-- LinkPrice redirect
+-- 앱 강제 종료 후 히스토리/찜 유지
+-- 네트워크 끊김/timeout
++Current change set:
++- Hybrid four-retailer search: direct HTTP + JS-rendered WebView fallback.
++- Exact SKU text is required in rendered card text/HTML before an offer is accepted.
++- One cheapest offer per retailer.
++- LinkPrice link generation remains isolated by retailer.
++- History dedupe by normalized SKU, latest lookup moves item to top.
++- Original capture timestamp preserved; latest lookup timestamp used only for ordering.
++- Displayed capture time format: `YYYY.MM.DD(요일) HH:mm`.
++
++Validation pending on the current source revision:
++- npm install
++- TypeScript typecheck
++- unit tests
++- Expo prebuild
++- Android assembleRelease
++- on-device Levi's `005DO0005` live retailer lookup
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/app.json /mnt/data/tagxray-app/apps/mobile/app.json
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/app.json	2026-08-21 05:35:09.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/app.json	2026-08-21 06:27:56.056599478 +0000
+@@ -2,7 +2,7 @@
+   "expo": {
+     "name": "tagX-ray",
+     "slug": "tagx-ray",
+-    "version": "0.1.0",
++    "version": "0.2.0",
+     "orientation": "portrait",
+     "scheme": "tagxray",
+     "userInterfaceStyle": "automatic",
+@@ -13,14 +13,14 @@
+         "NSCameraUsageDescription": "상품 택을 촬영해 온라인 가격을 비교하기 위해 카메라를 사용합니다.",
+         "NSPhotoLibraryUsageDescription": "저장된 상품 택 사진을 불러오기 위해 사진 보관함을 사용합니다."
+       },
+-      "buildNumber": "1"
++      "buildNumber": "2"
+     },
+     "android": {
+       "package": "com.tagxray.app",
+       "permissions": [
+         "CAMERA"
+       ],
+-      "versionCode": 1
++      "versionCode": 2
+     },
+     "plugins": [
+       [
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/package.json /mnt/data/tagxray-app/apps/mobile/package.json
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/package.json	2026-08-21 05:33:52.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/package.json	2026-08-21 06:26:14.278336035 +0000
+@@ -24,7 +24,8 @@
+     "react": "19.2.3",
+     "react-native": "0.86.0",
+     "react-native-safe-area-context": "^5.6.1",
+-    "react-native-screens": "^4.16.0"
++    "react-native-screens": "^4.16.0",
++    "react-native-webview": "^13.16.0"
+   },
+   "devDependencies": {
+     "@types/react": "^19.1.12",
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/RetailerWebSearch.tsx /mnt/data/tagxray-app/apps/mobile/src/RetailerWebSearch.tsx
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/RetailerWebSearch.tsx	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/RetailerWebSearch.tsx	2026-08-21 06:42:04.547707328 +0000
+@@ -0,0 +1,276 @@
++import React, {useMemo, useState} from 'react';
++import {StyleSheet, View} from 'react-native';
++import {WebView, WebViewMessageEvent} from 'react-native-webview';

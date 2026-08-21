@@ -1,0 +1,111 @@
+     imageUri:item.imageUri,
++    capturedAt:item.capturedAt,
+   });
+ 
+   const remove=(item:ScanHistoryItem)=>Alert.alert('기록을 삭제할까요?', item.productName || item.normalizedProductCode, [
+@@ -36,7 +38,7 @@
+         <Text style={s.brand}>{item.brand||'상품'}</Text>
+         <Text style={s.name} numberOfLines={1}>{item.productName||item.normalizedProductCode}</Text>
+         <Text style={s.code}>{item.normalizedProductCode}</Text>
+-        <Text style={s.meta}>{new Date(item.scannedAt).toLocaleString('ko-KR')}</Text>
++        <Text style={s.meta}>촬영 {formatHistoryDate(item.capturedAt)}</Text>
+         <Text style={s.price}>조회 당시 {money(item.lowestOnlinePriceAtScan)}{item.lowestProviderAtScan?` · ${providerName(item.lowestProviderAtScan)}`:''}</Text>
+         {item.storePrice ? <Text style={s.store}>매장 {money(item.storePrice)}{typeof item.savingAmountAtScan==='number' && item.savingAmountAtScan>0 ? ` · ${money(item.savingAmountAtScan)} 절약` : ''}</Text> : null}
+       </View>
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/screens/HomeScreen.tsx /mnt/data/tagxray-app/apps/mobile/src/screens/HomeScreen.tsx
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/screens/HomeScreen.tsx	2026-08-21 05:31:57.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/screens/HomeScreen.tsx	2026-08-21 06:26:40.776289462 +0000
+@@ -25,13 +25,13 @@
+       return;
+     }
+     const r = await ImagePicker.launchImageLibraryAsync({mediaTypes: ['images'], quality: 1});
+-    if (!r.canceled) root.navigate('Review', {imageUri: r.assets[0].uri});
++    if (!r.canceled) root.navigate('Review', {imageUri: r.assets[0].uri, capturedAt: new Date().toISOString()});
+   };
+ 
+   const goSearch = () => {
+     const value = code.trim();
+     if (!value) return Alert.alert('상품코드를 입력해주세요');
+-    root.navigate('Result', {rawCode: value});
++    root.navigate('Result', {rawCode: value, capturedAt: new Date().toISOString()});
+   };
+ 
+   return <SafeAreaView style={s.safe}><ScrollView contentContainerStyle={s.wrap} keyboardShouldPersistTaps="handled">
+@@ -70,6 +70,7 @@
+         barcode: item.barcode,
+         storePrice: item.storePrice,
+         imageUri: item.imageUri,
++        capturedAt: item.capturedAt,
+       })} style={({pressed}) => [s.recentCard, pressed && {opacity:.72}]}>
+         {item.imageUri ? <Image source={{uri:item.imageUri}} style={s.thumb}/> : <View style={s.thumb}/>} 
+         <View style={{flex:1}}>
+diff -ruN '--exclude=BUILD_REPORT.md' '--exclude=node_modules' '--exclude=android' '--exclude=.expo' /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/screens/ResultScreen.tsx /mnt/data/tagxray-app/apps/mobile/src/screens/ResultScreen.tsx
+--- /mnt/data/tagxray-orig/tagxray-app/apps/mobile/src/screens/ResultScreen.tsx	2026-08-21 05:31:57.000000000 +0000
++++ /mnt/data/tagxray-app/apps/mobile/src/screens/ResultScreen.tsx	2026-08-21 06:42:05.513513028 +0000
+@@ -1,66 +1,89 @@
+-import React,{useEffect,useState} from 'react';
++import React,{useEffect,useMemo,useRef,useState} from 'react';
+ import {ActivityIndicator,Linking,Pressable,SafeAreaView,ScrollView,StyleSheet,Text,View} from 'react-native';
+ import {searchProducts} from '../api';
+-import type {SearchResponse} from '../types';
++import type {Offer,SearchResponse} from '../types';
+ import {money,PrimaryButton,providerName,Section} from '../components';
+ import {saveScan,toggleFavorite} from '../db';
+ import {theme} from '../theme';
++import {RetailerWebSearch} from '../RetailerWebSearch';
++import {mergeOffers,withOffers} from '../searchMerge';
++import {searchVariants} from '../directSearch';
+ 
+ export function ResultScreen({route}:{route:any}) {
+   const args=route.params;
+-  const [data,setData]=useState<SearchResponse>();
++  const [base,setBase]=useState<SearchResponse>();
++  const [webOffers,setWebOffers]=useState<Offer[]>([]);
++  const [doneProviders,setDoneProviders]=useState<Set<Offer['provider']>>(new Set());
+   const [err,setErr]=useState('');
+   const [scanId,setScanId]=useState<number>();
+   const [favorite,setFavorite]=useState(false);
++  const [timedOut,setTimedOut]=useState(false);
++  const [session,setSession]=useState(0);
++  const savedRef=useRef(false);
++  const localVariants=useMemo(()=>searchVariants(args.rawCode),[args.rawCode]);
++  const data=useMemo(()=>base?withOffers(base,webOffers):undefined,[base,webOffers]);
+ 
+   const run=async()=>{
+-    setErr(''); setData(undefined); setFavorite(false); setScanId(undefined);
+-    try{
+-      const r=await searchProducts(args);
+-      setData(r);
+-      const id=await saveScan({...args,result:r});
+-      setScanId(id);
+-    }catch(e){setErr(e instanceof Error?e.message:'검색 실패');}
++    setErr(''); setBase(undefined); setWebOffers([]); setDoneProviders(new Set()); setFavorite(false); setScanId(undefined); setTimedOut(false); savedRef.current=false; setSession(x=>x+1);
++    try{setBase(await searchProducts(args));}catch(e){setErr(e instanceof Error?e.message:'검색 실패');}
+   };
+   useEffect(()=>{void run();},[]);
++  useEffect(()=>{const t=setTimeout(()=>setTimedOut(true),13500);return()=>clearTimeout(t);},[session]);
++
++  const onWebResult=(provider:Offer['provider'],offers:Offer[])=>{
++    setWebOffers(prev=>mergeOffers(prev,offers));
++  };
++  const onWebDone=(provider:Offer['provider'])=>setDoneProviders(prev=>{const n=new Set(prev);n.add(provider);return n;});
++  const allRetailersDone=doneProviders.size>=4||timedOut;
++
++  useEffect(()=>{
++    if(!data||!allRetailersDone||savedRef.current)return;
++    savedRef.current=true;
++    void saveScan({...args,result:data,capturedAt:args.capturedAt||new Date().toISOString()}).then(saved=>{setScanId(saved.id);setFavorite(saved.favorite);});
++  },[data,allRetailersDone]);
+ 
+   const setFav=async()=>{
+     if(!scanId)return;
+-    const next=!favorite;
+-    setFavorite(next);
+-    await toggleFavorite(scanId,next);
++    const next=!favorite; setFavorite(next); await toggleFavorite(scanId,next);
+   };
+ 
+-  if(!data&&!err)return <SafeAreaView style={s.center}><ActivityIndicator/><Text style={s.loading}>G마켓 · 롯데ON · Hmall · 하이마트를 확인하고 있어요</Text><Text style={s.loadingSmall}>정확히 같은 품번만 가격 비교에 포함합니다.</Text></SafeAreaView>;
+-  if(err)return <SafeAreaView style={s.center}><Text style={s.err}>검색하지 못했어요</Text><Text style={s.loading}>{err}</Text><View style={{width:220,marginTop:20}}><PrimaryButton title="다시 검색" onPress={()=>void run()}/></View></SafeAreaView>;
++  const probe=<RetailerWebSearch key={session} rawCode={args.rawCode} variants={localVariants} brand={args.brand} onResult={onWebResult} onProviderDone={onWebDone}/>;
++
