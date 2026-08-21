@@ -5,6 +5,9 @@ on:
   push:
     branches: ["tagxray-build-20260821"]
     paths: [".github/workflows/tagxray-serp-probe.yml"]
+  pull_request:
+    branches: ["main"]
+    paths: [".github/workflows/tagxray-serp-probe.yml"]
 
 jobs:
   probe:
@@ -40,8 +43,7 @@ jobs:
               console.log('lotteon',t.includes('lotteon.com'));
               console.log('gmarket',t.includes('gmarket.co.kr'));
               console.log('hmall',t.includes('hmall.com'));
-              const urls=[...t.matchAll(/https?:\\?\/\\?\/[^
-"'<> ]+/g)].map(m=>m[0].replace(/\\u0026/g,'&').replace(/\\\//g,'/')).filter(x=>/levi|lotteon|gmarket|hmall|himart/i.test(x));
+              const urls=[...t.matchAll(/https?:\\?\/\\?\/[^\n\"'<> ]+/g)].map(m=>m[0].replace(/\\u0026/g,'&').replace(/\\\//g,'/')).filter(x=>/levi|lotteon|gmarket|hmall|himart/i.test(x));
               console.log('urls',JSON.stringify([...new Set(urls)].slice(0,20)));
             }catch(e){console.log(`\n=== ${name} ERROR`,e?.stack||String(e));}
           }
