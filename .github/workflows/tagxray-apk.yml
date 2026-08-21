@@ -54,17 +54,27 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Reconstruct tagX-ray source archive
+      - name: Reconstruct original tagX-ray source archive
         run: |
-          cat tagxray-v02-parts/part-* > tagX-ray-source-v0.2.0.b64
-          base64 --decode tagX-ray-source-v0.2.0.b64 > tagX-ray-source-v0.2.0.zip
-          echo "7dacea165a70e52d455f570a784e668f90f82990fe35cebdfbb9a3bcf073b368  tagX-ray-source-v0.2.0.zip" | sha256sum --check
+          cat tagxray-parts/part-* > tagX-ray-source.b64
+          base64 --decode tagX-ray-source.b64 > tagX-ray-source.zip
+          echo "6e2e30d7eb343bf74a74c3c3fcaacfd68147f7669a25d7bad65f8c94d49c3480  tagX-ray-source.zip" | sha256sum --check
 
-      - name: Unpack tagX-ray source
+      - name: Unpack original source
         run: |
           rm -rf tagxray-build
           mkdir tagxray-build
-          unzip -q tagX-ray-source-v0.2.0.zip -d tagxray-build
+          unzip -q tagX-ray-source.zip -d tagxray-build
+
+      - name: Apply tagX-ray v0.2 patch
+        run: |
+          cat tagxray-diff-parts/part-* > tagxray-v02.diff.gz.b64
+          base64 --decode tagxray-v02.diff.gz.b64 > tagxray-v02.diff.gz
+          echo "b31f37021a408c0a75592e070dc2c427f4fee90d24d30e464f8a8cf1564927ad  tagxray-v02.diff.gz" | sha256sum --check
+          gzip -dc tagxray-v02.diff.gz > tagxray-v02.diff
+          echo "0a01a367d7de271bad03bb0aee3b25ecc126e624a98860a44259244b89b161fb  tagxray-v02.diff" | sha256sum --check
+          cd tagxray-build/tagxray-app
+          patch -p1 < ../../tagxray-v02.diff
 
       - name: Install dependencies
         working-directory: tagxray-build/tagxray-app
