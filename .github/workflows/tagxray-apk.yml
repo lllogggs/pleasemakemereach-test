@@ -3,6 +3,8 @@ name: tagX-ray APK Build
 on:
   push:
     branches: ["tagxray-build-20260821"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
